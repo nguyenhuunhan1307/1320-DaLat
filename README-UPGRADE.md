@@ -1,74 +1,67 @@
-# Đà Lạt Sương Mù — v9 Open World Multiplayer
+# Đà Lạt Sương Mù — v10 Rental Fleet Multiplayer
 
-Bản nâng cấp giữ nguyên thế giới 3D, bản đồ, cảnh quan, hệ thống đi bộ, xe máy, ô tô, camper, thuyền, khách sạn/homestay, nhà hàng và câu cá của bản v8; bổ sung lớp Multiplayer mở rộng.
+Bản nâng cấp tiếp tục trên v9, bổ sung hệ thống thuê phương tiện qua NPC và tồn kho xe đồng bộ toàn phòng.
 
-## Những phần đã bổ sung
+## Tính năng thuê xe mới
 
-- **Đồng bộ nhân vật:** vị trí, độ cao, hướng nhìn, chạy/ngồi/nằm, trang phục.
-- **Đồng bộ phương tiện:** xe máy, ô tô, camper, thuyền; vị trí, hướng, độ nghiêng, tốc độ. Mỗi người chơi online có bản sao phương tiện riêng ở máy người xem để không ghi đè xe thuê của người chơi đó.
-- **Đi chung xe:** người chơi có thể đứng gần xe do người khác lái rồi nhấn `G` hoặc nút **🚗 Đi cùng**. Ghế phụ được phân bổ theo trạng thái phòng; nhấn `F` để xuống. Người lái cần tiếp tục lái xe bình thường.
-- **Voice Chat theo khoảng cách:** WebRTC audio, bật/tắt micro, bật/tắt loa, hiển thị trạng thái micro/đang nói, âm lượng giảm theo khoảng cách, tắt tiếng từng người ngay trong danh sách phòng.
-- **Hoạt động nhóm:** trạng thái câu cá, thông báo bắt được cá, thông báo ghé khách sạn/homestay và tương tác tại địa điểm; đồng bộ trạng thái dựng trại trên camper.
-- **Phòng online:** mặc định `dalat`, tối đa 64 kết nối/phòng (có thể đổi bằng `MAX_PLAYERS_PER_ROOM`).
-- **Health endpoint:** `/health` để Render kiểm tra dịch vụ.
+- **NPC thuê xe máy:** có nhân viên tại quầy; người chơi phải đến hỏi giá, chọn xe và xác nhận thuê.
+- **Xe máy phân hạng:** xe tay ga phổ thông và mô tô thể thao, có mẫu 3D khác nhau.
+- **NPC thuê ô tô:** sedan, hatchback, MPV 7 chỗ và SUV camping.
+- **Giá thuê minh họa trong game:** tay ga 90.000đ/lượt; mô tô thể thao 220.000đ/lượt; hatchback 280.000đ/lượt; sedan 320.000đ/lượt; MPV 480.000đ/lượt; SUV camping 1.200.000đ/lượt (cao nhất).
+- **Đồng bộ tồn kho:** máy chủ xác nhận quyền thuê theo từng ID xe; khi có người thuê, xe biến mất khỏi bãi trên tất cả máy người chơi trong cùng phòng. Những người khác không thể thuê trùng chiếc xe đó.
+- **Trả xe tại NPC:** người chơi đi bộ về quầy thuê xe tương ứng, mở bảng giá và chọn “Trả xe đang thuê”. Xe được đưa về đúng vị trí bãi ban đầu và xuất hiện lại cho cả phòng.
+- **Tự giải phóng khi mất kết nối:** nếu người thuê thoát game hoặc mất kết nối, máy chủ xóa quyền thuê để xe xuất hiện lại trong bãi.
+- **Một phương tiện mỗi người:** người chơi cần trả xe hiện tại trước khi thuê xe khác.
+
+> Giá hiện là giá hiển thị và xác nhận trong game; bản này chưa có ví tiền, số dư hoặc hệ thống trừ tiền/kiếm tiền.
+
+## Những tính năng multiplayer kế thừa
+
+- Đồng bộ nhân vật, vị trí, phương tiện đang lái, hành khách và hoạt động chung.
+- Đi chung xe bằng `G`, xuống xe bằng `F`.
+- Voice Chat WebRTC theo khoảng cách, bật/tắt micro và loa.
+- Hoạt động nhóm, câu cá, thông báo ghé địa điểm, dựng trại camper.
+- Phòng online mặc định `dalat`, tối đa 64 người.
 
 ## Cấu trúc gói
 
-- `Da-Lat-Suong-Mu-Cinematic-v8.html` — game client (mã nguồn nâng cấp v9, giữ tên file để tương thích đường dẫn hiện tại).
-- `index.html` — trang vào game, tự gắn WebSocket server và mã phòng.
-- `server.js` — WebSocket relay, room state, passenger seat validation, event relay và WebRTC signaling.
+- `Da-Lat-Suong-Mu-Cinematic-v8.html` — game client (giữ tên file để tương thích URL hiện tại).
+- `index.html` — trang vào game.
+- `server.js` — WebSocket relay, xác nhận thuê/trả xe và quản lý tồn kho theo phòng.
 - `package.json`, `Procfile`, `render.yaml` — cấu hình deploy Render.
 
-## Deploy máy chủ lên Render
+## Deploy Render
 
-1. Giải nén ZIP, đưa `server.js`, `package.json`, `Procfile` và `render.yaml` vào repository GitHub dành cho server.
-2. Trên Render, tạo **New → Web Service**, kết nối repository.
-3. Build Command: `npm install`.
-4. Start Command: `npm start`.
-5. Sau khi deploy, mở `https://TEN-MIEN-RENDER/health`. Kết quả phải có `"ok":true`.
-6. Địa chỉ WebSocket sẽ là `wss://TEN-MIEN-RENDER/ws`.
+1. Cập nhật repository máy chủ bằng `server.js`, `package.json`, `Procfile`, `render.yaml`.
+2. Build Command: `npm install`; Start Command: `npm start`.
+3. Kiểm tra `https://TEN-MIEN-RENDER/health` trả về `ok: true`.
+4. WebSocket: `wss://TEN-MIEN-RENDER/ws`.
 
-Nếu dùng domain hiện tại, game đã mặc định trỏ tới:
+## Deploy Vercel
 
-`wss://one320-dalat.onrender.com/ws`
+1. Cập nhật `Da-Lat-Suong-Mu-Cinematic-v8.html` và `index.html` trong repository Vercel.
+2. Commit/push để deploy. Giữ nguyên tên HTML để link hiện tại không bị đổi.
 
-Nếu Render cấp domain khác, mở game với tham số:
+## Kiểm tra đề xuất
 
-`?server=wss%3A%2F%2FTEN-MIEN-RENDER%2Fws&room=dalat`
+1. Mở cùng room `dalat` trên hai thiết bị.
+2. Thiết bị A đến NPC thuê xe máy, chọn một xe và xác nhận. Thiết bị B phải thấy đúng xe đó biến mất khỏi bãi; các xe còn lại vẫn còn.
+3. Thiết bị B thử thuê cùng ID xe: máy chủ phải từ chối, nhưng cho thuê một xe khác còn trống.
+4. Thiết bị A lái xe rời bãi, xuống xe; thiết bị B vẫn không thấy xe trong bãi.
+5. Thiết bị A quay lại quầy, mở bảng giá và trả xe; cả hai thiết bị phải thấy xe xuất hiện lại đúng vị trí.
+6. Thử thoát kết nối khi đang thuê: máy chủ giải phóng xe và phát trạng thái tồn kho mới.
+7. Lặp lại với sedan, MPV và SUV camping; kiểm tra camping có giá cao nhất.
 
-## Deploy game lên Vercel
+## Lưu ý kỹ thuật
 
-1. Đưa `Da-Lat-Suong-Mu-Cinematic-v8.html` và `index.html` vào repository Vercel hiện tại.
-2. Commit/push để Vercel deploy bản mới.
-3. Đảm bảo Production Deployment Protection không yêu cầu đăng nhập đối với người chơi; domain production phải truy cập công khai.
-4. Mở domain production bằng cửa sổ ẩn danh để kiểm tra.
+- Máy chủ kiểm tra ID xe, quyền sở hữu, vị trí gần quầy và trạng thái đang lái trước khi chấp nhận thuê/trả.
+- Nếu người chơi thuê xe, chiếc xe gốc bị ẩn ở các máy khác; bản sao xe của người lái vẫn được dựng theo trạng thái multiplayer. Khi trả hoặc người thuê mất kết nối, xe gốc được khôi phục ở vị trí bãi.
+- Giá thuê chỉ là báo giá/xác nhận; chưa trừ tiền vì game chưa có hệ thống tiền tệ.
+- Voice Chat vẫn dùng STUN công khai; một số mạng cần TURN server riêng.
+- Đã kiểm tra cú pháp JavaScript của client module và server. Chưa deploy lên tài khoản Vercel/Render và chưa xác nhận bằng phiên chơi hai thiết bị thực tế.
 
-## Cách kiểm tra Multiplayer
 
-1. Mở game trên hai thiết bị/trình duyệt khác nhau.
-2. Cả hai vào cùng room `dalat` và đặt hai tên khác nhau.
-3. Di chuyển ở quảng trường: hai người phải nhìn thấy avatar nhau.
-4. Người A lái xe máy/ô tô/thuyền: người B phải nhìn thấy đúng phương tiện và xe di chuyển theo.
-5. Người B đứng gần xe A, bấm `G` hoặc **🚗 Đi cùng** để lên ghế trống; bấm `F` để xuống.
-6. Hai người bật micro, cho phép quyền Microphone; thử nói chuyện khi đứng gần và di chuyển ra xa. Danh sách người chơi có thể chạm để tắt tiếng từng người.
-7. Thử câu cá, bắt cá, ghé khách sạn và dựng trại camper để kiểm tra thông báo/trạng thái chung.
-
-## Lưu ý kỹ thuật quan trọng
-
-- Voice Chat dùng WebRTC peer-to-peer với STUN công khai. Cấu hình này có thể hoạt động trực tiếp giữa nhiều mạng, nhưng một số mạng NAT/firewall sẽ cần **TURN server** riêng để kết nối ổn định. Gói hiện tại chưa kèm dịch vụ TURN hoặc thông tin đăng nhập TURN.
-- Người chơi cần mở game bằng HTTPS và cấp quyền micro. iPhone/Safari có thể yêu cầu thao tác chạm nút bật micro sau khi vào game.
-- Server hiện là **room relay**, không phải máy chủ mô phỏng vật lý authoritative. Vị trí xe được người lái gửi lên và chuyển tiếp cho các máy khác; đây chưa phải hệ thống chống gian lận hoặc vật lý cạnh tranh thời gian thực.
-- Ghế phụ online là avatar người chơi thật. Nút `R/T` thêm/bớt NPC trang trí được giữ cho chế độ offline; trong online, người chơi thật lên xe bằng `G`/nút **Đi cùng**.
-- Các bảng đặt phòng/giá phòng trong game vẫn là dữ liệu minh họa. Bản nâng cấp chỉ chia sẻ hoạt động ghé thăm/tương tác, không tạo đặt phòng thật hay đồng bộ tồn phòng thương mại.
-- Chưa có tài khoản, lưu tiến trình cloud, chat chữ, matchmaking toàn cầu hoặc quản trị/moderation.
-
-## Phím điều khiển liên quan
-
-- `WASD`: di chuyển / lái xe.
-- `E`: tương tác hoặc lên xe người chơi gần nhất.
-- `G`: lên/xuống xe cùng người chơi.
-- `F`: xuống xe.
-- `R/T`: thêm/bớt NPC trang trí khi offline.
-- Nút `🎙 Bật micro`, `🔊 Âm thanh`: Voice Chat.
-
-**Bản này đã được kiểm tra cú pháp JavaScript của game module và server. Cần deploy lên Vercel/Render và thử trên hai thiết bị thật để xác nhận kết nối WebSocket/WebRTC theo mạng đang sử dụng.**
+## v11 — Thuê xe trực tiếp và hồi bãi sau 60 giây
+- Bỏ tương tác NPC thuê xe; người chơi bấm Thuê xe ngay tại phương tiện.
+- Xe thuê là một phiên bản phương tiện riêng; xe trong bãi xuất hiện lại sau 60 giây để người khác có thể thuê tiếp.
+- Xe đã thuê vẫn tiếp tục di chuyển và đồng bộ online; trả xe bằng nút Trả xe sau khi xuống xe.

@@ -1555,7 +1555,7 @@ function makeCar(color,kind,plate){
     const roll=cyl(.11,.11,2.4,12,M(0x2b2b2b,{roughness:.8}),-(W/2+.08),rk,(K.cz0+K.cz1)/2,g);roll.rotation.x=Math.PI/2;
     add(1.35,.2,.85,M(0x6a6a6c,{roughness:1}),0,yb-.02,K.cz0-.1);for(const x of[-.35,.35])add(.42,.12,.22,M(0x3a3a3c,{roughness:1}),x,yb+.13,K.cz0+.2);
     mesh(new THREE.SphereGeometry(.07,8,6),bulbMat,.5,yb+.16,K.cz0-.35,g).castShadow=false;
-    const bed=add(1.45,.2,1.8,M(0x5d5d60,{roughness:1}),0,yb+.02,K.cz0+.45);bed.visible=false;g.userData.bed=bed;
+    const bed=add(1.45,.2,1.8,M(0x5d5d60,{roughness:1}),0,yb+.02,K.cz0+.45);bed.name='camper-bed';bed.visible=false;g.userData.bed=bed;
     /* bộ trại dựng bên hông phải (phía phụ) — bật/tắt bằng "Dựng trại" */
     const camp=new THREE.Group();camp.name='camp-setup';camp.visible=false;g.add(camp);const cx0=-(W/2+.1),ow=-(W/2+2.7),zc=(K.cz0+K.cz1)/2;
     const can=box(2.6,.03,2.6,M(0xcdbb94,{roughness:1,side:THREE.DoubleSide}),(cx0+ow)/2,(rk+1.85)/2,zc,camp);can.rotation.z=Math.atan2(rk-1.85,cx0-ow);
@@ -1564,10 +1564,10 @@ function makeCar(color,kind,plate){
     const tx=-(W/2+1.5);box(1,.04,.6,M(0x8a6a4a),tx,.7,zc,camp);for(const sx of[-.42,.42])for(const sz of[-.25,.25])cyl(.015,.015,.7,4,greyM,tx+sx,.35,zc+sz,camp);
     for(const sz of[-.75,.75]){const ch=new THREE.Group();ch.position.set(tx,0,zc+sz);ch.rotation.y=sz>0?Math.PI:0;camp.add(ch);box(.5,.04,.45,M(0x2b2b2b),0,.45,0,ch);box(.5,.5,.04,M(0x2b2b2b),0,.72,-.22,ch);for(const a of[-.22,.22])cyl(.015,.015,.48,4,greyM,a,.23,0,ch);}
     mesh(new THREE.SphereGeometry(.09,10,8),bulbMat,tx+.35,.86,zc+.2,camp).castShadow=false;cyl(.05,.06,.12,8,M(0x3a3a3a),tx+.35,.75,zc+.2,camp);
-    box(.32,.08,.26,M(0x2a2a2a),tx-.12,.76,zc-.12,camp);const pot=cyl(.11,.1,.14,12,greyM,tx-.12,.87,zc-.12,camp);
-    const food=new THREE.Group();food.position.set(tx+.05,.73,zc+.12);food.visible=false;camp.add(food);cyl(.14,.14,.02,14,M(0xf6f4ee),0,.01,0,food);const fb=mesh(new THREE.SphereGeometry(.1,10,8),M(0xe0a43a,{roughness:.7}),0,.05,0,food);fb.scale.y=.5;
+    box(.32,.08,.26,M(0x2a2a2a),tx-.12,.76,zc-.12,camp);const pot=cyl(.11,.1,.14,12,greyM,tx-.12,.87,zc-.12,camp);pot.name='camp-pot';
+    const food=new THREE.Group();food.name='camp-food';food.position.set(tx+.05,.73,zc+.12);food.visible=false;camp.add(food);cyl(.14,.14,.02,14,M(0xf6f4ee),0,.01,0,food);const fb=mesh(new THREE.SphereGeometry(.1,10,8),M(0xe0a43a,{roughness:.7}),0,.05,0,food);fb.scale.y=.5;
     box(.6,.4,.4,M(0xdfe0dc),tx-.2,.2,zc+1.6,camp);box(.5,.32,.4,M(0x1a1b1d),ow+.4,.16,zc-1.6,camp);
-    const tX=-(W/2+4.7),tent=new THREE.Group();tent.position.set(tX,0,zc);camp.add(tent);
+    const tX=-(W/2+4.7),tent=new THREE.Group();tent.name='camp-tent';tent.position.set(tX,0,zc);camp.add(tent);
     const tm=M(0xd9822b,{roughness:.9,side:THREE.DoubleSide}),dome=new THREE.Mesh(new THREE.SphereGeometry(1,24,12,0,Math.PI*2,0,Math.PI/2),tm);dome.scale.set(1.2,1.05,1.5);tent.add(dome);
     const flyM=new THREE.Mesh(new THREE.SphereGeometry(1.03,24,6,0,Math.PI*2,0,Math.PI*.22),M(0x3a5a2a,{roughness:.9,side:THREE.DoubleSide}));flyM.scale.copy(dome.scale);tent.add(flyM);
     const tdoor=new THREE.Mesh(new THREE.CircleGeometry(.5,20,0,Math.PI),M(0x2a1a10,{side:THREE.DoubleSide}));tdoor.position.set(0,.02,1.5);tdoor.scale.set(1,1.5,1);tent.add(tdoor);
@@ -1660,10 +1660,6 @@ function kiosk(x,z,rot,title,sub,color){
   CARS.forEach(([kind,col,pl],i)=>{const K=CAR_KINDS[kind],x=cx-10,z=cz-11+i*5.5+(kind==='camper'?3.5:0),o=makeCar(col,kind,pl);o.position.set(x,Hdrive(x,z),z);o.rotation.y=-Math.PI/2;scene.add(o);
     const price={sedan:320000,hatch:280000,mpv:480000,camper:1200000}[kind];
     vehicles.push({type:'car',kind,rentalId:'car-'+i,spawnX:x,spawnZ:z,spawnHeading:-Math.PI/2,obj:o,x,z,heading:-Math.PI/2,speed:0,name:K.name,seats:K.seats.map(s=>[s[0],o.userData.seatY,s[1]]),pax:[],paxSeed:i,spec:K.spec,L:K.L,W:K.W,camp:o.userData.camp||null,campOn:false,rentPrice:price});});
-  const bikeClerk=makePerson({jacket:0x8a3b2f,scarf:0xf2b829});bikeClerk.g.position.set(bx-4,H(bx-4,bz+5),bz+5);bikeClerk.g.rotation.y=Math.PI;scene.add(bikeClerk.g);
-  addLabel('Nhân viên thuê xe máy','Đến hỏi giá và chọn xe',bx-4,H(bx-4,bz+5)+2.2,bz+5,.8,55);
-  const carClerk=makePerson({jacket:0x2f4a6b,scarf:0xf4f1e6});carClerk.g.position.set(cx+5,H(cx+5,cz+6),cz+6);carClerk.g.rotation.y=Math.PI;scene.add(carClerk.g);
-  addLabel('Nhân viên thuê ô tô','Đến hỏi giá và chọn xe',cx+5,H(cx+5,cz+6)+2.2,cz+6,.8,55);
   const dx=60,dz=111;const y=xh.level;const dock=new THREE.Group();dock.position.set(dx,y,dz);scene.add(dock);
   box(46,.4,3.2,M(0x8a6a4a),0,.75,4.5,dock);for(let k=-22;k<=22;k+=4)cyl(.12,.12,2.4,6,M(0x5a4636),k,-.3,5.9,dock);
   for(let k=-22;k<=22;k+=2.2){cyl(.04,.04,1,5,M(0xeeeeee),k,1.4,6,dock);}box(46,.06,.06,M(0xeeeeee),0,1.9,6,dock);
@@ -1717,7 +1713,7 @@ const player=makePerson({jacket:JACKETS[0],scarf:SCARVES[0]});scene.add(player.g
 const P={x:PLAZA.x-62,z:PLAZA.z+26,y:0,vy:0,face:Math.PI,run:false};P.y=H(P.x,P.z);
 let nameLabel=null,ride=null,started=false;
 
-/* ---------- Multiplayer v10: shared players, vehicles, passengers & activities ---------- */
+/* ---------- Multiplayer v11: shared players, vehicles, passengers & activities ---------- */
 const MP={socket:null,id:null,room:'dalat',name:'Lữ khách',status:'offline',lastSend:0,lastRoster:0,remote:new Map(),reconnect:0,manualClose:false,voiceStream:null,voiceEnabled:false,micMuted:false,speakerEnabled:true,peers:new Map(),audioEls:new Map(),iceQueues:new Map(),passenger:null,mutedPeers:new Set(),voiceContext:null,voiceAnalyser:null,voiceData:null,talking:false,voiceRAF:0,rentalOwners:new Map(),myRentalId:null,pendingRental:null};
 const mpStatus=$('mpStatus'),mpState=$('mpState'),mpCount=$('mpCount'),mpRoster=$('mpRoster');
 function mpSetStatus(state,message){MP.status=state;mpStatus.classList.toggle('online',state==='online');mpStatus.classList.toggle('connecting',state==='connecting');mpState.textContent=message;}
@@ -1729,11 +1725,11 @@ function mpConnect(){
   MP.manualClose=false;mpSetStatus('connecting','Đang kết nối…');let ws;try{ws=new WebSocket(url);}catch(e){mpSetStatus('offline','Không tạo được kết nối');return;}MP.socket=ws;
   ws.addEventListener('open',()=>{mpSetStatus('connecting','Đang vào phòng…');ws.send(JSON.stringify({type:'join',name:MP.name,room:MP.room,jacket:pickJ,scarf:pickS}));});
   ws.addEventListener('message',ev=>{let m;try{m=JSON.parse(ev.data);}catch(e){return;}
-    if(m.type==='welcome'){MP.id=m.id;mpSetStatus('online','Đang online');mpApplyRoster(m.players||[]);mpApplyFleet(m.rentals||[]);}
+    if(m.type==='welcome'){MP.id=m.id;mpSetStatus('online','Đang online');mpApplyRoster(m.players||[]);mpApplyFleet(m.rentals||[],m.slots||[]);}
     else if(m.type==='players')mpApplyRoster(m.players||[]);
-    else if(m.type==='fleet')mpApplyFleet(m.rentals||[]);
-    else if(m.type==='rent-result'){if(MP.pendingRental===m.vehicleId)MP.pendingRental=null;if(m.ok){MP.myRentalId=m.vehicleId;const v=vehicles.find(x=>x.rentalId===m.vehicleId);if(v){enterRide(v);toast('Đã xác nhận thuê '+v.name+' · '+fmtVND(v.rentPrice)+'.');}}else toast(m.message||'Không thể thuê xe lúc này.');}
-    else if(m.type==='return-result'){if(m.ok){MP.myRentalId=null;const v=vehicles.find(x=>x.rentalId===m.vehicleId);if(v)resetRentalVehicle(v);toast('Đã trả xe. Phương tiện đã trở lại bãi và mọi người đều nhìn thấy.');}else toast(m.message||'Không thể trả xe lúc này.');}
+    else if(m.type==='fleet')mpApplyFleet(m.rentals||[],m.slots||[]);
+    else if(m.type==='rent-result'){if(MP.pendingRental===m.vehicleId)MP.pendingRental=null;if(m.ok){MP.myRentalId=m.instanceId;const v=vehicles.find(x=>x.rentalId===m.instanceId);if(v){enterRide(v);toast('Đã thuê '+v.name+' · '+fmtVND(v.rentPrice)+'.');}}else toast(m.message||'Không thể thuê xe lúc này.');}
+    else if(m.type==='return-result'){if(m.ok){MP.myRentalId=null;endRentalInstance(m.instanceId);toast('Đã trả xe.');}else toast(m.message||'Không thể trả xe lúc này.');}
     else if(m.type==='notice'&&m.message){toast(m.message);if(String(m.message).includes('Ghế này'))mpLeaveRemoteRide(true);}
     else if(m.type==='rtc-signal')voiceHandleSignal(m.from,m.data);
     else if(m.type==='event')mpHandleEvent(m);
@@ -1744,7 +1740,7 @@ function mpConnect(){
 function mpApplyRoster(list){
   const alive=new Set();for(const d of list){if(!d||!d.id||d.id===MP.id)continue;alive.add(d.id);let r=MP.remote.get(d.id);
     if(!r){const person=makePerson({jacket:JACKETS[Number.isInteger(d.jacket)?Math.max(0,Math.min(4,d.jacket)):0],scarf:SCARVES[Number.isInteger(d.scarf)?Math.max(0,Math.min(4,d.scarf)):0]});scene.add(person.g);const label=makeLabel(String(d.name||'Lữ khách').slice(0,16),'',.14);r={person,label,x:d.x||0,y:d.y||0,z:d.z||0,face:d.face||0,run:false,last:performance.now(),rideIndex:-1,vehicleObj:null,fishRod:null};MP.remote.set(d.id,r);if(MP.voiceEnabled)voiceEnsurePeer(d.id);}
-    r.name=String(d.name||'Lữ khách').slice(0,16);r.target={x:Number(d.x)||0,y:Number(d.y)||0,z:Number(d.z)||0,face:Number(d.face)||0};r.run=!!d.run;r.seated=!!d.seated;r.rideIndex=Number.isInteger(d.rideIndex)?d.rideIndex:-1;r.vehicle=d.vehicle||null;r.passengerOf=d.passengerOf||null;r.seatIndex=Number.isInteger(d.seatIndex)?d.seatIndex:0;r.fishing=!!d.fishing;if(r.fishing&&!r.fishRod){r.fishRod=new THREE.Mesh(new THREE.CylinderGeometry(.018,.032,1.8,6),M(0x2b2b2b));r.fishRod.position.set(0,-.72,.02);r.person.armR.add(r.fishRod);}if(r.fishRod)r.fishRod.visible=r.fishing;r.activity=String(d.activity||'');r.mic=!!d.mic;r.talking=!!d.talking;r.last=performance.now();if(MP.voiceEnabled)voiceEnsurePeer(d.id);
+    r.name=String(d.name||'Lữ khách').slice(0,16);r.target={x:Number(d.x)||0,y:Number(d.y)||0,z:Number(d.z)||0,face:Number(d.face)||0};r.run=!!d.run;r.seated=!!d.seated;r.rideIndex=Number.isInteger(d.rideIndex)?d.rideIndex:-1;r.rentalId=d.rentalId||null;r.vehicle=d.vehicle||null;r.passengerOf=d.passengerOf||null;r.seatIndex=Number.isInteger(d.seatIndex)?d.seatIndex:0;r.fishing=!!d.fishing;if(r.fishing&&!r.fishRod){r.fishRod=new THREE.Mesh(new THREE.CylinderGeometry(.018,.032,1.8,6),M(0x2b2b2b));r.fishRod.position.set(0,-.72,.02);r.person.armR.add(r.fishRod);}if(r.fishRod)r.fishRod.visible=r.fishing;r.activity=String(d.activity||'');r.mic=!!d.mic;r.talking=!!d.talking;r.last=performance.now();if(MP.voiceEnabled)voiceEnsurePeer(d.id);
   }
   for(const id of [...MP.remote.keys()])if(!alive.has(id)){mpRemove(id);voiceClosePeer(id);}
   const entries=list.filter(x=>x&&x.id!==MP.id);mpCount.textContent=entries.length+' người';mpRoster.hidden=!entries.length;
@@ -1755,21 +1751,23 @@ function mpSendState(dt){
   if(MP.status!=='online'||!MP.socket||MP.socket.readyState!==WebSocket.OPEN||!started)return;
   MP.lastSend+=dt;if(MP.lastSend<.08)return;MP.lastSend=0;
   const rideIndex=ride?vehicles.indexOf(ride):-1;
-  const data={type:'state',x:P.x,y:P.y,z:P.z,face:P.face,run:!!(keys.has('shift')||P.run),seated:!!P.seated||!!ride||!!MP.passenger||!!P.lying,lying:!!P.lying,jacket:pickJ,scarf:pickS,rideIndex,vehicle:ride?{x:ride.x,y:ride.obj.position.y,z:ride.z,heading:ride.heading,pitch:ride.obj.rotation.x,roll:ride.obj.rotation.z,speed:ride.speed,type:ride.type,campOn:!!ride.campOn}:null,passengerOf:MP.passenger?.driverId||null,seatIndex:MP.passenger?.seatIndex||0,fishing:!!fishing,mic:!!MP.voiceEnabled&&!MP.micMuted,talking:!!MP.talking,activity:fishing?'fishing':ride||MP.passenger?'driving':indoor?(indoor.L.kind==='hotel'?'hotel':indoor.L.kind==='restaurant'?'restaurant':'inside'):P.lying?'resting':'exploring',fishCount};
+  const data={type:'state',x:P.x,y:P.y,z:P.z,face:P.face,run:!!(keys.has('shift')||P.run),seated:!!P.seated||!!ride||!!MP.passenger||!!P.lying,lying:!!P.lying,jacket:pickJ,scarf:pickS,rideIndex,vehicle:ride?{x:ride.x,y:ride.obj.position.y,z:ride.z,heading:ride.heading,pitch:ride.obj.rotation.x,roll:ride.obj.rotation.z,speed:ride.speed,type:ride.type,campOn:!!ride.campOn,rentalId:ride.rentalId||null}:null,passengerOf:MP.passenger?.driverId||null,seatIndex:MP.passenger?.seatIndex||0,fishing:!!fishing,mic:!!MP.voiceEnabled&&!MP.micMuted,talking:!!MP.talking,activity:fishing?'fishing':ride||MP.passenger?'driving':indoor?(indoor.L.kind==='hotel'?'hotel':indoor.L.kind==='restaurant'?'restaurant':'inside'):P.lying?'resting':'exploring',fishCount};
   try{MP.socket.send(JSON.stringify(data));}catch(e){}
 }
+function mpRemoteVehicle(r){return r?.rentalId?vehicles.find(v=>v.rentalId===r.rentalId):vehicles[r?.rideIndex];}
 function mpUpdateRemote(dt){
   // First pass: interpolate each remote driver's own vehicle clone. Never move the local rental vehicle.
   for(const [id,r] of MP.remote){if(!r.target)continue;const t=1-Math.exp(-dt*12);r.x=lerp(r.x,r.target.x,t);r.y=lerp(r.y,r.target.y,t);r.z=lerp(r.z,r.target.z,t);let a=Math.atan2(Math.sin(r.target.face-r.face),Math.cos(r.target.face-r.face));r.face+=a*t;
-    if(r.rideIndex>=0&&r.vehicle&&vehicles[r.rideIndex]){const base=vehicles[r.rideIndex];if(!r.vehicleObj||r.vehicleBase!==r.rideIndex){if(r.vehicleObj)scene.remove(r.vehicleObj);r.vehicleObj=base.obj.clone(true);r.vehicleObj.visible=true;r.vehicleBase=r.rideIndex;scene.add(r.vehicleObj);}
+    const remoteBase=mpRemoteVehicle(r);
+    if(r.rideIndex>=0&&r.vehicle&&remoteBase){const base=remoteBase;const vehicleKey=r.rentalId||r.rideIndex;if(!r.vehicleObj||r.vehicleBase!==vehicleKey){if(r.vehicleObj)scene.remove(r.vehicleObj);r.vehicleObj=base.obj.clone(true);r.vehicleObj.visible=true;r.vehicleBase=vehicleKey;scene.add(r.vehicleObj);}
       const q=r.vehicle;r.vehicleObj.position.set(lerp(r.vehicleObj.position.x,Number(q.x)||0,t),Number(q.y)||base.obj.position.y,lerp(r.vehicleObj.position.z,Number(q.z)||0,t));r.vehicleObj.rotation.set(Number(q.pitch)||0,r.vehicleObj.rotation.y+Math.atan2(Math.sin((Number(q.heading)||0)-r.vehicleObj.rotation.y),Math.cos((Number(q.heading)||0)-r.vehicleObj.rotation.y))*t,Number(q.roll)||0,'YXZ');const campMesh=r.vehicleObj.getObjectByName('camp-setup');if(campMesh)campMesh.visible=!!q.campOn;
     }else if(r.vehicleObj){if(MP.passenger?.driverId===id)mpLeaveRemoteRide(true);if(r.person.g.parent===r.vehicleObj)scene.add(r.person.g);scene.remove(r.vehicleObj);r.vehicleObj=null;r.vehicleBase=-1;}
   }
   // Second pass: attach drivers and real remote passengers to the correct cloned vehicle seats.
   for(const [id,r] of MP.remote){
-    if(r.passengerOf){const localDriver=r.passengerOf===MP.id&&ride?{vehicleObj:ride.obj,rideIndex:vehicles.indexOf(ride)}:null;const driver=localDriver||MP.remote.get(r.passengerOf),base=driver&&vehicles[driver.rideIndex];if(driver?.vehicleObj&&base?.seats?.[r.seatIndex]){if(r.person.g.parent!==driver.vehicleObj){if(r.person.g.parent)r.person.g.parent.remove(r.person.g);driver.vehicleObj.add(r.person.g);}r.person.g.position.set(...base.seats[r.seatIndex]);r.person.g.rotation.set(0,0,0);sitPose(r.person,base.type==='car'?-1.35:-.8);}
+    if(r.passengerOf){const localDriver=r.passengerOf===MP.id&&ride?{vehicleObj:ride.obj,rideIndex:vehicles.indexOf(ride)}:null;const driver=localDriver||MP.remote.get(r.passengerOf),base=driver&&(driver===localDriver?ride:mpRemoteVehicle(driver));if(driver?.vehicleObj&&base?.seats?.[r.seatIndex]){if(r.person.g.parent!==driver.vehicleObj){if(r.person.g.parent)r.person.g.parent.remove(r.person.g);driver.vehicleObj.add(r.person.g);}r.person.g.position.set(...base.seats[r.seatIndex]);r.person.g.rotation.set(0,0,0);sitPose(r.person,base.type==='car'?-1.35:-.8);}
       else if(r.person.g.parent!==scene){if(r.person.g.parent)r.person.g.parent.remove(r.person.g);scene.add(r.person.g);r.person.g.position.set(r.x,r.y,r.z);}
-    }else if(r.rideIndex>=0&&r.vehicleObj&&vehicles[r.rideIndex]){const base=vehicles[r.rideIndex];if(r.person.g.parent!==r.vehicleObj){if(r.person.g.parent)r.person.g.parent.remove(r.person.g);r.vehicleObj.add(r.person.g);}r.person.g.position.set(...(base.seats?.[0]||vspec(base).seat));r.person.g.rotation.set(0,0,0);sitPose(r.person,base.type==='car'?-1.35:-1.0);}
+    }else if(r.rideIndex>=0&&r.vehicleObj&&(r.rentalId?vehicles.find(v=>v.rentalId===r.rentalId):vehicles[r.rideIndex])){const base=r.rentalId?vehicles.find(v=>v.rentalId===r.rentalId):vehicles[r.rideIndex];if(r.person.g.parent!==r.vehicleObj){if(r.person.g.parent)r.person.g.parent.remove(r.person.g);r.vehicleObj.add(r.person.g);}r.person.g.position.set(...(base.seats?.[0]||vspec(base).seat));r.person.g.rotation.set(0,0,0);sitPose(r.person,base.type==='car'?-1.35:-1.0);}
     else{if(r.person.g.parent!==scene){if(r.person.g.parent)r.person.g.parent.remove(r.person.g);scene.add(r.person.g);standPose(r.person);}r.person.g.position.set(r.x,r.y,r.z);r.person.g.rotation.y=r.face;if(r.fishing){r.person.armR.rotation.x=-1.3;}else if(!r.seated){r.person.armR.rotation.x*=.8;r.person.armL.rotation.x*=.8;}}
     const d=Math.hypot(r.x-P.x,r.z-P.z);r.person.g.visible=d<900;r.label.position.set(r.x,r.y+2.55,r.z);r.label.visible=d<260;
     if(r.rideIndex<0&&!r.passengerOf&&r.run&&!r.seated&&!r.fishing)animPerson(r.person,3.8,dt);
@@ -1778,10 +1776,10 @@ function mpUpdateRemote(dt){
   if(MP.passenger)mpUpdatePassengerPose();voiceUpdateVolumes();
 }
 function mpNearestDriver(){let best=null,bd=14;for(const [id,r] of MP.remote){if(r.rideIndex<0||!r.vehicle||!r.vehicleObj)continue;const d=Math.hypot(r.x-P.x,r.z-P.z);if(d<bd){best={id,r,d};bd=d;}}return best;}
-function mpJoinRemoteRide(){if(MP.passenger){mpLeaveRemoteRide();return;}const hit=mpNearestDriver();if(!hit){toast('Chưa có người chơi lái xe ở gần bạn.');return;}const base=vehicles[hit.r.rideIndex],seats=base?.seats||[];if(seats.length<2){toast('Phương tiện này không có ghế phụ.');return;}
+function mpJoinRemoteRide(){if(MP.passenger){mpLeaveRemoteRide();return;}const hit=mpNearestDriver();if(!hit){toast('Chưa có người chơi lái xe ở gần bạn.');return;}const base=mpRemoteVehicle(hit.r),seats=base?.seats||[];if(seats.length<2){toast('Phương tiện này không có ghế phụ.');return;}
   const used=new Set([...MP.remote.values()].filter(x=>x.passengerOf===hit.id).map(x=>x.seatIndex));let seat=1;while(seat<seats.length&&used.has(seat))seat++;if(seat>=seats.length){toast('Xe đã đủ chỗ ngồi.');return;}
   MP.passenger={driverId:hit.id,seatIndex:seat,vehicleIndex:hit.r.rideIndex};mpBroadcastEvent('group-action',{message:'đã lên xe cùng '+hit.r.name});if(player.g.parent)player.g.parent.remove(player.g);hit.r.vehicleObj.add(player.g);player.g.position.set(...seats[seat]);sitPose(player,base.type==='car'?-1.35:-.8);$('hud').hidden=false;$('vname').textContent='Đi cùng '+hit.r.name;$('vseat').textContent='Ghế '+(seat+1)+' · '+base.name;$('vhint').textContent='Đang ngồi cùng người chơi · nhấn F để xuống';$('btnExit').textContent='Xuống xe';toast('Đã lên xe cùng '+hit.r.name+'.');}
-function mpUpdatePassengerPose(){const ps=MP.passenger,driver=ps&&MP.remote.get(ps.driverId),base=driver&&vehicles[driver.rideIndex];if(!driver||!driver.vehicleObj||!base?.seats?.[ps.seatIndex]){mpLeaveRemoteRide(true);return;}if(player.g.parent!==driver.vehicleObj){if(player.g.parent)player.g.parent.remove(player.g);driver.vehicleObj.add(player.g);}player.g.position.set(...base.seats[ps.seatIndex]);player.g.rotation.set(0,0,0);player.g.updateWorldMatrix(true,false);const wp=new THREE.Vector3();player.g.getWorldPosition(wp);P.x=wp.x;P.y=wp.y;P.z=wp.z;P.face=driver.face;}
+function mpUpdatePassengerPose(){const ps=MP.passenger,driver=ps&&MP.remote.get(ps.driverId),base=driver&&mpRemoteVehicle(driver);if(!driver||!driver.vehicleObj||!base?.seats?.[ps.seatIndex]){mpLeaveRemoteRide(true);return;}if(player.g.parent!==driver.vehicleObj){if(player.g.parent)player.g.parent.remove(player.g);driver.vehicleObj.add(player.g);}player.g.position.set(...base.seats[ps.seatIndex]);player.g.rotation.set(0,0,0);player.g.updateWorldMatrix(true,false);const wp=new THREE.Vector3();player.g.getWorldPosition(wp);P.x=wp.x;P.y=wp.y;P.z=wp.z;P.face=driver.face;}
 function mpLeaveRemoteRide(silent=false){if(!MP.passenger)return;player.g.updateWorldMatrix(true,false);const wp=new THREE.Vector3();player.g.getWorldPosition(wp);if(player.g.parent)player.g.parent.remove(player.g);scene.add(player.g);MP.passenger=null;mpBroadcastEvent('group-action',{message:'đã xuống xe'});P.x=wp.x;P.y=wp.y;P.z=wp.z;P.vy=0;standPose(player);player.g.position.set(P.x,P.y,P.z);player.g.rotation.set(0,0,0);$('hud').hidden=true;if(!silent)toast('Bạn đã xuống xe.');}
 function mpBroadcastEvent(event,data={}){if(MP.socket?.readyState===WebSocket.OPEN)MP.socket.send(JSON.stringify({type:'event',event,data}));}
 function mpHandleEvent(m){if(m.from===MP.id)return;const who=MP.remote.get(m.from)?.name||'Một lữ khách';if(m.event==='fish-catch')toast(who+' vừa câu được '+String(m.data?.fish||'một con cá')+' · '+String(m.data?.kg||'?')+' kg');else if(m.event==='group-action')toast(who+' '+String(m.data?.message||'đang tham gia hoạt động'));}
@@ -2048,14 +2046,6 @@ function cloudHunt(){modeIdx=0;thickFog=false;$('btnFog').setAttribute('aria-pre
 SPOTS.unshift({id:'thuyta',name:'Nhà hàng Thủy Tạ',eyebrow:'Nhà hàng trên mặt hồ Xuân Hương',x:-245,z:-163,r:13,text:'Nhà hàng nổi trên hồ, bàn sát vách kính nhìn ra mặt nước. Đặc sản: lẩu gà lá é, atiso hầm, bánh căn, nem nướng, dâu tây.',actions:[{label:'Vào nhà hàng',fn:()=>enterLodge(THUYTA)}]});
 if(GH.length)SPOTS.push({id:'gh',name:'Vườn nhà kính',eyebrow:'Rau, hoa và dâu tây',x:GH[0].x,z:GH[0].z,r:45,text:'Những dãy nhà kính trắng phủ kín các sườn đồi là hình ảnh quen thuộc của Đà Lạt: trồng rau, dâu tây và hoa quanh năm.',actions:[{label:'Hái dâu tây',fn:()=>toast('Một rổ dâu tây đỏ mọng, hơi chua nhẹ.')}]});
 
-SPOTS.push(
-  {id:'bike-rental-npc',name:'Quầy thuê xe máy',eyebrow:'Nhân viên cho thuê xe',x:-424,z:-113,r:8,
-   text:'Chào bạn! Bên mình có xe tay ga phổ thông và mô tô thể thao. Hỏi giá, chọn xe rồi xác nhận thuê trước khi nhận chìa khóa nhé.',
-   actions:[{label:'Hỏi giá thuê xe máy',fn:()=>openRentalMenu('bike')}]},
-  {id:'car-rental-npc',name:'Quầy thuê ô tô',eyebrow:'Nhân viên cho thuê ô tô',x:377,z:218,r:9,
-   text:'Chào bạn! Bên mình có sedan, hatchback, MPV 7 chỗ và SUV camping. Bạn muốn xem bảng giá dòng nào?',
-   actions:[{label:'Hỏi giá thuê ô tô',fn:()=>openRentalMenu('car')}]}
-);
 let currentSpot=null,currentVeh=null,booked=null,bookSel=0,bookNights=1,bookLodge=null;
 const fmtVND=n=>n.toLocaleString('vi-VN')+'đ';
 function openBooking(L){mpBroadcastEvent('group-action',{message:'đang xem phòng tại '+L.name});unlock();bookLodge=L;bookSel=0;bookNights=1;$('bookKind').textContent=(L.kind==='hotel'?'Khách sạn':'Homestay')+' · tên hư cấu';$('bookTitle').textContent=L.name;
@@ -3015,61 +3005,46 @@ function startPoker(){
 }
 
 
-/* ---------- Rental fleet: NPC dialogue, prices and room-wide availability ---------- */
-function rentalTypeName(v){return v.type==='bike'?(v.kind==='sport'?'Mô tô thể thao':'Xe tay ga phổ thông'):v.name;}
-function mpApplyFleet(items){
-  MP.rentalOwners.clear();
-  for(const item of (items||[])){if(item&&item.vehicleId&&item.owner)MP.rentalOwners.set(item.vehicleId,item.owner);}
-  for(const v of vehicles){if(!v.rentalId)continue;const previous=v.rentalOwner||null;const owner=MP.rentalOwners.get(v.rentalId)||null;
-    if(previous&&!owner)resetRentalVehicle(v);
-    v.rentalOwner=owner;v.obj.visible=!owner||owner===MP.id;
-    if(owner===MP.id)MP.myRentalId=v.rentalId;
-    if(!owner&&MP.myRentalId===v.rentalId)MP.myRentalId=null;
-  }
+/* ---------- Rental fleet: direct hire + 60-second shared respawn ---------- */
+function fmtVND(n){return new Intl.NumberFormat('vi-VN').format(Number(n)||0)+' đ';}
+function rentalBase(id){return vehicles.find(v=>v.rentalId===id&&!v.isRentalInstance);}
+function ensureRentalInstance(data){
+  if(!data||!data.instanceId||vehicles.some(v=>v.rentalId===data.instanceId))return;
+  const base=rentalBase(data.baseId);if(!base)return;
+  const obj=base.obj.clone(true);obj.visible=true;obj.position.set(base.spawnX,Hdrive(base.spawnX,base.spawnZ),base.spawnZ);obj.rotation.set(0,base.spawnHeading,0);scene.add(obj);
+  const camp=obj.getObjectByName('camp-setup')||null;
+  const v={...base,rentalId:data.instanceId,baseRentalId:data.baseId,isRentalInstance:true,obj,x:base.spawnX,z:base.spawnZ,heading:base.spawnHeading,speed:0,pax:[],camp,campOn:false,rentalOwner:data.owner||null,rentPrice:base.rentPrice};
+  v.seats=(base.seats||[]).map(s=>[...s]);
+  obj.userData.camp=camp;obj.userData.pot=obj.getObjectByName('camp-pot');obj.userData.food=obj.getObjectByName('camp-food');obj.userData.tent=obj.getObjectByName('camp-tent')?base.obj.userData.tent:null;obj.userData.bed=obj.getObjectByName('camper-bed');obj.userData.chairs=base.obj.userData.chairs;
+  v.camp=camp;
+  if(camp)camp.visible=false;
+  vehicles.push(v);
 }
-function resetRentalVehicle(v){
-  if(!v||!v.rentalId)return;
-  v.x=v.spawnX;v.z=v.spawnZ;v.heading=v.spawnHeading;v.speed=0;v.campOn=false;
-  v.obj.position.set(v.spawnX,Hdrive(v.spawnX,v.spawnZ),v.spawnZ);v.obj.rotation.set(0,v.spawnHeading,0);
-  if(v.camp){v.camp.visible=false;}
-  v.obj.visible=true;v.rentalOwner=null;
+function endRentalInstance(instanceId){
+  const v=vehicles.find(x=>x.rentalId===instanceId&&x.isRentalInstance);if(!v)return;
+  if(ride===v)exitRide(true);
+  scene.remove(v.obj);v.obj.visible=false;v.rentalActive=false;
+  if(MP.myRentalId===instanceId)MP.myRentalId=null;
+}
+function mpApplyFleet(items,slots){
+  for(const item of (items||[]))ensureRentalInstance(item);
+  const busy=new Set((slots||[]).filter(x=>x&&x.busy).map(x=>x.vehicleId));
+  for(const v of vehicles){if(v.rentalId&&!v.isRentalInstance){v.obj.visible=!busy.has(v.rentalId);}}
+  for(const item of (items||[])){const v=vehicles.find(x=>x.rentalId===item.instanceId);if(v){v.rentalOwner=item.owner;v.rentalActive=true;}}
 }
 function requestRent(v){
-  if(!v||!v.rentalId)return;
-  if(MP.myRentalId){toast('Bạn đang thuê một phương tiện. Hãy trả xe trước khi thuê chiếc khác.');return;}
-  if(v.rentalOwner){toast('Xe này đã có người thuê. Hãy chọn chiếc khác.');return;}
-  if(MP.status!=='online'||MP.socket?.readyState!==WebSocket.OPEN){toast('Bạn cần kết nối vào phòng online để thuê xe và đồng bộ trạng thái với mọi người.');return;}
+  if(!v||!v.rentalId||v.isRentalInstance)return;
+  if(MP.myRentalId){toast('Bạn đang sử dụng một xe thuê. Hãy trả xe trước khi thuê xe khác.');return;}
+  if(v.obj.visible===false){toast('Xe này vừa được người khác thuê.');return;}
+  if(MP.status!=='online'||MP.socket?.readyState!==WebSocket.OPEN){toast('Bạn cần kết nối phòng online để thuê xe.');return;}
   if(MP.pendingRental){toast('Đang xử lý yêu cầu thuê xe…');return;}
   MP.pendingRental=v.rentalId;MP.socket.send(JSON.stringify({type:'rent-request',vehicleId:v.rentalId}));
-  toast('Đang xác nhận tình trạng xe với máy chủ…');
 }
-function returnRentalAtNpc(){
-  if(!MP.myRentalId){toast('Bạn hiện không có xe thuê cần trả.');return;}
-  const v=vehicles.find(x=>x.rentalId===MP.myRentalId);if(!v){MP.myRentalId=null;return;}
-  if(MP.status!=='online'||MP.socket?.readyState!==WebSocket.OPEN){toast('Kết nối lại phòng online để xác nhận trả xe.');return;}
-  MP.socket.send(JSON.stringify({type:'return-request',vehicleId:v.rentalId}));
-}
-function openRentalMenu(type){
-  const list=vehicles.filter(v=>v.rentalId&&(type==='bike'?v.type==='bike':v.type==='car'));
-  const title=type==='bike'?'Bảng giá thuê xe máy':'Bảng giá thuê ô tô';
-  const rows=list.map(v=>{
-    const unavailable=!!v.rentalOwner;
-    const detail=v.type==='bike'?(v.kind==='sport'?'Mô tô thể thao · động cơ mạnh hơn':'Xe tay ga phổ thông · dễ điều khiển'):
-      v.kind==='camper'?'SUV camping · có bếp, lều và bộ bàn ghế cắm trại':
-      v.kind==='mpv'?'MPV 7 chỗ · phù hợp đi nhóm/gia đình':
-      v.kind==='hatch'?'Hatchback · nhỏ gọn trong phố':'Sedan · êm ái, 4 chỗ';
-    return `<div class="rental-row" style="display:flex;justify-content:space-between;gap:12px;align-items:center;padding:10px;border:1px solid var(--line);border-radius:10px;opacity:${unavailable?.55:1}">
-      <div><b>${v.name}</b><div class="muted" style="font-size:12px">${detail}${unavailable?' · Đang có người thuê':''}</div><b style="color:var(--accent)">${fmtVND(v.rentPrice)}/lượt</b></div>
-      <button class="${unavailable?'':'primary'}" data-rent="${v.rentalId}" ${unavailable?'disabled':''}>${unavailable?'Đã thuê':'Thuê xe'}</button></div>`;
-  }).join('');
-  const returnLine=MP.myRentalId?.startsWith(type+'-')?'<p style="color:var(--accent)">Bạn đang thuê một xe. Có thể trả xe ngay tại quầy này.</p><button class="primary" id="returnRental">Trả xe đang thuê</button>':'';
-  panelOpen(title,`<p>Chọn phương tiện và xác nhận với nhân viên. Giá trong game tính theo một lượt thuê; xe đã có người thuê sẽ bị khóa trên toàn phòng.</p>${rows}${returnLine}`);
-  hotelPanel.querySelectorAll('[data-rent]').forEach(b=>b.onclick=()=>{
-    const v=vehicles.find(x=>x.rentalId===b.dataset.rent);if(!v)return;
-    if(!confirm('Xác nhận thuê '+v.name+' với giá '+fmtVND(v.rentPrice)+'?'))return;
-    closePanel();requestRent(v);
-  });
-  const rb=$('returnRental');if(rb)rb.onclick=()=>{closePanel();returnRentalAtNpc();};
+function requestReturnRental(v){
+  if(!v||!v.isRentalInstance||MP.myRentalId!==v.rentalId)return;
+  if(ride===v){toast('Hãy xuống xe trước khi trả.');return;}
+  if(MP.status!=='online'||MP.socket?.readyState!==WebSocket.OPEN){toast('Cần kết nối online để trả xe.');return;}
+  MP.socket.send(JSON.stringify({type:'return-request',instanceId:v.rentalId}));
 }
 
 function renderCard(s,extra){
@@ -3085,9 +3060,9 @@ function renderCard(s,extra){
 function vehCard(v){
   const map={bike:['Bãi xe cho thuê','Lên xe máy'],car:['Bãi ô tô cho thuê','Lên ô tô'],boat:[v.where||'Bến đạp vịt hồ Xuân Hương',v.board||'Lên thuyền đạp vịt']}[v.type],n=v.seats.length,wait=v.pax.length;
   const sp=Math.round(vspec(v).max*3.6/5)*5;let text=(v.type==='boat'?(v.desc||'Thuyền đạp chân, mái che xanh.')+(v.kind==='cano'?' Tối đa ~'+sp+' km/h.':''):'Tối đa ~'+sp+' km/h.')+' '+n+' chỗ: khi đang lái bấm R (hoặc “+ Người”) để rủ thêm người, T để cho xuống.'+(wait?' Đang có '+wait+' người chờ trên xe.':'');
-  const isRental=!!v.rentalId,owned=MP.myRentalId===v.rentalId;
-  const acts=[{label:isRental?(owned?'Lên xe đã thuê':'Hỏi NPC để thuê xe'):map[1],fn:()=>{if(isRental&&!owned){toast('Bạn cần đến gặp nhân viên thuê xe để xem giá và xác nhận thuê trước.');return;}enterRide(v);}}];
-  if(v.camp){text=v.campOn?'Trại đã dựng: mái che, bàn ghế xếp, bếp gas mini, đèn dây. Nấu món gì đó rồi ngồi ghế thưởng thức.':'Baga nóc, thùng đồ, đèn LED, mái che hông, nệm ngủ cốp sau. '+text;
+  const isRental=!!v.rentalId&&!v.isRentalInstance,owned=MP.myRentalId===v.rentalId;
+  const acts=isRental?[{label:'Thuê xe · '+fmtVND(v.rentPrice),fn:()=>requestRent(v)}]:v.isRentalInstance?(owned?[{label:'Lên xe đã thuê',fn:()=>enterRide(v)},{label:'Trả xe',alt:true,fn:()=>requestReturnRental(v)}]:[]):[{label:map[1],fn:()=>enterRide(v)}];
+  if(v.camp&&(!isRental||v.isRentalInstance)){text=v.campOn?'Trại đã dựng: mái che, bàn ghế xếp, bếp gas mini, đèn dây. Nấu món gì đó rồi ngồi ghế thưởng thức.':'Baga nóc, thùng đồ, đèn LED, mái che hông, nệm ngủ cốp sau. '+text;
     if(v.campOn)acts.push({label:'Thu trại',alt:true,fn:()=>{if(P.seated)standUp();v.campOn=false;v.camp.visible=false;toast('Đã thu trại gọn lên nóc xe.');vehCard(v);}},
       {label:'Nấu ăn',alt:true,fn:()=>cookCamp(v)},...(v.obj.userData.food.visible?[{label:'Ăn món vừa nấu',alt:true,fn:()=>eatCamp(v)}]:[]),
       P.seated?{label:'Đứng dậy',alt:true,fn:()=>{standUp();vehCard(v);}}:{label:'Ngồi ghế xếp',alt:true,fn:()=>sitCamp(v,0)});
@@ -3336,7 +3311,7 @@ function frame(){
       player.g.position.set(P.x,P.y-(P.seated?(P.seatOff||.07):0),P.z);player.g.rotation.y=P.face;
       if(P.lying){player.g.position.set(P.lying.x,P.lying.y,P.lying.z);player.g.rotation.set(-Math.PI/2,P.lying.yaw,0,'YXZ');}
       if(P.seated||P.lying){}else if(spd>.1&&P.y<=g+.05)animPerson(player,spd,dt);else{['legL','legR','armL','armR'].forEach(k=>player[k].rotation.x*=.8);}
-      let veh=null,vd=1e9;if(!P.lying){for(const v of vehicles){const d=Math.hypot(v.x-P.x,v.z-P.z);const lim=v.type==='boat'?13:v.type==='car'?(v.campOn?7:5):4.5;if(d<lim&&d<vd&&(!v.rentalId||MP.myRentalId===v.rentalId)){vd=d;veh=v;}}
+      let veh=null,vd=1e9;if(!P.lying){for(const v of vehicles){const d=Math.hypot(v.x-P.x,v.z-P.z);const lim=v.type==='boat'?13:v.type==='car'?(v.campOn?7:5):4.5;const score=d-(v.isRentalInstance&&MP.myRentalId===v.rentalId?100:0);if(d<lim&&score<vd&&(!v.rentalId||(!v.isRentalInstance&&v.obj.visible)||MP.myRentalId===v.rentalId)){vd=score;veh=v;}}
       if(veh!==currentVeh){currentVeh=veh;if(veh){currentSpot=null;vehCard(veh);}else{currentSpot=null;renderCard(null);}}}
       if(!indoor&&!veh&&!P.lying){const sn=outSeatSpot();if(sn){if(sn!==currentSpot){currentSpot=sn;renderCard(sn);}}else if(currentSpot&&currentSpot.isSeat){currentSpot=null;renderCard(null);}}
       if(indoor){updateInterior(dt);}else if(!veh&&!P.lying&&!(currentSpot&&currentSpot.isSeat)){let near=null;for(const sp of SPOTS){const ok=sp.check?sp.check():Math.hypot(P.x-sp.x,P.z-sp.z)<sp.r;if(ok){near=sp;break;}}if(near!==currentSpot){currentSpot=near;renderCard(near);}}
