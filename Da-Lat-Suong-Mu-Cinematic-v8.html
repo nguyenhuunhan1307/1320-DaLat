@@ -199,14 +199,14 @@ body.photo #top,body.photo #mapwrap,body.photo #card,body.photo #hint,body.photo
     <button class="tbtn" id="btnQ" aria-pressed="false">Đồ họa: Cao</button>
     <button class="tbtn" id="btnView" aria-pressed="false">Góc: thứ ba</button>
     <button class="tbtn" id="btnAlbum">Album</button>
-    <button class="tbtn" id="btnGo" aria-expanded="false">Đi đến…</button><button class="tbtn" id="btnWorldMap">Bản đồ</button><button class="tbtn" id="btnChat">Chat / Admin</button>
+    <button class="tbtn" id="btnGo" aria-expanded="false">Đi đến…</button><button class="tbtn" id="btnWorldMap">Bản đồ</button><button class="tbtn" id="btnChat">Chat</button>
   </div>
 </div>
 <div id="mpStatus" class="glass"><span class="dot"></span><strong id="mpState">Chưa kết nối</strong> · <span id="mpCount">0 người</span></div>
 <div id="mpRoster" class="glass" hidden></div>
 <div id="goto" class="glass" hidden></div>
 <div id="worldMap" class="glass" hidden><div class="wm-head"><b>BẢN ĐỒ ĐÀ LẠT</b><button id="wmClose">Đóng</button></div><p>Chọn địa điểm để di chuyển nhanh đến khu vực đó.</p><div id="wmPlaces"></div></div>
-<div id="gameChat" class="glass" hidden><div class="wm-head"><b>CHAT THẾ GIỚI</b><button id="chatClose">Đóng</button></div><div id="chatLog">Nhập <b>/1320vlog</b> rồi bấm Gửi để trở thành ADMIN.</div><div class="chat-entry"><input id="chatInput" maxlength="180" placeholder="Nhập tin nhắn hoặc lệnh…"><button id="chatSend">Gửi</button></div></div>
+<div id="gameChat" class="glass" hidden><div class="wm-head"><b>CHAT THẾ GIỚI</b><button id="chatClose">Đóng</button></div><div id="chatLog"></div><div class="chat-entry"><input id="chatInput" maxlength="180" placeholder="Nhập tin nhắn…"><button id="chatSend">Gửi</button></div></div>
 <div id="mapwrap" class="glass"><canvas id="minimap" width="300" height="300" aria-label="Bản đồ nhỏ"></canvas></div>
 <div id="card" class="glass" hidden></div>
 <div id="hud" class="glass" hidden><div class="spd"><span id="spd">0</span><small>km/h</small></div><div class="meta"><b id="vname">Xe máy</b><span id="vseat">Chở 1/2 người</span><span id="vhint">W ga · S phanh · A/D lái · F xuống</span></div><button class="act alt" id="btnPaxAdd" title="Rủ thêm người lên xe (R)">+ Người</button><button class="act alt" id="btnPaxDel" title="Cho một người xuống (T)">− Người</button><button class="act alt" id="btnExit">Xuống</button></div>
@@ -1708,11 +1708,9 @@ function mpConnect(){
   let ws;try{ws=new WebSocket(url);}catch(e){mpSetStatus('offline','Không tạo được kết nối');return;}MP.socket=ws;
   ws.addEventListener('open',()=>{mpSetStatus('connecting','Đang vào phòng…');ws.send(JSON.stringify({type:'join',name:MP.name,room:MP.room,jacket:pickJ,scarf:pickS}));});
   ws.addEventListener('message',ev=>{let m;try{m=JSON.parse(ev.data);}catch(e){return;}
-    if(m.type==='welcome'){MP.id=m.id;mpSetStatus('online','Đang online');mpApplyRoster(m.players||[]);if(m.world){applyWorldWeather(m.world.weather);if(m.world.npcsEnabled===false)applyNpcPopulation(false);}}
+    if(m.type==='welcome'){MP.id=m.id;mpSetStatus('online','Đang online');mpApplyRoster(m.players||[]);if(m.isAdmin)toast('Bạn đã vào game với quyền ADMIN.');if(m.world){applyWorldWeather(m.world.weather);if(m.world.npcsEnabled===false)applyNpcPopulation(false);}}
     else if(m.type==='players'){mpApplyRoster(m.players||[]);}
     else if(m.type==='world-state'){if(m.weather)applyWorldWeather(m.weather);if(typeof m.npcsEnabled==='boolean')applyNpcPopulation(m.npcsEnabled);}
-    else if(m.type==='admin-auth-result'){adminAuthenticated=!!m.ok;chatLine(m.message|| (m.ok?'ADMIN đã xác thực.':'Xác thực thất bại.'),true);}
-    else if(m.type==='admin-result'){chatLine(m.message||'Đã nhận lệnh admin.',true);}
     else if(m.type==='chat'){chatLine((m.name||'Lữ khách')+': '+(m.message||''));}
     else if(m.type==='notice'&&m.message)toast(m.message);
   });
@@ -1991,20 +1989,17 @@ function teleport(id){
   if(!T)return;if(CABLE.ride)return;if(P.lying)getUp();if(P.seated)standUp();if(ride)exitRide(true);if(fishing)stopFishing();if(indoor)leaveIndoor();P.x=T[0];P.z=T[1];P.y=groundAt(P.x,P.z);P.lastPier=pierAt(P.x,P.z);P.vy=0;cam.yaw=Math.atan2(P.x-T[2],P.z-T[3]);P.face=cam.yaw+Math.PI;
   cam.tx=P.x;cam.ty=P.y;cam.tz=P.z;cam.pitch=.3;cam.dist=Math.max(cam.dist,12);updateLOD(P.x,P.z,true);currentSpot=null;currentVeh=null;renderCard(null);
 }
-/* ---------- Living World: full destination map + chat/admin bridge ---------- */
+/* ---------- Living World: full destination map + world chat ---------- */
 const WORLD_PLACES=[
  ['Quảng trường Lâm Viên','plaza','Trung tâm thành phố'],['Hồ Xuân Hương','dock','Hồ và bến dạo bộ'],['Nhà thờ Con Gà','church','Kiến trúc biểu tượng'],['Ga Đà Lạt','station','Nhà ga cổ'],['Chợ Đà Lạt','market','Khu phố trung tâm'],['Quán cà phê bên hồ','cafe','Không gian nghỉ chân'],['Thiền viện Trúc Lâm','truclam','Không gian yên tĩnh'],['Thác Datanla','falls','Thác và rừng thông'],['Đồi chè Cầu Đất','caudat','Đồi chè và săn mây'],['Nhà máy trà','teafactory','Tham quan nhà máy'],['Rạp Hòa Bình','hoabinh','Khu trung tâm'],['Đồi Langbiang','langbiang','Cung đường núi'],['Điểm câu hồ Xuân Hương','fish','Hoạt động câu cá'],['Điểm câu hồ Tuyền Lâm','fishtl','Hoạt động câu cá'],['Khu homestay / khách sạn','plaza','Các nơi lưu trú']
 ];
 const worldMap=$('worldMap'),wmPlaces=$('wmPlaces');
 WORLD_PLACES.forEach(([name,id,desc])=>{const b=document.createElement('button');b.innerHTML='<b>'+name+'</b><small>'+desc+'</small>';b.onclick=()=>{if(id==='plaza')teleport('plaza');else teleport(id);worldMap.hidden=true;toast('Đang đến '+name+'.');};wmPlaces.appendChild(b);});
 $('btnWorldMap').onclick=()=>{worldMap.hidden=!worldMap.hidden;$('gameChat').hidden=true;};$('wmClose').onclick=()=>worldMap.hidden=true;
-const chatLog=$('chatLog'),chatInput=$('chatInput');let adminAuthenticated=false;
+const chatLog=$('chatLog'),chatInput=$('chatInput');
 function chatLine(msg,sys=false){const d=document.createElement('div');if(sys)d.className='sys';d.textContent=msg;chatLog.appendChild(d);chatLog.scrollTop=chatLog.scrollHeight;}
 function sendWorldMessage(type,data){if(MP.socket&&MP.socket.readyState===WebSocket.OPEN)MP.socket.send(JSON.stringify({type,...data}));else chatLine('Chưa kết nối máy chủ online.',true);}
-function submitChat(){const raw=chatInput.value.trim();if(!raw)return;chatInput.value='';chatLine((MP.name||'Bạn')+': '+raw);
- if(raw==='/1320vlog'){sendWorldMessage('admin-auth',{token:'/1320vlog'});return;}
- if(raw.startsWith('/')){if(!adminAuthenticated){chatLine('Bạn cần xác thực ADMIN trước.',true);return;}sendWorldMessage('admin-command',{command:raw});return;}
- sendWorldMessage('chat',{message:raw});}
+function submitChat(){const raw=chatInput.value.trim();if(!raw)return;chatInput.value='';sendWorldMessage('chat',{message:raw});}
 $('btnChat').onclick=()=>{ $('gameChat').hidden=!$('gameChat').hidden;worldMap.hidden=true;if(!$('gameChat').hidden)chatInput.focus();};$('chatClose').onclick=()=>$('gameChat').hidden=true;$('chatSend').onclick=submitChat;chatInput.addEventListener('keydown',e=>{if(e.key==='Enter')submitChat();});
 function applyWorldWeather(w){if(!w)return;if(Number.isInteger(w.mode)&&w.mode>=0&&w.mode<MODES.length)modeIdx=w.mode;if(typeof w.fog==='boolean')thickFog=w.fog;applyMode();$('btnFog').setAttribute('aria-pressed',String(thickFog));}
 function applyNpcPopulation(enabled){[...traffic.map(x=>x.o),...walkers.map(x=>x.p.g),...strollers.map(x=>x.p.g)].forEach(o=>o.visible=!!enabled);}
