@@ -1465,6 +1465,22 @@ say('Đang chuẩn bị xe và thuyền…');await nextFrame();
 const blackM=M(0x161616,{roughness:.6}),greyM=M(0x9a9a9a,{metalness:.7,roughness:.35}),seatM=M(0x1e1e1e,{roughness:.7});
 function wheel(r,w,parent,x,y,z,rim){const t=cyl(r,r,w,18,blackM,x,y,z,parent);t.rotation.z=Math.PI/2;cyl(r*.58,r*.58,w+.02,12,rim||greyM,x,y,z,parent).rotation.z=Math.PI/2;return t;}
 /* Xe máy tay ga: yên dài hai tầng, chở được 1 người phía sau (tổng 2 người) */
+
+function makeSportBike(color){
+  const g=new THREE.Group(),b=M(color,{roughness:.3,metalness:.35});
+  wheel(.31,.14,g,0,.31,.72);wheel(.31,.14,g,0,.31,-.72);
+  const tank=mesh(new THREE.SphereGeometry(1,16,12),b,0,.82,.08,g);tank.scale.set(.31,.27,.48);
+  box(.34,.16,.9,blackM,0,.63,-.36,g);
+  const fair=mesh(new THREE.SphereGeometry(1,16,12),b,0,.92,.55,g);fair.scale.set(.36,.48,.38);
+  const wind=new THREE.Mesh(new THREE.SphereGeometry(.28,12,8),carGlass);wind.scale.set(.8,.6,.15);wind.position.set(0,1.28,.66);g.add(wind);
+  const fork=cyl(.035,.035,.9,8,greyM,0,.72,.65,g);fork.rotation.x=-.28;
+  const bar=cyl(.025,.025,.72,8,blackM,0,1.24,.58,g);bar.rotation.z=Math.PI/2;
+  box(.18,.1,.08,headMat,0,1.12,.82,g);box(.28,.08,.08,tailMat,0,.83,-.9,g);
+  box(.32,.1,.55,seatM,0,1.0,-.48,g);
+  for(const s of[-1,1]){const exhaust=cyl(.055,.07,.5,8,greyM,s*.23,.48,-.58,g);exhaust.rotation.x=Math.PI/2;}
+  return g;
+}
+
 function makeBike(color){
   const g=new THREE.Group(),b=M(color,{roughness:.35,metalness:.2});
   wheel(.28,.12,g,0,.28,.68);wheel(.28,.12,g,0,.28,-.66);
@@ -1638,11 +1654,16 @@ function kiosk(x,z,rot,title,sub,color){
 (function rentals(){
   const bx=-420,bz=-118;kiosk(bx,bz,Math.PI/2,'Thuê xe máy','Xe tay ga · lái được',0xb8322a);
   const bikeCols=[0xc8302a,0xf2f2f2,0x2a52b8,0x1d1d1d,0x2f8a57];
-  for(let i=0;i<5;i++){const x=bx+7,z=bz-6+i*3,o=makeBike(bikeCols[i]);o.position.set(x,Hdrive(x,z),z);o.rotation.y=Math.PI/2;scene.add(o);vehicles.push({type:'bike',obj:o,x,z,heading:Math.PI/2,speed:0,name:'Xe máy tay ga',seats:[[0,.42,-.1],[0,.48,-.62]],pax:[],paxSeed:i});}
+  for(let i=0;i<5;i++){const x=bx+7,z=bz-6+i*3,isSport=i>=3,o=isSport?makeSportBike(bikeCols[i]):makeBike(bikeCols[i]);o.position.set(x,Hdrive(x,z),z);o.rotation.y=Math.PI/2;scene.add(o);vehicles.push({type:'bike',kind:isSport?'sport':'scooter',rentalId:'bike-'+i,spawnX:x,spawnZ:z,spawnHeading:Math.PI/2,obj:o,x,z,heading:Math.PI/2,speed:0,name:isSport?'Mô tô thể thao':'Xe tay ga phổ thông',seats:[[0,.42,-.1],[0,.48,-.62]],pax:[],paxSeed:i,rentPrice:isSport?220000:90000});}
   const cx=372,cz=212;kiosk(cx,cz,-Math.PI/2,'Thuê ô tô','Tự lái · lái được',0x2a52b8);
   const CARS=[['sedan',0xb0281f],['hatch',0x8c939a],['sedan',0xf2f2f2],['mpv',0x23324a],['camper',0xf3f3f0,'49A-CAMP']];
   CARS.forEach(([kind,col,pl],i)=>{const K=CAR_KINDS[kind],x=cx-10,z=cz-11+i*5.5+(kind==='camper'?3.5:0),o=makeCar(col,kind,pl);o.position.set(x,Hdrive(x,z),z);o.rotation.y=-Math.PI/2;scene.add(o);
-    vehicles.push({type:'car',kind,obj:o,x,z,heading:-Math.PI/2,speed:0,name:K.name,seats:K.seats.map(s=>[s[0],o.userData.seatY,s[1]]),pax:[],paxSeed:i,spec:K.spec,L:K.L,W:K.W,camp:o.userData.camp||null,campOn:false});});
+    const price={sedan:320000,hatch:280000,mpv:480000,camper:1200000}[kind];
+    vehicles.push({type:'car',kind,rentalId:'car-'+i,spawnX:x,spawnZ:z,spawnHeading:-Math.PI/2,obj:o,x,z,heading:-Math.PI/2,speed:0,name:K.name,seats:K.seats.map(s=>[s[0],o.userData.seatY,s[1]]),pax:[],paxSeed:i,spec:K.spec,L:K.L,W:K.W,camp:o.userData.camp||null,campOn:false,rentPrice:price});});
+  const bikeClerk=makePerson({jacket:0x8a3b2f,scarf:0xf2b829});bikeClerk.g.position.set(bx-4,H(bx-4,bz+5),bz+5);bikeClerk.g.rotation.y=Math.PI;scene.add(bikeClerk.g);
+  addLabel('Nhân viên thuê xe máy','Đến hỏi giá và chọn xe',bx-4,H(bx-4,bz+5)+2.2,bz+5,.8,55);
+  const carClerk=makePerson({jacket:0x2f4a6b,scarf:0xf4f1e6});carClerk.g.position.set(cx+5,H(cx+5,cz+6),cz+6);carClerk.g.rotation.y=Math.PI;scene.add(carClerk.g);
+  addLabel('Nhân viên thuê ô tô','Đến hỏi giá và chọn xe',cx+5,H(cx+5,cz+6)+2.2,cz+6,.8,55);
   const dx=60,dz=111;const y=xh.level;const dock=new THREE.Group();dock.position.set(dx,y,dz);scene.add(dock);
   box(46,.4,3.2,M(0x8a6a4a),0,.75,4.5,dock);for(let k=-22;k<=22;k+=4)cyl(.12,.12,2.4,6,M(0x5a4636),k,-.3,5.9,dock);
   for(let k=-22;k<=22;k+=2.2){cyl(.04,.04,1,5,M(0xeeeeee),k,1.4,6,dock);}box(46,.06,.06,M(0xeeeeee),0,1.9,6,dock);
@@ -1696,8 +1717,8 @@ const player=makePerson({jacket:JACKETS[0],scarf:SCARVES[0]});scene.add(player.g
 const P={x:PLAZA.x-62,z:PLAZA.z+26,y:0,vy:0,face:Math.PI,run:false};P.y=H(P.x,P.z);
 let nameLabel=null,ride=null,started=false;
 
-/* ---------- Multiplayer v9: shared players, vehicles, passengers & activities ---------- */
-const MP={socket:null,id:null,room:'dalat',name:'Lữ khách',status:'offline',lastSend:0,lastRoster:0,remote:new Map(),reconnect:0,manualClose:false,voiceStream:null,voiceEnabled:false,micMuted:false,speakerEnabled:true,peers:new Map(),audioEls:new Map(),iceQueues:new Map(),passenger:null,mutedPeers:new Set(),voiceContext:null,voiceAnalyser:null,voiceData:null,talking:false,voiceRAF:0};
+/* ---------- Multiplayer v10: shared players, vehicles, passengers & activities ---------- */
+const MP={socket:null,id:null,room:'dalat',name:'Lữ khách',status:'offline',lastSend:0,lastRoster:0,remote:new Map(),reconnect:0,manualClose:false,voiceStream:null,voiceEnabled:false,micMuted:false,speakerEnabled:true,peers:new Map(),audioEls:new Map(),iceQueues:new Map(),passenger:null,mutedPeers:new Set(),voiceContext:null,voiceAnalyser:null,voiceData:null,talking:false,voiceRAF:0,rentalOwners:new Map(),myRentalId:null,pendingRental:null};
 const mpStatus=$('mpStatus'),mpState=$('mpState'),mpCount=$('mpCount'),mpRoster=$('mpRoster');
 function mpSetStatus(state,message){MP.status=state;mpStatus.classList.toggle('online',state==='online');mpStatus.classList.toggle('connecting',state==='connecting');mpState.textContent=message;}
 function mpServerUrl(){const q=new URLSearchParams(location.search).get('server');if(q)return q;if(['localhost','127.0.0.1'].includes(location.hostname))return 'ws://localhost:8080/ws';return 'wss://one320-dalat.onrender.com/ws';}
@@ -1708,8 +1729,11 @@ function mpConnect(){
   MP.manualClose=false;mpSetStatus('connecting','Đang kết nối…');let ws;try{ws=new WebSocket(url);}catch(e){mpSetStatus('offline','Không tạo được kết nối');return;}MP.socket=ws;
   ws.addEventListener('open',()=>{mpSetStatus('connecting','Đang vào phòng…');ws.send(JSON.stringify({type:'join',name:MP.name,room:MP.room,jacket:pickJ,scarf:pickS}));});
   ws.addEventListener('message',ev=>{let m;try{m=JSON.parse(ev.data);}catch(e){return;}
-    if(m.type==='welcome'){MP.id=m.id;mpSetStatus('online','Đang online');mpApplyRoster(m.players||[]);}
+    if(m.type==='welcome'){MP.id=m.id;mpSetStatus('online','Đang online');mpApplyRoster(m.players||[]);mpApplyFleet(m.rentals||[]);}
     else if(m.type==='players')mpApplyRoster(m.players||[]);
+    else if(m.type==='fleet')mpApplyFleet(m.rentals||[]);
+    else if(m.type==='rent-result'){if(MP.pendingRental===m.vehicleId)MP.pendingRental=null;if(m.ok){MP.myRentalId=m.vehicleId;const v=vehicles.find(x=>x.rentalId===m.vehicleId);if(v){enterRide(v);toast('Đã xác nhận thuê '+v.name+' · '+fmtVND(v.rentPrice)+'.');}}else toast(m.message||'Không thể thuê xe lúc này.');}
+    else if(m.type==='return-result'){if(m.ok){MP.myRentalId=null;const v=vehicles.find(x=>x.rentalId===m.vehicleId);if(v)resetRentalVehicle(v);toast('Đã trả xe. Phương tiện đã trở lại bãi và mọi người đều nhìn thấy.');}else toast(m.message||'Không thể trả xe lúc này.');}
     else if(m.type==='notice'&&m.message){toast(m.message);if(String(m.message).includes('Ghế này'))mpLeaveRemoteRide(true);}
     else if(m.type==='rtc-signal')voiceHandleSignal(m.from,m.data);
     else if(m.type==='event')mpHandleEvent(m);
@@ -1737,7 +1761,7 @@ function mpSendState(dt){
 function mpUpdateRemote(dt){
   // First pass: interpolate each remote driver's own vehicle clone. Never move the local rental vehicle.
   for(const [id,r] of MP.remote){if(!r.target)continue;const t=1-Math.exp(-dt*12);r.x=lerp(r.x,r.target.x,t);r.y=lerp(r.y,r.target.y,t);r.z=lerp(r.z,r.target.z,t);let a=Math.atan2(Math.sin(r.target.face-r.face),Math.cos(r.target.face-r.face));r.face+=a*t;
-    if(r.rideIndex>=0&&r.vehicle&&vehicles[r.rideIndex]){const base=vehicles[r.rideIndex];if(!r.vehicleObj||r.vehicleBase!==r.rideIndex){if(r.vehicleObj)scene.remove(r.vehicleObj);r.vehicleObj=base.obj.clone(true);r.vehicleBase=r.rideIndex;scene.add(r.vehicleObj);}
+    if(r.rideIndex>=0&&r.vehicle&&vehicles[r.rideIndex]){const base=vehicles[r.rideIndex];if(!r.vehicleObj||r.vehicleBase!==r.rideIndex){if(r.vehicleObj)scene.remove(r.vehicleObj);r.vehicleObj=base.obj.clone(true);r.vehicleObj.visible=true;r.vehicleBase=r.rideIndex;scene.add(r.vehicleObj);}
       const q=r.vehicle;r.vehicleObj.position.set(lerp(r.vehicleObj.position.x,Number(q.x)||0,t),Number(q.y)||base.obj.position.y,lerp(r.vehicleObj.position.z,Number(q.z)||0,t));r.vehicleObj.rotation.set(Number(q.pitch)||0,r.vehicleObj.rotation.y+Math.atan2(Math.sin((Number(q.heading)||0)-r.vehicleObj.rotation.y),Math.cos((Number(q.heading)||0)-r.vehicleObj.rotation.y))*t,Number(q.roll)||0,'YXZ');const campMesh=r.vehicleObj.getObjectByName('camp-setup');if(campMesh)campMesh.visible=!!q.campOn;
     }else if(r.vehicleObj){if(MP.passenger?.driverId===id)mpLeaveRemoteRide(true);if(r.person.g.parent===r.vehicleObj)scene.add(r.person.g);scene.remove(r.vehicleObj);r.vehicleObj=null;r.vehicleBase=-1;}
   }
@@ -2023,6 +2047,15 @@ function outdoorMenu(title,items){panelOpen(title,`<p>Chọn món, phục vụ m
 function cloudHunt(){modeIdx=0;thickFog=false;$('btnFog').setAttribute('aria-pressed','false');applyMode();cam.dist=Math.max(cam.dist,26);cam.pitch=.1;cam.yaw=-Math.PI*.75;cam.lastDrag=clockT;toast('Bình minh trên đồi chè: biển mây trắng xóa phủ kín thung lũng phía dưới.');}
 SPOTS.unshift({id:'thuyta',name:'Nhà hàng Thủy Tạ',eyebrow:'Nhà hàng trên mặt hồ Xuân Hương',x:-245,z:-163,r:13,text:'Nhà hàng nổi trên hồ, bàn sát vách kính nhìn ra mặt nước. Đặc sản: lẩu gà lá é, atiso hầm, bánh căn, nem nướng, dâu tây.',actions:[{label:'Vào nhà hàng',fn:()=>enterLodge(THUYTA)}]});
 if(GH.length)SPOTS.push({id:'gh',name:'Vườn nhà kính',eyebrow:'Rau, hoa và dâu tây',x:GH[0].x,z:GH[0].z,r:45,text:'Những dãy nhà kính trắng phủ kín các sườn đồi là hình ảnh quen thuộc của Đà Lạt: trồng rau, dâu tây và hoa quanh năm.',actions:[{label:'Hái dâu tây',fn:()=>toast('Một rổ dâu tây đỏ mọng, hơi chua nhẹ.')}]});
+
+SPOTS.push(
+  {id:'bike-rental-npc',name:'Quầy thuê xe máy',eyebrow:'Nhân viên cho thuê xe',x:-424,z:-113,r:8,
+   text:'Chào bạn! Bên mình có xe tay ga phổ thông và mô tô thể thao. Hỏi giá, chọn xe rồi xác nhận thuê trước khi nhận chìa khóa nhé.',
+   actions:[{label:'Hỏi giá thuê xe máy',fn:()=>openRentalMenu('bike')}]},
+  {id:'car-rental-npc',name:'Quầy thuê ô tô',eyebrow:'Nhân viên cho thuê ô tô',x:377,z:218,r:9,
+   text:'Chào bạn! Bên mình có sedan, hatchback, MPV 7 chỗ và SUV camping. Bạn muốn xem bảng giá dòng nào?',
+   actions:[{label:'Hỏi giá thuê ô tô',fn:()=>openRentalMenu('car')}]}
+);
 let currentSpot=null,currentVeh=null,booked=null,bookSel=0,bookNights=1,bookLodge=null;
 const fmtVND=n=>n.toLocaleString('vi-VN')+'đ';
 function openBooking(L){mpBroadcastEvent('group-action',{message:'đang xem phòng tại '+L.name});unlock();bookLodge=L;bookSel=0;bookNights=1;$('bookKind').textContent=(L.kind==='hotel'?'Khách sạn':'Homestay')+' · tên hư cấu';$('bookTitle').textContent=L.name;
@@ -2981,6 +3014,64 @@ function startPoker(){
  render('Bạn nhận được 2 lá bài riêng. Bắt đầu vòng cược pre-flop.');
 }
 
+
+/* ---------- Rental fleet: NPC dialogue, prices and room-wide availability ---------- */
+function rentalTypeName(v){return v.type==='bike'?(v.kind==='sport'?'Mô tô thể thao':'Xe tay ga phổ thông'):v.name;}
+function mpApplyFleet(items){
+  MP.rentalOwners.clear();
+  for(const item of (items||[])){if(item&&item.vehicleId&&item.owner)MP.rentalOwners.set(item.vehicleId,item.owner);}
+  for(const v of vehicles){if(!v.rentalId)continue;const previous=v.rentalOwner||null;const owner=MP.rentalOwners.get(v.rentalId)||null;
+    if(previous&&!owner)resetRentalVehicle(v);
+    v.rentalOwner=owner;v.obj.visible=!owner||owner===MP.id;
+    if(owner===MP.id)MP.myRentalId=v.rentalId;
+    if(!owner&&MP.myRentalId===v.rentalId)MP.myRentalId=null;
+  }
+}
+function resetRentalVehicle(v){
+  if(!v||!v.rentalId)return;
+  v.x=v.spawnX;v.z=v.spawnZ;v.heading=v.spawnHeading;v.speed=0;v.campOn=false;
+  v.obj.position.set(v.spawnX,Hdrive(v.spawnX,v.spawnZ),v.spawnZ);v.obj.rotation.set(0,v.spawnHeading,0);
+  if(v.camp){v.camp.visible=false;}
+  v.obj.visible=true;v.rentalOwner=null;
+}
+function requestRent(v){
+  if(!v||!v.rentalId)return;
+  if(MP.myRentalId){toast('Bạn đang thuê một phương tiện. Hãy trả xe trước khi thuê chiếc khác.');return;}
+  if(v.rentalOwner){toast('Xe này đã có người thuê. Hãy chọn chiếc khác.');return;}
+  if(MP.status!=='online'||MP.socket?.readyState!==WebSocket.OPEN){toast('Bạn cần kết nối vào phòng online để thuê xe và đồng bộ trạng thái với mọi người.');return;}
+  if(MP.pendingRental){toast('Đang xử lý yêu cầu thuê xe…');return;}
+  MP.pendingRental=v.rentalId;MP.socket.send(JSON.stringify({type:'rent-request',vehicleId:v.rentalId}));
+  toast('Đang xác nhận tình trạng xe với máy chủ…');
+}
+function returnRentalAtNpc(){
+  if(!MP.myRentalId){toast('Bạn hiện không có xe thuê cần trả.');return;}
+  const v=vehicles.find(x=>x.rentalId===MP.myRentalId);if(!v){MP.myRentalId=null;return;}
+  if(MP.status!=='online'||MP.socket?.readyState!==WebSocket.OPEN){toast('Kết nối lại phòng online để xác nhận trả xe.');return;}
+  MP.socket.send(JSON.stringify({type:'return-request',vehicleId:v.rentalId}));
+}
+function openRentalMenu(type){
+  const list=vehicles.filter(v=>v.rentalId&&(type==='bike'?v.type==='bike':v.type==='car'));
+  const title=type==='bike'?'Bảng giá thuê xe máy':'Bảng giá thuê ô tô';
+  const rows=list.map(v=>{
+    const unavailable=!!v.rentalOwner;
+    const detail=v.type==='bike'?(v.kind==='sport'?'Mô tô thể thao · động cơ mạnh hơn':'Xe tay ga phổ thông · dễ điều khiển'):
+      v.kind==='camper'?'SUV camping · có bếp, lều và bộ bàn ghế cắm trại':
+      v.kind==='mpv'?'MPV 7 chỗ · phù hợp đi nhóm/gia đình':
+      v.kind==='hatch'?'Hatchback · nhỏ gọn trong phố':'Sedan · êm ái, 4 chỗ';
+    return `<div class="rental-row" style="display:flex;justify-content:space-between;gap:12px;align-items:center;padding:10px;border:1px solid var(--line);border-radius:10px;opacity:${unavailable?.55:1}">
+      <div><b>${v.name}</b><div class="muted" style="font-size:12px">${detail}${unavailable?' · Đang có người thuê':''}</div><b style="color:var(--accent)">${fmtVND(v.rentPrice)}/lượt</b></div>
+      <button class="${unavailable?'':'primary'}" data-rent="${v.rentalId}" ${unavailable?'disabled':''}>${unavailable?'Đã thuê':'Thuê xe'}</button></div>`;
+  }).join('');
+  const returnLine=MP.myRentalId?.startsWith(type+'-')?'<p style="color:var(--accent)">Bạn đang thuê một xe. Có thể trả xe ngay tại quầy này.</p><button class="primary" id="returnRental">Trả xe đang thuê</button>':'';
+  panelOpen(title,`<p>Chọn phương tiện và xác nhận với nhân viên. Giá trong game tính theo một lượt thuê; xe đã có người thuê sẽ bị khóa trên toàn phòng.</p>${rows}${returnLine}`);
+  hotelPanel.querySelectorAll('[data-rent]').forEach(b=>b.onclick=()=>{
+    const v=vehicles.find(x=>x.rentalId===b.dataset.rent);if(!v)return;
+    if(!confirm('Xác nhận thuê '+v.name+' với giá '+fmtVND(v.rentPrice)+'?'))return;
+    closePanel();requestRent(v);
+  });
+  const rb=$('returnRental');if(rb)rb.onclick=()=>{closePanel();returnRentalAtNpc();};
+}
+
 function renderCard(s,extra){
   const c=$('card');if(!s){c.hidden=true;return;}
   c.hidden=false;c.innerHTML='';
@@ -2994,7 +3085,8 @@ function renderCard(s,extra){
 function vehCard(v){
   const map={bike:['Bãi xe cho thuê','Lên xe máy'],car:['Bãi ô tô cho thuê','Lên ô tô'],boat:[v.where||'Bến đạp vịt hồ Xuân Hương',v.board||'Lên thuyền đạp vịt']}[v.type],n=v.seats.length,wait=v.pax.length;
   const sp=Math.round(vspec(v).max*3.6/5)*5;let text=(v.type==='boat'?(v.desc||'Thuyền đạp chân, mái che xanh.')+(v.kind==='cano'?' Tối đa ~'+sp+' km/h.':''):'Tối đa ~'+sp+' km/h.')+' '+n+' chỗ: khi đang lái bấm R (hoặc “+ Người”) để rủ thêm người, T để cho xuống.'+(wait?' Đang có '+wait+' người chờ trên xe.':'');
-  const acts=[{label:map[1],fn:()=>enterRide(v)}];
+  const isRental=!!v.rentalId,owned=MP.myRentalId===v.rentalId;
+  const acts=[{label:isRental?(owned?'Lên xe đã thuê':'Hỏi NPC để thuê xe'):map[1],fn:()=>{if(isRental&&!owned){toast('Bạn cần đến gặp nhân viên thuê xe để xem giá và xác nhận thuê trước.');return;}enterRide(v);}}];
   if(v.camp){text=v.campOn?'Trại đã dựng: mái che, bàn ghế xếp, bếp gas mini, đèn dây. Nấu món gì đó rồi ngồi ghế thưởng thức.':'Baga nóc, thùng đồ, đèn LED, mái che hông, nệm ngủ cốp sau. '+text;
     if(v.campOn)acts.push({label:'Thu trại',alt:true,fn:()=>{if(P.seated)standUp();v.campOn=false;v.camp.visible=false;toast('Đã thu trại gọn lên nóc xe.');vehCard(v);}},
       {label:'Nấu ăn',alt:true,fn:()=>cookCamp(v)},...(v.obj.userData.food.visible?[{label:'Ăn món vừa nấu',alt:true,fn:()=>eatCamp(v)}]:[]),
@@ -3244,7 +3336,7 @@ function frame(){
       player.g.position.set(P.x,P.y-(P.seated?(P.seatOff||.07):0),P.z);player.g.rotation.y=P.face;
       if(P.lying){player.g.position.set(P.lying.x,P.lying.y,P.lying.z);player.g.rotation.set(-Math.PI/2,P.lying.yaw,0,'YXZ');}
       if(P.seated||P.lying){}else if(spd>.1&&P.y<=g+.05)animPerson(player,spd,dt);else{['legL','legR','armL','armR'].forEach(k=>player[k].rotation.x*=.8);}
-      let veh=null,vd=1e9;if(!P.lying){for(const v of vehicles){const d=Math.hypot(v.x-P.x,v.z-P.z);const lim=v.type==='boat'?13:v.type==='car'?(v.campOn?7:5):4.5;if(d<lim&&d<vd){vd=d;veh=v;}}
+      let veh=null,vd=1e9;if(!P.lying){for(const v of vehicles){const d=Math.hypot(v.x-P.x,v.z-P.z);const lim=v.type==='boat'?13:v.type==='car'?(v.campOn?7:5):4.5;if(d<lim&&d<vd&&(!v.rentalId||MP.myRentalId===v.rentalId)){vd=d;veh=v;}}
       if(veh!==currentVeh){currentVeh=veh;if(veh){currentSpot=null;vehCard(veh);}else{currentSpot=null;renderCard(null);}}}
       if(!indoor&&!veh&&!P.lying){const sn=outSeatSpot();if(sn){if(sn!==currentSpot){currentSpot=sn;renderCard(sn);}}else if(currentSpot&&currentSpot.isSeat){currentSpot=null;renderCard(null);}}
       if(indoor){updateInterior(dt);}else if(!veh&&!P.lying&&!(currentSpot&&currentSpot.isSeat)){let near=null;for(const sp of SPOTS){const ok=sp.check?sp.check():Math.hypot(P.x-sp.x,P.z-sp.z)<sp.r;if(ok){near=sp;break;}}if(near!==currentSpot){currentSpot=near;renderCard(near);}}
