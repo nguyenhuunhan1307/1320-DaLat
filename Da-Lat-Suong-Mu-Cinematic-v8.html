@@ -206,7 +206,7 @@ body.photo #top,body.photo #mapwrap,body.photo #card,body.photo #hint,body.photo
 <div id="mpRoster" class="glass" hidden></div>
 <div id="goto" class="glass" hidden></div>
 <div id="worldMap" class="glass" hidden><div class="wm-head"><b>BẢN ĐỒ ĐÀ LẠT</b><button id="wmClose">Đóng</button></div><p>Chọn địa điểm để di chuyển nhanh đến khu vực đó.</p><div id="wmPlaces"></div></div>
-<div id="gameChat" class="glass" hidden><div class="wm-head"><b>CHAT THẾ GIỚI</b><button id="chatClose">Đóng</button></div><div id="chatLog">Nhập <b>/1320vlog</b> để kích hoạt quyền ADMIN. Máy chủ cần cấu hình ADMIN_TOKEN=1320vlog.</div><div class="chat-entry"><input id="chatInput" maxlength="180" placeholder="Nhập tin nhắn hoặc lệnh…"><button id="chatSend">Gửi</button></div></div>
+<div id="gameChat" class="glass" hidden><div class="wm-head"><b>CHAT THẾ GIỚI</b><button id="chatClose">Đóng</button></div><div id="chatLog">Nhập <b>/1320vlog</b> rồi bấm Gửi để trở thành ADMIN.</div><div class="chat-entry"><input id="chatInput" maxlength="180" placeholder="Nhập tin nhắn hoặc lệnh…"><button id="chatSend">Gửi</button></div></div>
 <div id="mapwrap" class="glass"><canvas id="minimap" width="300" height="300" aria-label="Bản đồ nhỏ"></canvas></div>
 <div id="card" class="glass" hidden></div>
 <div id="hud" class="glass" hidden><div class="spd"><span id="spd">0</span><small>km/h</small></div><div class="meta"><b id="vname">Xe máy</b><span id="vseat">Chở 1/2 người</span><span id="vhint">W ga · S phanh · A/D lái · F xuống</span></div><button class="act alt" id="btnPaxAdd" title="Rủ thêm người lên xe (R)">+ Người</button><button class="act alt" id="btnPaxDel" title="Cho một người xuống (T)">− Người</button><button class="act alt" id="btnExit">Xuống</button></div>
@@ -2002,7 +2002,7 @@ const chatLog=$('chatLog'),chatInput=$('chatInput');let adminAuthenticated=false
 function chatLine(msg,sys=false){const d=document.createElement('div');if(sys)d.className='sys';d.textContent=msg;chatLog.appendChild(d);chatLog.scrollTop=chatLog.scrollHeight;}
 function sendWorldMessage(type,data){if(MP.socket&&MP.socket.readyState===WebSocket.OPEN)MP.socket.send(JSON.stringify({type,...data}));else chatLine('Chưa kết nối máy chủ online.',true);}
 function submitChat(){const raw=chatInput.value.trim();if(!raw)return;chatInput.value='';chatLine((MP.name||'Bạn')+': '+raw);
- if(raw==='/1320vlog'){sendWorldMessage('admin-auth',{token:'1320vlog'});return;}
+ if(raw==='/1320vlog'){sendWorldMessage('admin-auth',{token:'/1320vlog'});return;}
  if(raw.startsWith('/')){if(!adminAuthenticated){chatLine('Bạn cần xác thực ADMIN trước.',true);return;}sendWorldMessage('admin-command',{command:raw});return;}
  sendWorldMessage('chat',{message:raw});}
 $('btnChat').onclick=()=>{ $('gameChat').hidden=!$('gameChat').hidden;worldMap.hidden=true;if(!$('gameChat').hidden)chatInput.focus();};$('chatClose').onclick=()=>$('gameChat').hidden=true;$('chatSend').onclick=submitChat;chatInput.addEventListener('keydown',e=>{if(e.key==='Enter')submitChat();});
