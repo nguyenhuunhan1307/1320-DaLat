@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Đà Lạt Sương Mù — Cinematic 3D Edition v10.0.3 Tea Factory & Cinema</title>
+<title>Đà Lạt Sương Mù — Cinematic 3D Edition v10.0.5 Homestay & Interior Update</title>
 <meta name="theme-color" content="#18231f">
 <meta name="description" content="Khám phá Đà Lạt 3D thế giới mở với góc nhìn thứ ba, ánh sáng cinematic, sương mù và các địa danh đặc trưng.">
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -314,7 +314,7 @@ addEventListener('resize',resize);resize();
 scene.fog=new THREE.Fog(0xc0c9cc,30,650);
 function hallPosterMaterial(){if(!HALL_POSTER_CANVAS){HALL_POSTER_CANVAS=document.createElement('canvas');HALL_POSTER_CANVAS.width=1024;HALL_POSTER_CANVAS.height=576;const c=HALL_POSTER_CANVAS.getContext('2d');c.fillStyle='#080b10';c.fillRect(0,0,1024,576);c.strokeStyle='#c69a55';c.lineWidth=16;c.strokeRect(22,22,980,532);c.fillStyle='#e7c78a';c.textAlign='center';c.font='700 58px sans-serif';c.fillText('RẠP HÒA BÌNH',512,210);c.font='500 34px sans-serif';c.fillText('MÀN HÌNH CHỜ NỘI DUNG',512,292);c.font='400 24px sans-serif';c.fillStyle='#b9c4d2';c.fillText('Đến quầy điều khiển để gắn link video',512,360);HALL_POSTER_TEXTURE=new THREE.CanvasTexture(HALL_POSTER_CANVAS);HALL_POSTER_TEXTURE.colorSpace=THREE.SRGBColorSpace;}return new THREE.MeshStandardMaterial({map:HALL_POSTER_TEXTURE,emissiveMap:HALL_POSTER_TEXTURE,emissive:0xffffff,emissiveIntensity:.85,roughness:.35,metalness:.12});}
 function updateHallPoster(playing){if(!HALL_POSTER_CANVAS)return;const c=HALL_POSTER_CANVAS.getContext('2d');c.fillStyle='#080b10';c.fillRect(0,0,1024,576);c.strokeStyle='#c69a55';c.lineWidth=16;c.strokeRect(22,22,980,532);c.textAlign='center';c.fillStyle='#e7c78a';c.font='700 58px sans-serif';c.fillText('RẠP HÒA BÌNH',512,190);c.font='700 42px sans-serif';c.fillStyle=playing?'#9fe2b1':'#e8d5ad';c.fillText(playing?'ĐANG PHÁT NỘI DUNG':'MÀN HÌNH CHỜ NỘI DUNG',512,292);c.font='400 24px sans-serif';c.fillStyle='#b9c4d2';c.fillText(playing?'Màn hình đồng bộ với đường dẫn đã gắn':'Đến quầy điều khiển để gắn link video',512,365);HALL_POSTER_TEXTURE.needsUpdate=true;}
-const hallOverlay=document.createElement('div');hallOverlay.id='hallWorldOverlay';hallOverlay.style.cssText='position:fixed;left:0;top:0;width:0;height:0;overflow:hidden;display:none;z-index:3;pointer-events:none;background:#000';const hallOverlayFrame=document.createElement('iframe');hallOverlayFrame.title='Màn hình Rạp Hòa Bình';hallOverlayFrame.allow='autoplay; encrypted-media; picture-in-picture; fullscreen';hallOverlayFrame.allowFullscreen=true;hallOverlayFrame.referrerPolicy='strict-origin-when-cross-origin';hallOverlayFrame.style.cssText='width:100%;height:100%;border:0;background:#000;pointer-events:none';hallOverlay.appendChild(hallOverlayFrame);document.body.appendChild(hallOverlay);
+const hallOverlay=document.createElement('div');hallOverlay.id='hallWorldOverlay';hallOverlay.style.cssText='position:fixed;left:0;top:0;width:0;height:0;overflow:hidden;display:none;z-index:20;pointer-events:none;background:#000';const hallOverlayFrame=document.createElement('iframe');hallOverlayFrame.title='Màn hình Rạp Hòa Bình';hallOverlayFrame.allow='autoplay; encrypted-media; picture-in-picture; fullscreen';hallOverlayFrame.allowFullscreen=true;hallOverlayFrame.referrerPolicy='strict-origin-when-cross-origin';hallOverlayFrame.style.cssText='width:100%;height:100%;border:0;background:#000;pointer-events:none';hallOverlay.appendChild(hallOverlayFrame);document.body.appendChild(hallOverlay);
 function setHallScreenUrl(src){hallScreenUrl=src||null;updateHallPoster(!!hallScreenUrl);if(hallScreenUrl){let u=hallScreenUrl;try{const q=new URL(u);if(q.hostname.includes('youtube-nocookie.com')||q.hostname.includes('player.vimeo.com')){q.searchParams.set('autoplay','1');q.searchParams.set('mute','1');q.searchParams.set('playsinline','1');u=q.href;}}catch(_){}hallOverlayFrame.src=u;}else hallOverlayFrame.removeAttribute('src');}
 function updateHallScreenOverlay(){if(!hallScreenUrl){hallOverlay.style.display='none';return;}camera.updateMatrixWorld();const rect=canvas.getBoundingClientRect(),candidates=[];for(const S of HALL_SCREENS){const m=S.mesh;if(!m||!m.visible)continue;m.updateWorldMatrix(true,false);const center=m.localToWorld(new THREE.Vector3(0,0,0));const normal=m.getWorldDirection(new THREE.Vector3());const toward=camera.position.clone().sub(center).normalize();if(normal.dot(toward)<.18)continue;const dist=camera.position.distanceTo(center);if(dist>520)continue;const pts=[[-S.w/2,S.h/2],[S.w/2,S.h/2],[-S.w/2,-S.h/2],[S.w/2,-S.h/2]].map(([x,y])=>m.localToWorld(new THREE.Vector3(x,y,0)).project(camera));if(pts.some(v=>v.z< -1||v.z>1))continue;const xs=pts.map(v=>rect.left+(v.x*.5+.5)*rect.width),ys=pts.map(v=>rect.top+(-v.y*.5+.5)*rect.height);const left=Math.min(...xs),top=Math.min(...ys),right=Math.max(...xs),bottom=Math.max(...ys);if(right<0||left>innerWidth||bottom<0||top>innerHeight)continue;candidates.push({dist,left,top,right,bottom});}if(!candidates.length){hallOverlay.style.display='none';return;}candidates.sort((a,b)=>a.dist-b.dist);const q=candidates[0];hallOverlay.style.display='block';hallOverlay.style.left=Math.max(0,q.left)+'px';hallOverlay.style.top=Math.max(0,q.top)+'px';hallOverlay.style.width=Math.max(0,Math.min(innerWidth,q.right)-Math.max(0,q.left))+'px';hallOverlay.style.height=Math.max(0,Math.min(innerHeight,q.bottom)-Math.max(0,q.top))+'px';}
 
@@ -385,7 +385,8 @@ const LODGES=[
   {id:'h3',kind:'hotel',name:'Hotel Sương Mai',x:-150,z:335,rot:0,floors:8,view:'church',w:24,d:14,color:0xe9eef2,accent:0xb8322a,desc:'Khách sạn nhỏ cạnh nhà thờ Con Gà, đi bộ vài phút ra hồ.',rooms:[['Phòng đơn',550000],['Phòng đôi',780000],['Phòng 4 người',1200000]]},
   {id:'s1',kind:'homestay',style:'aframe',floors:2,view:'valley',name:'Homestay Gác Gỗ',x:620,z:330,rot:-0.6,desc:'Nhà gỗ chữ A trên đồi, có gác xép và hiên ngắm mây buổi sáng.',rooms:[['Gác xép 2 người',450000],['Phòng gia đình',750000]]},
   {id:'s2',kind:'homestay',style:'glass',floors:2,view:'garden',name:'Homestay Nhà Kính',x:-600,z:330,rot:0.4,desc:'Homestay vách kính giữa vườn rau nhà kính, đêm nằm ngắm sao.',rooms:[['Phòng kính 2 người',520000],['Phòng kính có bếp',680000]]},
-  {id:'s3',kind:'homestay',style:'villa',floors:2,view:'roses',name:'Homestay Vườn Hồng',x:450,z:650,rot:0.3,desc:'Biệt thự nhỏ màu hồng có vườn hồng và lò sưởi.',rooms:[['Phòng hoa hồng',490000],['Phòng có lò sưởi',820000]]}
+  {id:'s3',kind:'homestay',style:'villa',floors:2,view:'roses',name:'Homestay Vườn Hồng',x:450,z:650,rot:0.3,desc:'Biệt thự nhỏ màu hồng có vườn hồng và lò sưởi.',rooms:[['Phòng hoa hồng',490000],['Phòng có lò sưởi',820000]]},
+  {id:'s4',kind:'homestay',style:'bungalow',floors:1,view:'garden',name:'Nhà Cấp 4 Hẻm 31',x:-850,z:650,rot:-0.22,desc:'Homestay nhà cấp 4 phong cách Đà Lạt: mái ngói dốc, hiên nhỏ, tường sáng màu, cửa gỗ và sân vườn xanh yên tĩnh.',rooms:[['Phòng đôi nhà cấp 4',420000],['Phòng gia đình nhà cấp 4',650000]]}
 ];
 LODGES.forEach(L=>{const hd=L.kind==='hotel'?L.d/2:6;L.ex=L.x+Math.sin(L.rot)*(hd+10);L.ez=L.z+Math.cos(L.rot)*(hd+10);addPad('lodge_'+L.id,L.x,L.z,L.kind==='hotel'?22:15,L.kind==='hotel'?20:15);});
 function Hlake(x,z){
@@ -1206,6 +1207,20 @@ const lodgeMats=[];
       box(13,.5,10,M(0xe9e6df),0,.25,0,g);box(13,3.6,10,M(0x9fc9d6,{transparent:true,opacity:.45,roughness:.05,metalness:.4}),0,2.3,0,g);
       for(const px of[-6.4,-3.2,0,3.2,6.4])for(const pz of[-4.9,4.9])box(.15,3.6,.15,M(0xf4f4f4),px,2.3,pz,g);
       box(13.6,.4,10.6,M(0xf4f4f4),0,4.3,0,g);box(4,.6,3,M(0x6b4a2a),2,.8,0,g);box(1.6,1,2.2,M(0xf2f2f2),-3,1,1,g);boxCol(L.x,L.z,6.8,5.3,L.rot);top=6;
+    }else if(L.style==='bungalow'){
+      const plaster=M(0xe5d8bd,{roughness:.94}),roofTile=M(0x7b3f32,{roughness:.9}),doorWood=M(0x68452f,{roughness:.8}),windowGlow=M(0xa9c9d0,{transparent:true,opacity:.62,roughness:.12,metalness:.12});
+      // Nhà cấp 4 một tầng, mái ngói dốc và hiên trước.
+      box(14,.42,10.5,M(0x8d8779),0,.18,0,g);box(13.5,3.45,9.8,plaster,0,2.08,-.15,g);
+      mesh(gableGeo(14.8,2.8,11.5),roofTile,0,3.78,-.1,g);
+      box(14.9,.16,11.6,M(0x4d332b),0,2.85,-.1,g);
+      box(8,.18,3.2,roofTile,0,3.25,6.1,g);for(const x of[-3.5,3.5])box(.22,3.1,.22,doorWood,x,1.65,7.1,g);
+      box(2.1,2.55,.16,doorWood,0,1.52,4.78,g);box(.09,2.25,.04,M(0xd4a53a),.65,1.55,4.67,g);
+      for(const x of[-4.6,4.6]){box(2.25,1.55,.14,windowGlow,x,2.15,4.84,g);box(2.45,.12,.2,doorWood,x,2.15,4.73,g);box(.12,1.72,.2,doorWood,x,2.15,4.73,g);box(2.3,.12,.2,doorWood,x,1.37,4.73,g);}
+      box(8,.18,2.8,M(0x8d8779),0,.52,6.15,g);box(8,.12,2.8,M(0xc9bba0),0,.67,6.15,g);
+      for(const x of[-5.4,5.4]){cyl(.32,.4,.55,12,M(0x9a6542),x,.85,6.7,g);const bush=mesh(new THREE.SphereGeometry(.48,10,8),M(0x426d3b,{roughness:1}),x,1.5,6.7,g);bush.scale.y=1.2;}
+      for(let i=0;i<7;i++){const x=-7+i*2.3;box(.12,.65,.12,doorWood,x,.38,9.3,g);if(i<6)box(2.3,.09,.1,doorWood,x+1.1,.55,9.3,g);}
+      const bungalowSign=signMesh('NHÀ CẤP 4 HẺM 31',6.2,.65,'#3d4c31','#f4ead2');bungalowSign.position.set(0,3.02,4.95);g.add(bungalowSign);
+      boxCol(L.x,L.z,7.4,6.1,L.rot);top=6.8;
     }else{
       box(12,7,10,M(0xf0b9c2),0,3.5,0,g);mesh(gableGeo(13,4,11),M(0x9a3a2c),0,7,0,g);box(1.2,3,1.2,M(0xd8cfc4),3.5,9.5,-2,g);
       for(const px of[-3.5,0,3.5]){box(1.6,2,.08,winMat,px,4.8,5.05,g);box(1.6,2,.08,winMat,px,1.6,5.05,g);}
@@ -2187,7 +2202,7 @@ function refreshViews(){if(!indoor)return;const I=indoor.I;
   if(indoor.level==='u')I.roomObjs.forEach(r=>{if(r.open&&r.f===indoor.floor)renderRoomView(I,r);});}
 
 function buildInterior(L){
-  const idx=LODGES.indexOf(L),ox=600+idx*80,oz=-1000,hotel=L.kind==='hotel',who=hotel?'Lễ tân':'Chủ nhà';
+  const idx=LODGES.indexOf(L),ox=600+idx*80,oz=-1000,hotel=L.kind==='hotel',bungalow=L.style==='bungalow',who=hotel?'Lễ tân':'Chủ nhà';
   const root=new THREE.Group();root.position.set(ox,IY,oz);scene.add(root);const g=new THREE.Group();root.add(g);
   const cols=[],spots=[],greeters=[],sitters=[],rooms=[],seats=[];
   const acc=hotel?L.accent:({aframe:0x6e4c32,glass:0x2f8a7a,villa:0xc9476a}[L.style]||0xb8322a);
@@ -2235,6 +2250,11 @@ function buildInterior(L){
   const clerk=npc(hotel?0x263d55:0x6b4a2a,0xe0bd78,1,0,-14,0);
   sofa(-8,0,8.8,Math.PI,hotel?0x3d4f6b:0x8a5a3a,'g');sofa(-8,0,3.2,0,hotel?0x3d4f6b:0x8a5a3a,'g');B(-9.2,-6.8,0,.45,5.4,6.6,mTop,'g');
   plant(-12.8,0,16.6,'g');plant(16.4,0,16.6,'g');plant(13,0,-16.6,'g');plant(-12.6,0,-16.6,'g');
+  // Warm reception details: rug, framed artwork, coffee table, books and timber accents.
+  B(-10,-5,.025,.065,1.1,6.1,mats.rug);B(-9.7,-5.3,.07,.09,1.4,5.8,mats.gold);
+  B(-7.7,-4.5,.45,.58,4.6,6.9,mTrim);B(-7.5,-4.7,.59,.66,4.8,6.7,mTop);
+  for(let i=0;i<3;i++)B(-7.2+i*.72,-6.65+i*.72,.67,.78,5.1,5.65,[mAcc,mats.gold,mats.soft][i]);
+  for(let i=0;i<7;i++){const x=-5+i*2;B(x-.045,x+.045,1.3,3.2,-17.35,-17.25,mTrim);mesh(new THREE.SphereGeometry(.12,8,6),mGlow,x,2.65,-17.18,g).castShadow=false;}
   put(new THREE.Mesh(new THREE.SphereGeometry(.55,16,12),mGlow),3,3.85,2);
   const ring=new THREE.Mesh(new THREE.TorusGeometry(1.4,.06,8,32),M(0xd4a53a,{metalness:.8,roughness:.3}));ring.rotation.x=Math.PI/2;put(ring,3,3.9,2);
   if(!hotel){B(22.6,24,0,2.8,6,10,M(0x77716a),'g');B(22.55,22.6,.3,1.5,7,9,new THREE.MeshStandardMaterial({color:0xff8a3a,emissive:0xff6a1a,emissiveIntensity:2}));B(22.4,24,2.8,3,5.8,10.2,mTrim);}
@@ -2255,8 +2275,20 @@ function buildInterior(L){
   for(let k=0;k<16;k++)B(18.15,24,-6,-6*(k+.5)/16,-14+k,-13+k,k%2?mTrim:mTop);
   put(signMesh('↓ TẦNG HẦM · BAR · BIDA · POKER',6,.8,'#1c1a18','#f2b829'),21,3.6,-17.95);
 
+  /* --- nội thất riêng cho nhà cấp 4 --- */
+  if(bungalow){
+    B(-13,-8,0,1.65,-5,-3,mTrim,'g');B(-12.8,-8.2,1.65,1.75,-4.9,-3.1,mTop);
+    for(let i=0;i<5;i++)B(-12.4+i*.82,-11.8+i*.82,.35,1.35,-4.65,-4.5,[mats.soft,mats.gold,mAcc,mats.rug,mTop][i]);
+    B(7,12,0,.12,5,8,mats.rug,'g');B(7.3,11.7,.72,.86,5.3,7.7,mTrim,'g');
+    for(const x of[7.8,11.2])for(const z of[5.6,7.4])B(x-.08,x+.08,0,.72,z-.08,z+.08,mTrim,'g');
+    for(const [x,z] of [[6,6.2],[12.5,6.2]]){const chair=new THREE.Group();chair.position.set(x,0,z);chair.rotation.y=x<9?Math.PI/2:-Math.PI/2;g.add(chair);box(.75,.12,.75,mats.soft,0,.48,0,chair);box(.75,.8,.1,mTrim,0,.88,-.32,chair);seats.push({lv:'g',x,z,face:x<9?Math.PI/2:-Math.PI/2,name:'Ghế bàn ăn'});}
+    B(10,12.8,0,1.05,-5,-2.5,mTrim,'g');B(10.1,12.7,1.05,1.14,-4.9,-2.6,mTop);
+    put(signMesh('BẾP NHỎ',2.2,.5,'#3d4c31','#f4ead2'),11.4,2,-4.8);
+    put(signMesh('NHÀ CẤP 4 · GÓC TRÀ',5,.65,'#3d4c31','#f4ead2'),0,4.1,12.5);
+  }
+
   /* --- cầu thang gỗ lên tầng phòng ngủ (homestay) --- */
-  if(!hotel){for(let k=0;k<10;k++)B(14.2,17.4,0,.45*(k+1),-10.6-k*.6,-10-k*.6,k%2?mTrim:mTop);cols.push({x0:14.2,x1:17.4,z0:-16.2,z1:-10,lv:'g',t:true});
+  if(!hotel&&!bungalow){for(let k=0;k<10;k++)B(14.2,17.4,0,.45*(k+1),-10.6-k*.6,-10-k*.6,k%2?mTrim:mTop);cols.push({x0:14.2,x1:17.4,z0:-16.2,z1:-10,lv:'g',t:true});
     B(14.05,14.2,.9,4.5,-16,-10,mTrim);put(signMesh('↑ TẦNG 2 · PHÒNG NGỦ',4,.6,'#1c1a18','#f2b829'),15.8,3.2,-9.8);}
 
   /* --- tầng hầm giải trí --- */
@@ -2851,8 +2883,13 @@ function buildVenueInterior(L){
   B(-halfW-.2,-halfW,0,8.8,-halfD,halfD,wall,true);B(halfW,halfW+.2,0,8.8,-halfD,halfD,wall,true);B(-halfW,halfW,0,8.8,-halfD-.2,-halfD,wall,true);
   // Front wall leaves a wide doorway open so the player can walk in and out.
   B(-halfW,-3,0,8.8,halfD,halfD+.2,wall,true);B(3,halfW,0,8.8,halfD,halfD+.2,wall,true);B(-3,3,7.2,8.8,halfD,halfD+.2,wall,true);
-  for(let x=-halfW+3;x<=halfW-3;x+=6){B(x-.12,x+.12,0,8.7,-halfD,halfD,trim);B(x-.12,x+.12,8.3,8.5,-halfD,halfD,metal);}
-  for(let z=-halfD+3;z<=halfD-3;z+=6){B(-halfW,halfW,8.35,8.5,z-.08,z+.08,metal);}
+  // Không dựng cột chịu lực xuyên giữa phòng: tránh che bảng hiệu, màn chiếu và lối đi.
+  // Chỉ giữ các trụ nhỏ áp sát bốn góc tường.
+  for(const x of[-halfW+0.45,halfW-0.45])for(const z of[-halfD+0.45,halfD-0.45])
+    B(x-.18,x+.18,0,8.45,z-.18,z+.18,trim);
+  // Xà ngang chỉ chạy sát mép trần, không cắt ngang tầm nhìn.
+  B(-halfW+.3,halfW-.3,8.25,8.42,-halfD+.3,-halfD+.48,metal);
+  B(-halfW+.3,halfW-.3,8.25,8.42,halfD-.48,halfD-.3,metal);
   const lights=[];for(const x of[-13,0,13]){const l=mesh(new THREE.BoxGeometry(4,.08,.5),M(0xffe6b5,{emissive:0xffd18a,emissiveIntensity:1.2}),x,8.1,0,g);lights.push(l);}
   if(factory){
     put(signMesh('XƯỞNG CHẾ BIẾN CHÈ CẦU ĐẤT',18,1.35,'#5b2e22','#f4e6c8'),0,7.35,-halfD+.35);
@@ -2899,9 +2936,9 @@ function buildVenueInterior(L){
     K.spots.push({lv:'g',x:-14,z:10,r:2.7,eyebrow:'Sảnh rạp',name:'Quầy vé',text:'Quầy bán vé và bảng giới thiệu các suất chiếu.',actions:[{label:'Xem thông tin suất chiếu',fn:()=>toast('Rạp Hòa Bình · không gian trải nghiệm phim trong thế giới Đà Lạt Sương Mù.')}]},
       {lv:'g',x:14,z:10,r:2.7,eyebrow:'Quầy giải khát',name:'Bắp rang & nước uống',text:'Quầy bắp rang bơ, nước ngọt và đồ ăn nhẹ trước giờ chiếu.',actions:[{label:'Mua bắp rang',fn:()=>toast('Một hộp bắp rang bơ thơm nóng đã sẵn sàng!')}]},
       {lv:'g',x:0,z:-7,r:3,eyebrow:'Phòng chiếu',name:'Màn hình lớn',text:'Đến đây để gắn link YouTube hoặc website. Nội dung sẽ phát trên màn hình trong rạp và màn hình LED ngoài mặt tiền.',actions:[{label:'Gắn link / phát phim',fn:()=>openHallScreen()}]},
-      {lv:'g',x:0,z:16,r:1.8,eyebrow:'Lối ra',name:'Cửa ra vào',text:'Đi thẳng qua cửa để trở lại khu Hòa Bình.',actions:[{label:'Ra ngoài',fn:()=>exitLodge()}]});
+      {lv:'g',x:0,z:17,r:1.4,eyebrow:'Lối ra',name:'Cửa ra vào',text:'Đi thẳng qua cửa để trở lại khu Hòa Bình.',actions:[{label:'Ra ngoài',fn:()=>exitLodge()}]});
   }
-  const I=finishRoom(K,L,{door:{z:halfD-.2,x0:-3,x1:3},bx:halfW-.5,bz:halfD-.2,ceilY:8.4,spawn:[0,halfD-2.5,Math.PI],lights:factory?[[-12,7.7,0],[0,7.7,0],[12,7.7,0],[-10,7.7,12],[10,7.7,-12]]:[[0,7.8,0],[-15,7.5,8],[15,7.5,8],[0,7.5,-12]],dark:false,hello:factory?'Bạn bước vào nhà máy chè Cầu Đất. Mùi lá chè, gỗ cũ và hơi nóng từ máy sao thoảng trong không khí.':'Bạn bước vào Rạp Hòa Bình. Sảnh vé, quầy bắp nước và phòng chiếu đang chờ bạn.',greetText:factory?'Chào mừng đến tham quan xưởng chè Cầu Đất.':'Chào mừng quý khách đến Rạp Hòa Bình.'});
+  const I=finishRoom(K,L,{door:{z:halfD-.2,x0:-3,x1:3},bx:halfW-.5,bz:halfD-.2,ceilY:8.4,spawn:[0,13.2,Math.PI],lights:factory?[[-12,7.7,0],[0,7.7,0],[12,7.7,0],[-10,7.7,12],[10,7.7,-12]]:[[0,7.8,0],[-15,7.5,8],[15,7.5,8],[0,7.5,-12]],dark:false,hello:factory?'Bạn bước vào nhà máy chè Cầu Đất. Mùi lá chè, gỗ cũ và hơi nóng từ máy sao thoảng trong không khí.':'Bạn bước vào Rạp Hòa Bình. Sảnh vé, quầy bắp nước và phòng chiếu đang chờ bạn.',greetText:factory?'Chào mừng đến tham quan xưởng chè Cầu Đất.':'Chào mừng quý khách đến Rạp Hòa Bình.'});
   return I;
 }
 const BUILDERS={restaurant:buildRestaurant,atiso:buildAtiso,cafe:buildCafeIn,church:buildChurch,pagoda:buildTruclam,haunted:buildHaunted,factory:buildVenueInterior,cinema:buildVenueInterior};
