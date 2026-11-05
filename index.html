@@ -3,26 +3,25 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#101b1b">
-  <meta name="description" content="Đà Lạt Sương Mù — khám phá Đà Lạt trong thế giới 3D cinematic cùng bạn bè.">
+  <meta name="theme-color" content="#18231f">
+  <meta name="description" content="Đà Lạt Sương Mù — thế giới mở 3D Multiplayer.">
   <title>Đà Lạt Sương Mù — Multiplayer</title>
   <style>
-    *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;color:#f3eee2;background:#101b1b;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}main{width:min(560px,100%);text-align:center}h1{margin:0 0 12px;font-size:clamp(28px,6vw,44px)}p{color:#bdc9c3;line-height:1.7}a{display:inline-block;margin-top:14px;padding:13px 22px;border-radius:999px;color:#10201d;background:#c5d7c7;font-weight:700;text-decoration:none}.note{font-size:13px}
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;background:#18231f;color:#eef1e8;font-family:system-ui,sans-serif}main{width:min(520px,100%);text-align:center;padding:32px;border:1px solid #53635a;border-radius:22px;background:#202e29}h1{font-family:Georgia,serif;font-style:italic}p{color:#b9c6bd;line-height:1.7}a{display:inline-block;padding:14px 24px;border-radius:999px;background:#f2b829;color:#2a2005;text-decoration:none;font-weight:800}
   </style>
 </head>
 <body>
   <main>
     <h1>Đà Lạt Sương Mù</h1>
     <p>Đang mở thế giới 3D Multiplayer…</p>
-    <p class="note">Máy chủ online: one320-dalat.onrender.com</p>
     <a id="enter" href="Da-Lat-Suong-Mu-Cinematic-v8.html">Vào trò chơi</a>
   </main>
   <script>
     (function(){
-      var target=new URL('Da-Lat-Suong-Mu-Cinematic-v8.html',location.href);
+      var target=new URL('./Da-Lat-Suong-Mu-Cinematic-v8.html',location.href);
       var params=new URLSearchParams(location.search);
-      var server=params.get('server')||'wss://one320-dalat.onrender.com/ws';
-      target.searchParams.set('server',server);
+      target.searchParams.set('server',params.get('server')||'wss://one320-dalat.onrender.com/ws');
+      target.searchParams.set('room',params.get('room')||'dalat');
       document.getElementById('enter').href=target.href;
       location.replace(target.href);
     })();

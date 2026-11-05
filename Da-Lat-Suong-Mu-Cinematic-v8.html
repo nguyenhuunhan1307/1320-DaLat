@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Đà Lạt Sương Mù — Cinematic 3D Edition</title>
+<title>Đà Lạt Sương Mù — Cinematic 3D Edition v9 Multiplayer</title>
 <meta name="theme-color" content="#18231f">
 <meta name="description" content="Khám phá Đà Lạt 3D thế giới mở với góc nhìn thứ ba, ánh sáng cinematic, sương mù và các địa danh đặc trưng.">
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -171,8 +171,17 @@ body.photo #top,body.photo #mapwrap,body.photo #card,body.photo #hint,body.photo
 #mpStatus strong{color:var(--ink)}#mpStatus .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#d95b52;margin-right:7px;box-shadow:0 0 8px currentColor}
 #mpStatus.online .dot{background:#59d18b;color:#59d18b}
 #mpStatus.connecting .dot{background:#e8b94e;color:#e8b94e}
-#mpRoster{position:fixed;left:max(16px,env(safe-area-inset-left,0px));top:calc(106px + env(safe-area-inset-top,0px));z-index:6;max-width:210px;padding:8px 11px;font-size:11px;color:var(--muted);pointer-events:none;line-height:1.5}
+#mpRoster{position:fixed;left:max(16px,env(safe-area-inset-left,0px));top:calc(106px + env(safe-area-inset-top,0px));z-index:6;max-width:230px;padding:8px 11px;font-size:11px;color:var(--muted);pointer-events:auto;line-height:1.5}
+#mpRoster .mp-player{display:flex;width:100%;gap:6px;align-items:center;justify-content:space-between;padding:3px 0;border:0;background:transparent;color:var(--ink);font:500 11px var(--body);text-align:left}
+#mpRoster .mp-player span{color:var(--muted);white-space:nowrap}
 #mpRoster b{color:var(--ink)}
+#voiceControls{position:fixed;left:max(16px,env(safe-area-inset-left,0px));top:calc(148px + env(safe-area-inset-top,0px));z-index:7;display:flex;gap:7px;flex-wrap:wrap;max-width:min(360px,calc(100vw - 32px))}
+#voiceControls button{border:1px solid var(--line);border-radius:999px;padding:8px 12px;background:var(--mist);color:var(--ink);font:600 12px var(--body);backdrop-filter:blur(10px)}
+#voiceControls button[aria-pressed="true"]{background:var(--daquy);color:var(--daquy-ink);border-color:var(--daquy)}
+#btnRideWith{border-color:rgba(159,209,58,.45)!important}
+#voiceHint{max-width:180px;line-height:1.35}
+#voiceHint{font-size:10px;color:var(--muted);align-self:center}
+@media(max-width:640px){#voiceControls{top:calc(178px + env(safe-area-inset-top,0px));gap:5px}#voiceControls button{padding:7px 9px;font-size:11px}}
 @media(max-width:640px){#mpStatus{top:calc(104px + env(safe-area-inset-top,0px));font-size:10px;padding:6px 9px}#mpRoster{top:calc(139px + env(safe-area-inset-top,0px));max-width:145px;font-size:10px}}
 
 #start .sbox h2{margin:8px 0 0}
@@ -197,11 +206,12 @@ body.photo #top,body.photo #mapwrap,body.photo #card,body.photo #hint,body.photo
 </div>
 <div id="mpStatus" class="glass"><span class="dot"></span><strong id="mpState">Chưa kết nối</strong> · <span id="mpCount">0 người</span></div>
 <div id="mpRoster" class="glass" hidden></div>
+<div id="voiceControls"><button id="btnMic" aria-pressed="false" title="Bật/tắt micro">🎙 Bật micro</button><button id="btnSpeaker" aria-pressed="true" title="Bật/tắt âm thanh người khác">🔊 Âm thanh</button><button id="btnRideWith" title="Lên xe cùng người chơi gần bạn">🚗 Đi cùng</button><span id="voiceHint">Voice Chat · cần cho phép micro</span></div>
 <div id="goto" class="glass" hidden></div>
 <div id="mapwrap" class="glass"><canvas id="minimap" width="300" height="300" aria-label="Bản đồ nhỏ"></canvas></div>
 <div id="card" class="glass" hidden></div>
 <div id="hud" class="glass" hidden><div class="spd"><span id="spd">0</span><small>km/h</small></div><div class="meta"><b id="vname">Xe máy</b><span id="vseat">Chở 1/2 người</span><span id="vhint">W ga · S phanh · A/D lái · F xuống</span></div><button class="act alt" id="btnPaxAdd" title="Rủ thêm người lên xe (R)">+ Người</button><button class="act alt" id="btnPaxDel" title="Cho một người xuống (T)">− Người</button><button class="act alt" id="btnExit">Xuống</button></div>
-<div id="hint" class="glass"><b>WASD</b> đi · <b>Shift</b> chạy · <b>Space</b> nhảy · <b>R/T</b> thêm/bớt người trên xe<br>Kéo chuột xoay · cuộn zoom · <b>E</b> tương tác · <b>F</b> xuống xe · <b>X</b> ra khỏi nhà<br><b>C</b> chụp ảnh · <b>P</b> mở album · <b>V</b> góc nhìn thứ nhất</div>
+<div id="hint" class="glass"><b>WASD</b> đi · <b>Shift</b> chạy · <b>Space</b> nhảy · <b>G</b> đi cùng người chơi · <b>R/T</b> thêm/bớt NPC<br>Kéo chuột xoay · cuộn zoom · <b>E</b> tương tác · <b>F</b> xuống xe · <b>X</b> ra khỏi nhà<br><b>C</b> chụp ảnh · <b>P</b> mở album · <b>V</b> góc nhìn thứ nhất</div>
 <div id="cross" hidden></div>
 <div id="toast" class="glass" style="opacity:0"></div>
 <div id="flash"></div>
@@ -1531,7 +1541,7 @@ function makeCar(color,kind,plate){
     mesh(new THREE.SphereGeometry(.07,8,6),bulbMat,.5,yb+.16,K.cz0-.35,g).castShadow=false;
     const bed=add(1.45,.2,1.8,M(0x5d5d60,{roughness:1}),0,yb+.02,K.cz0+.45);bed.visible=false;g.userData.bed=bed;
     /* bộ trại dựng bên hông phải (phía phụ) — bật/tắt bằng "Dựng trại" */
-    const camp=new THREE.Group();camp.visible=false;g.add(camp);const cx0=-(W/2+.1),ow=-(W/2+2.7),zc=(K.cz0+K.cz1)/2;
+    const camp=new THREE.Group();camp.name='camp-setup';camp.visible=false;g.add(camp);const cx0=-(W/2+.1),ow=-(W/2+2.7),zc=(K.cz0+K.cz1)/2;
     const can=box(2.6,.03,2.6,M(0xcdbb94,{roughness:1,side:THREE.DoubleSide}),(cx0+ow)/2,(rk+1.85)/2,zc,camp);can.rotation.z=Math.atan2(rk-1.85,cx0-ow);
     for(const z of[zc-1.25,zc+1.25])cyl(.025,.025,1.85,6,greyM,ow,.925,z,camp);
     for(let q=0;q<13;q++)mesh(new THREE.SphereGeometry(.05,6,5),bulbMat,ow+.05,1.8-Math.sin(q/12*Math.PI)*.18,zc-1.25+q*2.5/12,camp).castShadow=false;
@@ -1686,49 +1696,104 @@ const player=makePerson({jacket:JACKETS[0],scarf:SCARVES[0]});scene.add(player.g
 const P={x:PLAZA.x-62,z:PLAZA.z+26,y:0,vy:0,face:Math.PI,run:false};P.y=H(P.x,P.z);
 let nameLabel=null,ride=null,started=false;
 
-/* ---------- Multiplayer: shared world presence ---------- */
-const MP={socket:null,id:null,room:'dalat',name:'Lữ khách',status:'offline',lastSend:0,lastRoster:0,remote:new Map(),reconnect:0,manualClose:false};
+/* ---------- Multiplayer v9: shared players, vehicles, passengers & activities ---------- */
+const MP={socket:null,id:null,room:'dalat',name:'Lữ khách',status:'offline',lastSend:0,lastRoster:0,remote:new Map(),reconnect:0,manualClose:false,voiceStream:null,voiceEnabled:false,micMuted:false,speakerEnabled:true,peers:new Map(),audioEls:new Map(),iceQueues:new Map(),passenger:null,mutedPeers:new Set(),voiceContext:null,voiceAnalyser:null,voiceData:null,talking:false,voiceRAF:0};
 const mpStatus=$('mpStatus'),mpState=$('mpState'),mpCount=$('mpCount'),mpRoster=$('mpRoster');
 function mpSetStatus(state,message){MP.status=state;mpStatus.classList.toggle('online',state==='online');mpStatus.classList.toggle('connecting',state==='connecting');mpState.textContent=message;}
 function mpServerUrl(){const q=new URLSearchParams(location.search).get('server');if(q)return q;if(['localhost','127.0.0.1'].includes(location.hostname))return 'ws://localhost:8080/ws';return 'wss://one320-dalat.onrender.com/ws';}
-function mpRemove(id){const r=MP.remote.get(id);if(!r)return;scene.remove(r.person.g);scene.remove(r.label);r.person.g.traverse(o=>{if(o.geometry)o.geometry.dispose();});r.label.material.map?.dispose();r.label.material.dispose();MP.remote.delete(id);}
+function mpRemove(id){const r=MP.remote.get(id);if(!r)return;if(MP.passenger?.driverId===id)mpLeaveRemoteRide(true);if(r.person.g.parent)r.person.g.parent.remove(r.person.g);scene.remove(r.label);if(r.vehicleObj)scene.remove(r.vehicleObj);r.person.g.traverse(o=>{if(o.geometry)o.geometry.dispose();});r.label.material.map?.dispose();r.label.material.dispose();MP.remote.delete(id);}
 function mpConnect(){
-  const url=mpServerUrl();if(!url){mpSetStatus('offline','Chưa cấu hình máy chủ');toast('Game đang ở chế độ đơn. Thêm ?server=wss://DIA-CHI-MAY-CHU/ws vào đường dẫn để bật online.');return;}
+  const url=mpServerUrl();if(!url){mpSetStatus('offline','Chưa cấu hình máy chủ');return;}
   if(MP.socket&&(MP.socket.readyState===WebSocket.OPEN||MP.socket.readyState===WebSocket.CONNECTING))return;
-  MP.manualClose=false;mpSetStatus('connecting','Đang kết nối…');
-  let ws;try{ws=new WebSocket(url);}catch(e){mpSetStatus('offline','Không tạo được kết nối');return;}MP.socket=ws;
+  MP.manualClose=false;mpSetStatus('connecting','Đang kết nối…');let ws;try{ws=new WebSocket(url);}catch(e){mpSetStatus('offline','Không tạo được kết nối');return;}MP.socket=ws;
   ws.addEventListener('open',()=>{mpSetStatus('connecting','Đang vào phòng…');ws.send(JSON.stringify({type:'join',name:MP.name,room:MP.room,jacket:pickJ,scarf:pickS}));});
   ws.addEventListener('message',ev=>{let m;try{m=JSON.parse(ev.data);}catch(e){return;}
     if(m.type==='welcome'){MP.id=m.id;mpSetStatus('online','Đang online');mpApplyRoster(m.players||[]);}
-    else if(m.type==='players'){mpApplyRoster(m.players||[]);}
-    else if(m.type==='notice'&&m.message)toast(m.message);
+    else if(m.type==='players')mpApplyRoster(m.players||[]);
+    else if(m.type==='notice'&&m.message){toast(m.message);if(String(m.message).includes('Ghế này'))mpLeaveRemoteRide(true);}
+    else if(m.type==='rtc-signal')voiceHandleSignal(m.from,m.data);
+    else if(m.type==='event')mpHandleEvent(m);
   });
-  ws.addEventListener('close',()=>{if(MP.socket===ws)MP.socket=null;MP.id=null;mpSetStatus('offline','Mất kết nối');if(!MP.manualClose&&started){clearTimeout(MP.reconnect);MP.reconnect=setTimeout(()=>mpConnect(),3000);}});
-  ws.addEventListener('error',()=>{mpSetStatus('offline','Lỗi kết nối máy chủ');});
+  ws.addEventListener('close',()=>{if(MP.socket===ws)MP.socket=null;MP.id=null;mpSetStatus('offline','Mất kết nối');if(MP.passenger)mpLeaveRemoteRide(true);if(!MP.manualClose&&started){clearTimeout(MP.reconnect);MP.reconnect=setTimeout(()=>mpConnect(),3000);}});
+  ws.addEventListener('error',()=>mpSetStatus('offline','Lỗi kết nối máy chủ'));
 }
 function mpApplyRoster(list){
   const alive=new Set();for(const d of list){if(!d||!d.id||d.id===MP.id)continue;alive.add(d.id);let r=MP.remote.get(d.id);
-    if(!r){const person=makePerson({jacket:JACKETS[Number.isInteger(d.jacket)?Math.max(0,Math.min(4,d.jacket)):0],scarf:SCARVES[Number.isInteger(d.scarf)?Math.max(0,Math.min(4,d.scarf)):0]});scene.add(person.g);const label=makeLabel(String(d.name||'Lữ khách').slice(0,16),'',.14);r={person,label,x:d.x||0,y:d.y||0,z:d.z||0,face:d.face||0,run:false,last:performance.now()};MP.remote.set(d.id,r);}
-    r.name=String(d.name||'Lữ khách').slice(0,16);r.target={x:Number(d.x)||0,y:Number(d.y)||0,z:Number(d.z)||0,face:Number(d.face)||0};r.run=!!d.run;r.seated=!!d.seated;r.last=performance.now();
+    if(!r){const person=makePerson({jacket:JACKETS[Number.isInteger(d.jacket)?Math.max(0,Math.min(4,d.jacket)):0],scarf:SCARVES[Number.isInteger(d.scarf)?Math.max(0,Math.min(4,d.scarf)):0]});scene.add(person.g);const label=makeLabel(String(d.name||'Lữ khách').slice(0,16),'',.14);r={person,label,x:d.x||0,y:d.y||0,z:d.z||0,face:d.face||0,run:false,last:performance.now(),rideIndex:-1,vehicleObj:null,fishRod:null};MP.remote.set(d.id,r);if(MP.voiceEnabled)voiceEnsurePeer(d.id);}
+    r.name=String(d.name||'Lữ khách').slice(0,16);r.target={x:Number(d.x)||0,y:Number(d.y)||0,z:Number(d.z)||0,face:Number(d.face)||0};r.run=!!d.run;r.seated=!!d.seated;r.rideIndex=Number.isInteger(d.rideIndex)?d.rideIndex:-1;r.vehicle=d.vehicle||null;r.passengerOf=d.passengerOf||null;r.seatIndex=Number.isInteger(d.seatIndex)?d.seatIndex:0;r.fishing=!!d.fishing;if(r.fishing&&!r.fishRod){r.fishRod=new THREE.Mesh(new THREE.CylinderGeometry(.018,.032,1.8,6),M(0x2b2b2b));r.fishRod.position.set(0,-.72,.02);r.person.armR.add(r.fishRod);}if(r.fishRod)r.fishRod.visible=r.fishing;r.activity=String(d.activity||'');r.mic=!!d.mic;r.talking=!!d.talking;r.last=performance.now();if(MP.voiceEnabled)voiceEnsurePeer(d.id);
   }
-  for(const id of MP.remote.keys())if(!alive.has(id))mpRemove(id);
-  mpCount.textContent=(list.length||0)+' người';mpRoster.hidden=!list.length;mpRoster.innerHTML='<b>Đang trong phòng</b><br>'+list.slice(0,8).map(x=>'• '+String(x.name||'Lữ khách').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))).join('<br>')+(list.length>8?'<br>… và '+(list.length-8)+' người khác':'');
+  for(const id of [...MP.remote.keys()])if(!alive.has(id)){mpRemove(id);voiceClosePeer(id);}
+  const entries=list.filter(x=>x&&x.id!==MP.id);mpCount.textContent=entries.length+' người';mpRoster.hidden=!entries.length;
+  const esc=x=>String(x||'Lữ khách').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  mpRoster.innerHTML='<b>Đang trong phòng · chạm để tắt tiếng</b>'+entries.slice(0,8).map(x=>'<button class="mp-player" data-peer="'+esc(x.id)+'">'+esc(x.name)+(x.talking?' 🔊':x.mic?' 🎙':'')+(x.fishing?' · 🎣':x.activity==='driving'?' · 🚗':x.activity==='hotel'?' · 🏨':x.activity==='restaurant'?' · 🍽':x.activity==='inside'?' · 🏡':'')+'<span>'+(MP.mutedPeers.has(x.id)?'🔇':'🔊')+'</span></button>').join('')+(entries.length>8?'<div>… và '+(entries.length-8)+' người khác</div>':'');
 }
 function mpSendState(dt){
   if(MP.status!=='online'||!MP.socket||MP.socket.readyState!==WebSocket.OPEN||!started)return;
-  MP.lastSend+=dt;if(MP.lastSend<.1)return;MP.lastSend=0;
-  const data={type:'state',x:P.x,y:P.y,z:P.z,face:P.face,run:!!(keys.has('shift')||P.run),seated:!!P.seated,lying:!!P.lying,jacket:pickJ,scarf:pickS};
+  MP.lastSend+=dt;if(MP.lastSend<.08)return;MP.lastSend=0;
+  const rideIndex=ride?vehicles.indexOf(ride):-1;
+  const data={type:'state',x:P.x,y:P.y,z:P.z,face:P.face,run:!!(keys.has('shift')||P.run),seated:!!P.seated||!!ride||!!MP.passenger||!!P.lying,lying:!!P.lying,jacket:pickJ,scarf:pickS,rideIndex,vehicle:ride?{x:ride.x,y:ride.obj.position.y,z:ride.z,heading:ride.heading,pitch:ride.obj.rotation.x,roll:ride.obj.rotation.z,speed:ride.speed,type:ride.type,campOn:!!ride.campOn}:null,passengerOf:MP.passenger?.driverId||null,seatIndex:MP.passenger?.seatIndex||0,fishing:!!fishing,mic:!!MP.voiceEnabled&&!MP.micMuted,talking:!!MP.talking,activity:fishing?'fishing':ride||MP.passenger?'driving':indoor?(indoor.L.kind==='hotel'?'hotel':indoor.L.kind==='restaurant'?'restaurant':'inside'):P.lying?'resting':'exploring',fishCount};
   try{MP.socket.send(JSON.stringify(data));}catch(e){}
 }
 function mpUpdateRemote(dt){
-  for(const r of MP.remote.values()){
-    if(!r.target)continue;const t=1-Math.exp(-dt*12);r.x=lerp(r.x,r.target.x,t);r.y=lerp(r.y,r.target.y,t);r.z=lerp(r.z,r.target.z,t);let a=Math.atan2(Math.sin(r.target.face-r.face),Math.cos(r.target.face-r.face));r.face+=a*t;
-    r.person.g.position.set(r.x,r.y,r.z);r.person.g.rotation.y=r.face;r.label.position.set(r.x,r.y+2.55,r.z);
-    const d=Math.hypot(r.x-P.x,r.z-P.z);r.person.g.visible=d<900;r.label.visible=d<260;
-    if(r.run&&!r.seated)animPerson(r.person,3.8,dt);else{r.person.legL.rotation.x*=.8;r.person.legR.rotation.x*=.8;r.person.armL.rotation.x*=.8;r.person.armR.rotation.x*=.8;}
+  // First pass: interpolate each remote driver's own vehicle clone. Never move the local rental vehicle.
+  for(const [id,r] of MP.remote){if(!r.target)continue;const t=1-Math.exp(-dt*12);r.x=lerp(r.x,r.target.x,t);r.y=lerp(r.y,r.target.y,t);r.z=lerp(r.z,r.target.z,t);let a=Math.atan2(Math.sin(r.target.face-r.face),Math.cos(r.target.face-r.face));r.face+=a*t;
+    if(r.rideIndex>=0&&r.vehicle&&vehicles[r.rideIndex]){const base=vehicles[r.rideIndex];if(!r.vehicleObj||r.vehicleBase!==r.rideIndex){if(r.vehicleObj)scene.remove(r.vehicleObj);r.vehicleObj=base.obj.clone(true);r.vehicleBase=r.rideIndex;scene.add(r.vehicleObj);}
+      const q=r.vehicle;r.vehicleObj.position.set(lerp(r.vehicleObj.position.x,Number(q.x)||0,t),Number(q.y)||base.obj.position.y,lerp(r.vehicleObj.position.z,Number(q.z)||0,t));r.vehicleObj.rotation.set(Number(q.pitch)||0,r.vehicleObj.rotation.y+Math.atan2(Math.sin((Number(q.heading)||0)-r.vehicleObj.rotation.y),Math.cos((Number(q.heading)||0)-r.vehicleObj.rotation.y))*t,Number(q.roll)||0,'YXZ');const campMesh=r.vehicleObj.getObjectByName('camp-setup');if(campMesh)campMesh.visible=!!q.campOn;
+    }else if(r.vehicleObj){if(MP.passenger?.driverId===id)mpLeaveRemoteRide(true);if(r.person.g.parent===r.vehicleObj)scene.add(r.person.g);scene.remove(r.vehicleObj);r.vehicleObj=null;r.vehicleBase=-1;}
   }
+  // Second pass: attach drivers and real remote passengers to the correct cloned vehicle seats.
+  for(const [id,r] of MP.remote){
+    if(r.passengerOf){const localDriver=r.passengerOf===MP.id&&ride?{vehicleObj:ride.obj,rideIndex:vehicles.indexOf(ride)}:null;const driver=localDriver||MP.remote.get(r.passengerOf),base=driver&&vehicles[driver.rideIndex];if(driver?.vehicleObj&&base?.seats?.[r.seatIndex]){if(r.person.g.parent!==driver.vehicleObj){if(r.person.g.parent)r.person.g.parent.remove(r.person.g);driver.vehicleObj.add(r.person.g);}r.person.g.position.set(...base.seats[r.seatIndex]);r.person.g.rotation.set(0,0,0);sitPose(r.person,base.type==='car'?-1.35:-.8);}
+      else if(r.person.g.parent!==scene){if(r.person.g.parent)r.person.g.parent.remove(r.person.g);scene.add(r.person.g);r.person.g.position.set(r.x,r.y,r.z);}
+    }else if(r.rideIndex>=0&&r.vehicleObj&&vehicles[r.rideIndex]){const base=vehicles[r.rideIndex];if(r.person.g.parent!==r.vehicleObj){if(r.person.g.parent)r.person.g.parent.remove(r.person.g);r.vehicleObj.add(r.person.g);}r.person.g.position.set(...(base.seats?.[0]||vspec(base).seat));r.person.g.rotation.set(0,0,0);sitPose(r.person,base.type==='car'?-1.35:-1.0);}
+    else{if(r.person.g.parent!==scene){if(r.person.g.parent)r.person.g.parent.remove(r.person.g);scene.add(r.person.g);standPose(r.person);}r.person.g.position.set(r.x,r.y,r.z);r.person.g.rotation.y=r.face;if(r.fishing){r.person.armR.rotation.x=-1.3;}else if(!r.seated){r.person.armR.rotation.x*=.8;r.person.armL.rotation.x*=.8;}}
+    const d=Math.hypot(r.x-P.x,r.z-P.z);r.person.g.visible=d<900;r.label.position.set(r.x,r.y+2.55,r.z);r.label.visible=d<260;
+    if(r.rideIndex<0&&!r.passengerOf&&r.run&&!r.seated&&!r.fishing)animPerson(r.person,3.8,dt);
+  }
+  if(MP.voiceEnabled){for(const [id,r] of MP.remote){const d=Math.hypot(r.x-P.x,r.z-P.z);if(d<45)voiceEnsurePeer(id);else if(d>60&&MP.peers.has(id))voiceClosePeer(id);}}
+  if(MP.passenger)mpUpdatePassengerPose();voiceUpdateVolumes();
 }
-function mpDisconnect(){MP.manualClose=true;clearTimeout(MP.reconnect);if(MP.socket){try{MP.socket.close();}catch(e){}}MP.socket=null;for(const id of [...MP.remote.keys()])mpRemove(id);mpCount.textContent='0 người';mpRoster.hidden=true;mpSetStatus('offline','Đã ngắt kết nối');}
+function mpNearestDriver(){let best=null,bd=14;for(const [id,r] of MP.remote){if(r.rideIndex<0||!r.vehicle||!r.vehicleObj)continue;const d=Math.hypot(r.x-P.x,r.z-P.z);if(d<bd){best={id,r,d};bd=d;}}return best;}
+function mpJoinRemoteRide(){if(MP.passenger){mpLeaveRemoteRide();return;}const hit=mpNearestDriver();if(!hit){toast('Chưa có người chơi lái xe ở gần bạn.');return;}const base=vehicles[hit.r.rideIndex],seats=base?.seats||[];if(seats.length<2){toast('Phương tiện này không có ghế phụ.');return;}
+  const used=new Set([...MP.remote.values()].filter(x=>x.passengerOf===hit.id).map(x=>x.seatIndex));let seat=1;while(seat<seats.length&&used.has(seat))seat++;if(seat>=seats.length){toast('Xe đã đủ chỗ ngồi.');return;}
+  MP.passenger={driverId:hit.id,seatIndex:seat,vehicleIndex:hit.r.rideIndex};mpBroadcastEvent('group-action',{message:'đã lên xe cùng '+hit.r.name});if(player.g.parent)player.g.parent.remove(player.g);hit.r.vehicleObj.add(player.g);player.g.position.set(...seats[seat]);sitPose(player,base.type==='car'?-1.35:-.8);$('hud').hidden=false;$('vname').textContent='Đi cùng '+hit.r.name;$('vseat').textContent='Ghế '+(seat+1)+' · '+base.name;$('vhint').textContent='Đang ngồi cùng người chơi · nhấn F để xuống';$('btnExit').textContent='Xuống xe';toast('Đã lên xe cùng '+hit.r.name+'.');}
+function mpUpdatePassengerPose(){const ps=MP.passenger,driver=ps&&MP.remote.get(ps.driverId),base=driver&&vehicles[driver.rideIndex];if(!driver||!driver.vehicleObj||!base?.seats?.[ps.seatIndex]){mpLeaveRemoteRide(true);return;}if(player.g.parent!==driver.vehicleObj){if(player.g.parent)player.g.parent.remove(player.g);driver.vehicleObj.add(player.g);}player.g.position.set(...base.seats[ps.seatIndex]);player.g.rotation.set(0,0,0);player.g.updateWorldMatrix(true,false);const wp=new THREE.Vector3();player.g.getWorldPosition(wp);P.x=wp.x;P.y=wp.y;P.z=wp.z;P.face=driver.face;}
+function mpLeaveRemoteRide(silent=false){if(!MP.passenger)return;player.g.updateWorldMatrix(true,false);const wp=new THREE.Vector3();player.g.getWorldPosition(wp);if(player.g.parent)player.g.parent.remove(player.g);scene.add(player.g);MP.passenger=null;mpBroadcastEvent('group-action',{message:'đã xuống xe'});P.x=wp.x;P.y=wp.y;P.z=wp.z;P.vy=0;standPose(player);player.g.position.set(P.x,P.y,P.z);player.g.rotation.set(0,0,0);$('hud').hidden=true;if(!silent)toast('Bạn đã xuống xe.');}
+function mpBroadcastEvent(event,data={}){if(MP.socket?.readyState===WebSocket.OPEN)MP.socket.send(JSON.stringify({type:'event',event,data}));}
+function mpHandleEvent(m){if(m.from===MP.id)return;const who=MP.remote.get(m.from)?.name||'Một lữ khách';if(m.event==='fish-catch')toast(who+' vừa câu được '+String(m.data?.fish||'một con cá')+' · '+String(m.data?.kg||'?')+' kg');else if(m.event==='group-action')toast(who+' '+String(m.data?.message||'đang tham gia hoạt động'));}
+/* ---------- Proximity Voice Chat (WebRTC mesh + WebSocket signaling) ---------- */
+const btnMic=$('btnMic'),btnSpeaker=$('btnSpeaker'),voiceHint=$('voiceHint');
+function voiceSignal(to,data){if(MP.socket&&MP.socket.readyState===WebSocket.OPEN)MP.socket.send(JSON.stringify({type:'rtc-signal',to,data}));}
+async function voiceEnable(){
+  if(!navigator.mediaDevices?.getUserMedia){toast('Trình duyệt không hỗ trợ micro hoặc trang chưa chạy HTTPS.');return;}
+  try{MP.voiceStream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true},video:false});MP.voiceEnabled=true;MP.micMuted=false;try{const AC=window.AudioContext||window.webkitAudioContext;if(AC){MP.voiceContext=new AC();await MP.voiceContext.resume();MP.voiceAnalyser=MP.voiceContext.createAnalyser();MP.voiceAnalyser.fftSize=512;MP.voiceContext.createMediaStreamSource(MP.voiceStream).connect(MP.voiceAnalyser);MP.voiceData=new Uint8Array(MP.voiceAnalyser.fftSize);const meter=()=>{if(!MP.voiceEnabled||!MP.voiceAnalyser)return;MP.voiceAnalyser.getByteTimeDomainData(MP.voiceData);let sum=0;for(const v of MP.voiceData){const n=(v-128)/128;sum+=n*n;}MP.talking=Math.sqrt(sum/MP.voiceData.length)>.045;MP.voiceRAF=requestAnimationFrame(meter);};meter();}}catch(_){}btnMic.textContent='🎙 Tắt micro';btnMic.setAttribute('aria-pressed','true');voiceHint.textContent='Micro đang bật · âm thanh theo khoảng cách';
+    for(const id of MP.remote.keys())voiceEnsurePeer(id);
+  }catch(e){toast('Không thể truy cập micro. Hãy cấp quyền Microphone cho trình duyệt.');voiceHint.textContent='Chưa cấp quyền micro';}
+}
+function voiceToggleMic(){if(!MP.voiceStream)return;MP.micMuted=!MP.micMuted;MP.voiceStream.getAudioTracks().forEach(t=>t.enabled=!MP.micMuted);MP.talking=false;btnMic.textContent=MP.micMuted?'🎙 Bật micro':'🎙 Tắt micro';btnMic.setAttribute('aria-pressed',String(!MP.micMuted));voiceHint.textContent=MP.micMuted?'Micro đã tắt · vẫn nghe người khác':'Micro đang bật · âm thanh theo khoảng cách';}
+function voiceDisable(){MP.voiceEnabled=false;MP.micMuted=false;MP.talking=false;if(MP.voiceRAF)cancelAnimationFrame(MP.voiceRAF);MP.voiceRAF=0;if(MP.voiceContext){MP.voiceContext.close().catch(()=>{});MP.voiceContext=null;MP.voiceAnalyser=null;MP.voiceData=null;}if(MP.voiceStream){MP.voiceStream.getTracks().forEach(t=>t.stop());MP.voiceStream=null;}for(const id of [...MP.peers.keys()])voiceClosePeer(id);btnMic.textContent='🎙 Bật micro';btnMic.setAttribute('aria-pressed','false');voiceHint.textContent='Voice Chat đã tắt';}
+function voiceClosePeer(id){const pc=MP.peers.get(id);if(pc){try{pc.close();}catch(e){}MP.peers.delete(id);}MP.iceQueues.delete(id);const a=MP.audioEls.get(id);if(a){a.pause();a.srcObject=null;a.remove();MP.audioEls.delete(id);}}
+function voiceEnsurePeer(id){
+  if(!MP.voiceEnabled||!MP.voiceStream||!MP.id||!id||id===MP.id)return;const nearby=MP.remote.get(id);if(!nearby||Math.hypot(nearby.x-P.x,nearby.z-P.z)>50)return;
+  if(MP.peers.has(id))return;
+  const pc=new RTCPeerConnection({iceServers:[{urls:'stun:stun.l.google.com:19302'},{urls:'stun:stun1.l.google.com:19302'}],bundlePolicy:'max-bundle'});MP.peers.set(id,pc);MP.iceQueues.set(id,[]);
+  MP.voiceStream.getTracks().forEach(track=>pc.addTrack(track,MP.voiceStream));
+  pc.onicecandidate=e=>{if(e.candidate)voiceSignal(id,{candidate:e.candidate});};
+  pc.ontrack=e=>{let a=MP.audioEls.get(id);if(!a){a=document.createElement('audio');a.autoplay=true;a.playsInline=true;a.dataset.peer=id;document.body.appendChild(a);MP.audioEls.set(id,a);}a.srcObject=e.streams[0];a.play().catch(()=>{});};
+  if(String(MP.id)<String(id))voiceTryOffer(id,pc);
+}
+function voiceTryOffer(id,pc){if(!MP.voiceEnabled||!pc||pc.remoteDescription||pc.signalingState==='closed')return;if(pc.signalingState==='have-local-offer'&&pc.localDescription){voiceSignal(id,{description:pc.localDescription});return;}if(pc.signalingState==='stable'&&!pc.localDescription){pc.createOffer().then(o=>pc.setLocalDescription(o)).then(()=>voiceSignal(id,{description:pc.localDescription})).catch(()=>{});}}
+setInterval(()=>{if(!MP.voiceEnabled||!MP.id)return;for(const [id,pc] of MP.peers){if(String(MP.id)<String(id))voiceTryOffer(id,pc);}},2500);
+async function voiceHandleSignal(from,data){
+  if(!MP.voiceEnabled||!MP.voiceStream||!from||!data)return;voiceEnsurePeer(from);const pc=MP.peers.get(from);if(!pc)return;
+  try{if(data.description){await pc.setRemoteDescription(data.description);const queued=MP.iceQueues.get(from)||[];for(const c of queued){try{await pc.addIceCandidate(c);}catch(_){}}MP.iceQueues.set(from,[]);if(data.description.type==='offer'){const answer=await pc.createAnswer();await pc.setLocalDescription(answer);voiceSignal(from,{description:pc.localDescription});}}else if(data.candidate){if(pc.remoteDescription)await pc.addIceCandidate(data.candidate);else MP.iceQueues.get(from)?.push(data.candidate);}}catch(e){console.warn('Voice signaling:',e);}
+}
+function voiceUpdateVolumes(){for(const [id,a] of MP.audioEls){const r=MP.remote.get(id);if(!MP.speakerEnabled||!r||MP.mutedPeers.has(id)){a.muted=true;continue;}const d=Math.hypot(r.x-P.x,r.z-P.z);a.muted=false;a.volume=Math.max(0,Math.min(1,1-d/45));}}
+mpRoster.addEventListener('click',e=>{const b=e.target.closest('[data-peer]');if(!b)return;const id=b.getAttribute('data-peer');if(MP.mutedPeers.has(id))MP.mutedPeers.delete(id);else MP.mutedPeers.add(id);voiceUpdateVolumes();const list=[...MP.remote.entries()].map(([id,r])=>({id,name:r.name,x:r.target?.x??r.x,y:r.target?.y??r.y,z:r.target?.z??r.z,face:r.target?.face??r.face,run:r.run,seated:r.seated,rideIndex:r.rideIndex,vehicle:r.vehicle,passengerOf:r.passengerOf,seatIndex:r.seatIndex,fishing:r.fishing,activity:r.activity,mic:r.mic,talking:r.talking,jacket:0,scarf:0}));mpApplyRoster(list);});
+btnMic.addEventListener('click',()=>{if(MP.voiceEnabled)voiceToggleMic();else voiceEnable();});
+btnSpeaker.addEventListener('click',()=>{MP.speakerEnabled=!MP.speakerEnabled;btnSpeaker.setAttribute('aria-pressed',String(MP.speakerEnabled));btnSpeaker.textContent=MP.speakerEnabled?'🔊 Âm thanh':'🔇 Tắt âm';voiceUpdateVolumes();});
+
+function mpDisconnect(){voiceDisable();MP.manualClose=true;clearTimeout(MP.reconnect);if(MP.socket){try{MP.socket.close();}catch(e){}}MP.socket=null;for(const id of [...MP.remote.keys()])mpRemove(id);mpCount.textContent='0 người';mpRoster.hidden=true;mpSetStatus('offline','Đã ngắt kết nối');}
 
 
 /* ---------- Camera & input ---------- */
@@ -1743,13 +1808,14 @@ canvas.addEventListener('wheel',e=>{e.preventDefault();if(!started)return;if(fpv
 const keys=new Set();
 addEventListener('keydown',e=>{const k0=e.key.toLowerCase();if(!$('album').hidden&&(k0==='escape'||k0==='p')){closeAlbum();return;}if(!$('hotelUI').hidden&&k0==='escape'){closePanel();return;}
   if(!started||e.target.tagName==='INPUT'||!$('book').hidden||!$('album').hidden||!$('hotelUI').hidden)return;const k=k0;keys.add(k);
-  if(k===' '){e.preventDefault();if(fishing){strike();return;}if(!ride)jump();}
+  if(k===' '){e.preventDefault();if(fishing){strike();return;}if(!ride&&!MP.passenger)jump();}
   if(k==='c'&&!e.repeat)takePhoto();
   if(k==='r'&&ride&&!e.repeat)addPax(ride);if(k==='t'&&ride&&!e.repeat)delPax(ride);
   if(k==='p')openAlbum();
   if(k==='v'&&!e.repeat)setView(!fpv);
   if(k==='e')doAction();
-  if(k==='f'&&ride)exitRide();if(k==='x'&&indoor)exitLodge();
+  if(k==='g'&&!e.repeat)mpJoinRemoteRide();
+  if(k==='f'&&MP.passenger)mpLeaveRemoteRide();else if(k==='f'&&ride)exitRide();if(k==='x'&&indoor)exitLodge();
   if(k.startsWith('arrow'))e.preventDefault();});
 addEventListener('keyup',e=>keys.delete(e.key.toLowerCase()));addEventListener('blur',()=>keys.clear());
 function jump(){if(!indoor&&!P.seated&&!P.lying&&P.y<=groundAt(P.x,P.z)+.05)P.vy=5.2;}
@@ -1760,9 +1826,10 @@ if(touch){
   const upd=e=>{const r=J.getBoundingClientRect();let dx=e.clientX-(r.left+r.width/2),dy=e.clientY-(r.top+r.height/2);const m=Math.hypot(dx,dy),max=44;if(m>max){dx*=max/m;dy*=max/m;}joy.x=dx/max;joy.y=dy/max;K.style.transform=`translate(${dx}px,${dy}px)`;};
   J.addEventListener('pointerdown',e=>{joy.id=e.pointerId;J.setPointerCapture(e.pointerId);upd(e);});J.addEventListener('pointermove',e=>{if(e.pointerId===joy.id)upd(e);});
   const rel=e=>{if(e.pointerId!==joy.id)return;joy.id=null;joy.x=joy.y=0;K.style.transform='';};J.addEventListener('pointerup',rel);J.addEventListener('pointercancel',rel);
-  $('bJump').onclick=()=>{if(fishing){strike();return;}if(!ride)jump();};$('bRun').onclick=()=>{P.run=!P.run;$('bRun').setAttribute('aria-pressed',P.run);};$('bAct').onclick=()=>doAction();
+  $('bJump').onclick=()=>{if(fishing){strike();return;}if(!ride&&!MP.passenger)jump();};$('bRun').onclick=()=>{P.run=!P.run;$('bRun').setAttribute('aria-pressed',P.run);};$('bAct').onclick=()=>doAction();
 }
-$('btnExit').onclick=()=>exitRide();
+$('btnExit').onclick=()=>{if(MP.passenger)mpLeaveRemoteRide();else exitRide();};
+$('btnRideWith').onclick=()=>mpJoinRemoteRide();
 $('btnPaxAdd').onclick=()=>{if(ride)addPax(ride);canvas.focus();};$('btnPaxDel').onclick=()=>{if(ride)delPax(ride);canvas.focus();};
 $('btnView').onclick=()=>{if(started)setView(!fpv);canvas.focus();};if($('bView'))$('bView').onclick=()=>setView(!fpv);
 
@@ -1829,7 +1896,7 @@ function startFishing(){
     const dx=best.x-P.x,dz=best.z-P.z,l=Math.hypot(dx,dz)||1;P.face=Math.atan2(dx,dz);bx=best.x+dx/l*7;bz=best.z+dz/l*7;}
   fishing={L,px:P.x,pz:P.z,t0:clockT,phase:'wait',t:0,wait:3+Math.random()*5,bx,bz,hits:0,misses:0,needed:3+Math.floor(Math.random()*3),pointer:0,zone:.5,seed:Math.random()*6.28};
   bobber.position.set(bx,L.level-.2,bz);bobber.visible=fishLine.visible=true;rod.visible=true;player.armR.rotation.x=-1.3;
-  fishUI('cast','Đang quăng cần… chờ phao chìm.');$('fish').classList.remove('bite');if(fpv)cam.yaw=P.face-Math.PI;
+  fishUI('cast','Đang quăng cần… chờ phao chìm.');mpBroadcastEvent('group-action',{message:'đang bắt đầu câu cá'});$('fish').classList.remove('bite');if(fpv)cam.yaw=P.face-Math.PI;
 }
 function stopFishing(msg){
   fishing=null;bobber.visible=fishLine.visible=false;rod.visible=false;
@@ -1851,7 +1918,7 @@ function strike(){
     if(fishing.hits>=fishing.needed){
       const pick=fishing.pick,kgN=fishing.kg,kg=kgN.toFixed(1);
       fishCount++;fishBest=Math.max(fishBest,kgN);$('bag').hidden=false;$('bagTxt').textContent=fishCount+' con cá · lớn nhất '+fishBest.toFixed(1)+' kg';
-      makeHeldFish(pick,kg);stopFishing((kgN>=8?'Cá khủng! ':'Câu thành công! ')+pick.charAt(0).toUpperCase()+pick.slice(1)+' nặng '+kg+' kg. Nhấn C để chụp ảnh kỷ niệm.');
+      makeHeldFish(pick,kg);mpBroadcastEvent('fish-catch',{fish:pick,kg});stopFishing((kgN>=8?'Cá khủng! ':'Câu thành công! ')+pick.charAt(0).toUpperCase()+pick.slice(1)+' nặng '+kg+' kg. Nhấn C để chụp ảnh kỷ niệm.');
     }else{const T=['Chuẩn! Giữ nhịp…','Dây vẫn căng…','Cá còn vùng vẫy…','Tốt lắm, tiếp tục!','Đừng buông cần!'];toast(T[Math.floor(Math.random()*T.length)]);}
   }else{
     fishing.misses++;$('fishMiss').textContent='Lỗi: '+fishing.misses+' / '+fishing.maxMiss;
@@ -1958,7 +2025,7 @@ SPOTS.unshift({id:'thuyta',name:'Nhà hàng Thủy Tạ',eyebrow:'Nhà hàng tr�
 if(GH.length)SPOTS.push({id:'gh',name:'Vườn nhà kính',eyebrow:'Rau, hoa và dâu tây',x:GH[0].x,z:GH[0].z,r:45,text:'Những dãy nhà kính trắng phủ kín các sườn đồi là hình ảnh quen thuộc của Đà Lạt: trồng rau, dâu tây và hoa quanh năm.',actions:[{label:'Hái dâu tây',fn:()=>toast('Một rổ dâu tây đỏ mọng, hơi chua nhẹ.')}]});
 let currentSpot=null,currentVeh=null,booked=null,bookSel=0,bookNights=1,bookLodge=null;
 const fmtVND=n=>n.toLocaleString('vi-VN')+'đ';
-function openBooking(L){unlock();bookLodge=L;bookSel=0;bookNights=1;$('bookKind').textContent=(L.kind==='hotel'?'Khách sạn':'Homestay')+' · tên hư cấu';$('bookTitle').textContent=L.name;
+function openBooking(L){mpBroadcastEvent('group-action',{message:'đang xem phòng tại '+L.name});unlock();bookLodge=L;bookSel=0;bookNights=1;$('bookKind').textContent=(L.kind==='hotel'?'Khách sạn':'Homestay')+' · tên hư cấu';$('bookTitle').textContent=L.name;
   const R=$('rooms');R.innerHTML='';L.rooms.forEach((r,i)=>{const b=document.createElement('button');b.className='room';b.setAttribute('aria-pressed',i===0?'true':'false');
     const n=document.createElement('span');n.textContent=r[0];{const sm=document.createElement('small');sm.textContent=VIEW_NAMES[roomView(L,r[0])]+' · '+roomFeat(r[0],r[1]).list.join(' · ');n.appendChild(sm);}const pr=document.createElement('b');pr.textContent=fmtVND(r[1])+'/đêm';b.append(n,pr);
     b.onclick=()=>{bookSel=i;[...R.children].forEach((x,j)=>x.setAttribute('aria-pressed',j===i?'true':'false'));updTotal();};R.appendChild(b);});
@@ -2021,7 +2088,7 @@ function openHallScreen(){
 const IY=-600,FH=5;
 const hotelPanel=$('hotelPanel'),hotelUI=$('hotelUI');
 const inLights=[0,1,2,3,4].map(()=>{const l=new THREE.PointLight(0xffd9a0,0,36,1.2);scene.add(l);return l;});
-function panelOpen(title,html){unlock();hotelPanel.innerHTML='';const h=document.createElement('h2');h.textContent=title;hotelPanel.appendChild(h);const body=document.createElement('div');body.style.cssText='display:flex;flex-direction:column;gap:10px';body.innerHTML=html;hotelPanel.appendChild(body);const close=document.createElement('button');close.className='primary';close.textContent='Đóng';close.onclick=closePanel;hotelPanel.appendChild(close);hotelUI.hidden=false;keys.clear();}
+function panelOpen(title,html){mpBroadcastEvent('group-action',{message:'đang tương tác tại '+(indoor?.L?.name||title)});unlock();hotelPanel.innerHTML='';const h=document.createElement('h2');h.textContent=title;hotelPanel.appendChild(h);const body=document.createElement('div');body.style.cssText='display:flex;flex-direction:column;gap:10px';body.innerHTML=html;hotelPanel.appendChild(body);const close=document.createElement('button');close.className='primary';close.textContent='Đóng';close.onclick=closePanel;hotelPanel.appendChild(close);hotelUI.hidden=false;keys.clear();}
 function closePanel(){hotelUI.hidden=true;hotelPanel.innerHTML='';keys.clear();canvas.focus();}
 function fadeDo(fn,hold){const f=$('fade');f.style.opacity=1;setTimeout(()=>{fn();setTimeout(()=>{f.style.opacity=0;},hold||150);},600);}
 function signMesh(txt,w,h,bg,fg){const c=document.createElement('canvas');c.width=512;c.height=Math.max(32,Math.round(512*h/w));const q=c.getContext('2d');q.fillStyle=bg;q.fillRect(0,0,c.width,c.height);q.fillStyle=fg;q.textAlign='center';q.textBaseline='middle';let fs=Math.min(c.height*.6,72);const F=()=>q.font=`700 ${fs}px "Be Vietnam Pro", system-ui, sans-serif`;F();while(q.measureText(txt).width>c.width*.9&&fs>12){fs-=2;F();}q.fillText(txt,c.width/2,c.height/2+2);const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;return new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshBasicMaterial({map:t,fog:false}));}
@@ -2756,7 +2823,7 @@ function payRest(I){const R=I.rest;if(!R.bill){toast('Bạn chưa gọi món nà
   panelOpen('Hóa đơn · Nhà hàng Thủy Tạ',`<p>${Object.entries(cnt).map(([i,q])=>MENU[i][0]+' x'+q+': <b>'+fmtVND(MENU[i][1]*q)+'</b>').join('<br>')}</p><p>Tổng cộng: <b>${fmtVND(R.bill)}</b></p><div class="row"><button class="primary" id="payNow">Thanh toán</button></div><p class="muted">Giá minh họa trong game.</p>`);
   $('payNow').onclick=()=>{R.plates.forEach(p=>p.parent&&p.parent.remove(p));R.plates.length=0;R.items.length=0;R.bill=0;closePanel();toast('Cảm ơn quý khách! Hẹn gặp lại ở Thủy Tạ.');};}
 
-function enterLodge(L,after){
+function enterLodge(L,after){mpBroadcastEvent('group-action',{message:'đã ghé '+L.name});
   if(indoor&&indoor.L===L){if(after)after();return;}
   if(ride)exitRide(true);if(fishing)stopFishing();if(P.seated)standUp();
   fadeDo(()=>{
@@ -2968,14 +3035,14 @@ function lieInRoom(I,no,b){
   const r=I.roomObjs.find(o=>o.no===no),y0=IY+FH*(b.f-1);
   lieDown({x:I.ox+b.x0+1.99,y:y0+b.by+1.01,z:I.oz+b.z,yaw:Math.PI/2,ux:I.ox+b.sx,uz:I.oz+b.sz,uy:y0,eyebrow:'Phòng '+no+' · '+b.name,name:'Đang nằm trên giường',
     wake:'Chào buổi sáng! Bạn đã ngủ một giấc ngon ở phòng '+no+'. Kéo rèm ra: '+VIEW_NAMES[r?r.view:'forest'].toLowerCase()+' trong sương sớm.'});}
-function doAction(){if(P.lying){sleepNow();return;}if(ride||CABLE.ride)return;if(indoor){if(currentHotelSpot&&currentHotelSpot.actions?.[0])currentHotelSpot.actions[0].fn();return;}if(currentVeh){enterRide(currentVeh);return;}if(currentSpot&&currentSpot.actions[0])currentSpot.actions[0].fn();}
+function doAction(){if(MP.passenger){mpLeaveRemoteRide();return;}if(mpNearestDriver()){mpJoinRemoteRide();return;}if(P.lying){sleepNow();return;}if(ride||CABLE.ride)return;if(indoor){if(currentHotelSpot&&currentHotelSpot.actions?.[0])currentHotelSpot.actions[0].fn();return;}if(currentVeh){enterRide(currentVeh);return;}if(currentSpot&&currentSpot.actions[0])currentSpot.actions[0].fn();}
 
 /* ---------- Riding ---------- */
 const VSPEC={bike:{max:17,acc:5,brake:12,rev:4,steer:1.9,cam:7,seat:[0,.42,-.1],r:.8},car:{max:25,acc:5.5,brake:14,rev:6,steer:1.3,cam:12,seat:[.4,-.15,.25],r:1.6},boat:{max:3.2,acc:1.2,brake:2,rev:1.2,steer:.9,cam:9,seat:[-.27,.335,-.45],r:1.3}};
 function vspec(v){return v._s||(v._s=Object.assign({},VSPEC[v.type],v.spec||{}));}
 const PAX_COLS=[[0x2f4a6b,0xe9a6b0],[0x8a3b2f,0xf2b829],[0x5b6b3a,0xf4f1e6],[0x6b4a8a,0xf2b829],[0x2f6b5a,0xe07b24],[0xc9b48a,0x8a3b2f],[0x3a3a3a,0xd8342c]];
 function updSeat(v){$('vseat').textContent='Chở '+(1+v.pax.length)+'/'+v.seats.length+' người';$('btnPaxAdd').disabled=v.pax.length>=v.seats.length-1;$('btnPaxDel').disabled=!v.pax.length;}
-function addPax(v){if(!v.seats)return;if(v.pax.length>=v.seats.length-1){toast(v.type==='bike'?'Xe máy chỉ chở tối đa 2 người.':'Xe đã đủ '+v.seats.length+' chỗ.');return;}
+function addPax(v){if(MP.status==='online'){toast('Trong chế độ online, bạn bè hãy đứng cạnh xe rồi bấm G hoặc nút Đi cùng để lên xe thật nhé.');return;}if(!v.seats)return;if(v.pax.length>=v.seats.length-1){toast(v.type==='bike'?'Xe máy chỉ chở tối đa 2 người.':'Xe đã đủ '+v.seats.length+' chỗ.');return;}
   const c=PAX_COLS[(v.pax.length+(v.paxSeed||0))%PAX_COLS.length],p=makePerson({jacket:c[0],scarf:c[1]}),s=v.seats[v.pax.length+1];
   p.g.position.set(s[0],s[1],s[2]);v.obj.add(p.g);sitPose(p,v.type==='bike'?-.8:v.kind==='kayak'?-1.2:-.55);if(v.type==='bike'){p.armL.rotation.z=.35;p.armR.rotation.z=-.35;}v.pax.push(p);updSeat(v);
   toast(v.type==='bike'?'Bạn đi cùng đã ngồi sau, ôm eo chắc chưa?':'Thêm một người lên xe ('+(1+v.pax.length)+'/'+v.seats.length+').');}
@@ -3105,7 +3172,7 @@ $('go').disabled=false;say('Vào Đà Lạt');
 $('go').onclick=()=>{
   started=true;player.jacket.color.setHex(JACKETS[pickJ]);player.scarf.color.setHex(SCARVES[pickS]);
   const nm=($('nm').value||'Lữ khách').trim().slice(0,16)||'Lữ khách';nameLabel=makeLabel(nm,null,.2);
-  MP.name=nm;MP.room='dalat';mpConnect();
+  MP.name=nm;MP.room=(new URLSearchParams(location.search).get('room')||'dalat').slice(0,24);mpConnect();
   $('start').hidden=true;canvas.focus();cam.yaw=Math.atan2(P.x-(PLAZA.x-62),P.z-(PLAZA.z+5));P.face=cam.yaw+Math.PI;cam.pitch=.18;
   updateLOD(P.x,P.z,true);
   toast('Chào '+nm+'! Bạn đã vào Đà Lạt. Hãy khám phá thế giới chung nhé.');
@@ -3156,11 +3223,13 @@ function frame(){
   smokeT+=dt;if(smokeT>.4&&smokeSpots.length){smokeT=0;puff(smokeSpots[Math.floor(Math.random()*smokeSpots.length)],1.1,2.2);}
   for(let i=puffs.length-1;i>=0;i--){const p=puffs[i];p.age+=dt;const t=p.age/p.life;p.s.position.y+=dt*1.2;p.s.scale.setScalar(p.size*(1+t*1.5));p.s.material.opacity=.55*(1-t);if(t>=1){scene.remove(p.s);p.s.material.dispose();puffs.splice(i,1);}}
 
+  if(started)mpUpdateRemote(dt);
   if(!started){
     introA+=dt*.04;const cx=PLAZA.x-10,cz=PLAZA.z-10;camera.position.set(cx+Math.cos(introA)*120,PADS[0].h+45,cz+Math.sin(introA)*90);camera.lookAt(PLAZA.x,PADS[0].h+8,PLAZA.z);
     player.g.position.set(P.x,P.y,P.z);
   }else{
     if(ride)stepRide(dt);
+    else if(MP.passenger){mpUpdatePassengerPose();}
     else if(CABLE.ride)stepCable(dt);
     else{
       let f=0,s=0;if(keys.has('w')||keys.has('arrowup'))f+=1;if(keys.has('s')||keys.has('arrowdown'))f-=1;if(keys.has('d')||keys.has('arrowright'))s+=1;if(keys.has('a')||keys.has('arrowleft'))s-=1;
@@ -3200,7 +3269,7 @@ function frame(){
   for(const l of labels){const d=Math.hypot(l.x-cpx,l.z-cpz);l.s.visible=d<l.maxD&&d>(l.minD||28);if(l.s.visible)l.s.position.set(l.x,l.y+Math.sin(time*1.2+l.x)*.3,l.z);}
   stepFishing(dt);
   for(const c of player.body.children)c.visible=!fpv||c===eyeAnchor||c===heldFish||(c===player.armR&&(!!fishing||!!heldFish))||(c===player.armL&&!!heldFish&&heldFish.userData.two);
-  mpSendState(dt);mpUpdateRemote(dt);
+  mpSendState(dt);
   grade.uniforms.uTime.value=time%10;composer.render();if(photoPending)finishPhoto();
   requestAnimationFrame(frame);
 }
