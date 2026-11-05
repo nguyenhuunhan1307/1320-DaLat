@@ -175,6 +175,9 @@ body.photo #top,body.photo #mapwrap,body.photo #card,body.photo #hint,body.photo
 #mpRoster b{color:var(--ink)}
 @media(max-width:640px){#mpStatus{top:calc(104px + env(safe-area-inset-top,0px));font-size:10px;padding:6px 9px}#mpRoster{top:calc(139px + env(safe-area-inset-top,0px));max-width:145px;font-size:10px}}
 
+#start .sbox h2{margin:8px 0 0}
+#start .sbox .field{margin:12px 0}
+#start .sbox #go{width:100%;margin-top:8px}
 </style>
 
 </head>
@@ -232,16 +235,16 @@ body.photo #top,body.photo #mapwrap,body.photo #card,body.photo #hint,body.photo
 <div id="start">
   <div class="sbox glass">
     <div>
-      <div class="kicker">Thành phố ngàn thông · cao ~1.500 m</div>
-      <h2>Đà Lạt 3D · CINEMATIC OPEN WORLD</h2>
+      <div class="kicker">THẾ GIỚI MỞ MULTIPLAYER · KHÔNG CẦN TÀI KHOẢN</div>
+      <h2>Tạo nhân vật của bạn</h2>
     </div>
-    <p>Đứng nhỏ xíu bên nụ atiso 15 m ở Quảng trường Lâm Viên, đạp vịt trên hồ Xuân Hương, thuê xe máy hoặc ô tô chạy qua đèo Prenn, đặt phòng khách sạn nhiều tầng có thang máy, kéo rèm ngắm hồ, ăn tối ở nhà hàng Thủy Tạ và câu cá trên hồ.</p>
-    <div class="field"><label for="nm">Tên của bạn</label><input id="nm" maxlength="16" value="Lữ khách" autocomplete="off"></div>
-    <div class="field"><label for="mpRoom">Phòng online</label><input id="mpRoom" maxlength="24" value="dalat" autocomplete="off" placeholder="dalat"></div>
+    <p>Chọn tên và diện mạo nhân vật, sau đó vào thẳng Đà Lạt. Không cần đăng ký, không cần mật khẩu, không cần chọn phòng.</p>
+    <div class="field"><label for="nm">Tên nhân vật</label><input id="nm" maxlength="16" value="Lữ khách" autocomplete="nickname" placeholder="Nhập tên hiển thị"></div>
     <div class="field"><span class="lab">Áo khoác</span><div class="sw" id="swJ"></div></div>
     <div class="field"><span class="lab">Khăn len &amp; mũ</span><div class="sw" id="swS"></div></div>
+    <div class="field" style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 12px;border:1px solid rgba(255,255,255,.14);border-radius:12px;background:rgba(255,255,255,.05)"><span class="lab">Thế giới đang tham gia</span><b style="color:var(--ink)">Đà Lạt · Phòng chung</b></div>
     <button id="go" disabled>Đang dựng thành phố…</button>
-    <div class="alt-line" id="loadmsg">Khám phá trung tâm và vùng ngoại ô Đà Lạt. Khoảng cách giữa một số địa danh được rút gọn để thuận tiện trải nghiệm.</div>
+    <div class="alt-line" id="loadmsg">Vào chơi với tư cách khách. Nhân vật sẽ xuất hiện trong thế giới chung khi máy chủ kết nối thành công. Không có tài khoản và không yêu cầu đăng nhập.</div>
   </div>
 </div>
 
@@ -3102,10 +3105,10 @@ $('go').disabled=false;say('Vào Đà Lạt');
 $('go').onclick=()=>{
   started=true;player.jacket.color.setHex(JACKETS[pickJ]);player.scarf.color.setHex(SCARVES[pickS]);
   const nm=($('nm').value||'Lữ khách').trim().slice(0,16)||'Lữ khách';nameLabel=makeLabel(nm,null,.2);
-  MP.name=nm;MP.room=(($('mpRoom').value||'dalat').trim().toLowerCase().replace(/[^a-z0-9_-]/g,'').slice(0,24)||'dalat');mpConnect();
+  MP.name=nm;MP.room='dalat';mpConnect();
   $('start').hidden=true;canvas.focus();cam.yaw=Math.atan2(P.x-(PLAZA.x-62),P.z-(PLAZA.z+5));P.face=cam.yaw+Math.PI;cam.pitch=.18;
   updateLOD(P.x,P.z,true);
-  toast('Chào '+nm+'! Ngước lên nhìn nụ atiso cao 15 m nào.');
+  toast('Chào '+nm+'! Bạn đã vào Đà Lạt. Hãy khám phá thế giới chung nhé.');
 };
 $('nm').addEventListener('keydown',e=>{if(e.key==='Enter'&&!$('go').disabled)$('go').click();});
 
