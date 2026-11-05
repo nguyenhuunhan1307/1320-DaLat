@@ -1755,7 +1755,7 @@ function mpSendState(dt){
   if(MP.status!=='online'||!MP.socket||MP.socket.readyState!==WebSocket.OPEN||!started)return;
   MP.lastSend+=dt;if(MP.lastSend<.08)return;MP.lastSend=0;
   const rideIndex=ride?vehicles.indexOf(ride):-1;
-  const data={type:'state',x:P.x,y:P.y,z:P.z,face:P.face,run:!!(keys.has('shift')||P.run),seated:!!P.seated||!!ride||!!MP.passenger||!!P.lying,lying:!!P.lying,jacket:pickJ,scarf:pickS,rideIndex,vehicle:ride?{x:ride.x,y:ride.obj.position.y,z:ride.z,heading:ride.heading,pitch:ride.obj.rotation.x,roll:ride.obj.rotation.z,speed:ride.speed,type:ride.type,campOn:!!ride.campOn}:null,passengerOf:MP.passenger?.driverId||null,seatIndex:MP.passenger?.seatIndex||0,fishing:!!fishing,mic:!!MP.voiceEnabled&&!MP.micMuted,talking:!!MP.talking,activity:fishing?'fishing':ride||MP.passenger?'driving':indoor?(indoor.L.kind==='hotel'?'hotel':indoor.L.kind==='restaurant'?'restaurant':'inside'):P.lying?'resting':'exploring',fishCount};
+  const data={type:'state',rentalId:ride?.rentalId||null,x:P.x,y:P.y,z:P.z,face:P.face,run:!!(keys.has('shift')||P.run),seated:!!P.seated||!!ride||!!MP.passenger||!!P.lying,lying:!!P.lying,jacket:pickJ,scarf:pickS,rideIndex,vehicle:ride?{x:ride.x,y:ride.obj.position.y,z:ride.z,heading:ride.heading,pitch:ride.obj.rotation.x,roll:ride.obj.rotation.z,speed:ride.speed,type:ride.type,campOn:!!ride.campOn}:null,passengerOf:MP.passenger?.driverId||null,seatIndex:MP.passenger?.seatIndex||0,fishing:!!fishing,mic:!!MP.voiceEnabled&&!MP.micMuted,talking:!!MP.talking,activity:fishing?'fishing':ride||MP.passenger?'driving':indoor?(indoor.L.kind==='hotel'?'hotel':indoor.L.kind==='restaurant'?'restaurant':'inside'):P.lying?'resting':'exploring',fishCount};
   try{MP.socket.send(JSON.stringify(data));}catch(e){}
 }
 function mpUpdateRemote(dt){
@@ -2050,10 +2050,10 @@ if(GH.length)SPOTS.push({id:'gh',name:'Vườn nhà kính',eyebrow:'Rau, hoa và
 
 SPOTS.push(
   {id:'bike-rental-npc',name:'Quầy thuê xe máy',eyebrow:'Nhân viên cho thuê xe',x:-424,z:-113,r:8,
-   text:'Chào bạn! Bên mình có xe tay ga phổ thông và mô tô thể thao. Hỏi giá, chọn xe rồi xác nhận thuê trước khi nhận chìa khóa nhé.',
+   text:'Chào bạn! Bên mình có xe tay ga phổ thông và mô tô thể thao. Bạn xem bảng giá rồi bấm Thuê xe để nhận xe ngay nhé.',
    actions:[{label:'Hỏi giá thuê xe máy',fn:()=>openRentalMenu('bike')}]},
   {id:'car-rental-npc',name:'Quầy thuê ô tô',eyebrow:'Nhân viên cho thuê ô tô',x:377,z:218,r:9,
-   text:'Chào bạn! Bên mình có sedan, hatchback, MPV 7 chỗ và SUV camping. Bạn muốn xem bảng giá dòng nào?',
+   text:'Chào bạn! Bên mình có sedan, hatchback, MPV 7 chỗ và SUV camping. Mời bạn xem bảng giá và chọn xe nhé.',
    actions:[{label:'Hỏi giá thuê ô tô',fn:()=>openRentalMenu('car')}]}
 );
 let currentSpot=null,currentVeh=null,booked=null,bookSel=0,bookNights=1,bookLodge=null;
@@ -3063,10 +3063,9 @@ function openRentalMenu(type){
       <button class="${unavailable?'':'primary'}" data-rent="${v.rentalId}" ${unavailable?'disabled':''}>${unavailable?'Đã thuê':'Thuê xe'}</button></div>`;
   }).join('');
   const returnLine=MP.myRentalId?.startsWith(type+'-')?'<p style="color:var(--accent)">Bạn đang thuê một xe. Có thể trả xe ngay tại quầy này.</p><button class="primary" id="returnRental">Trả xe đang thuê</button>':'';
-  panelOpen(title,`<p>Chọn phương tiện và xác nhận với nhân viên. Giá trong game tính theo một lượt thuê; xe đã có người thuê sẽ bị khóa trên toàn phòng.</p>${rows}${returnLine}`);
+  panelOpen(title,`<p>Chọn xe và bấm Thuê xe để nhận phương tiện ngay. Xe đang có người thuê sẽ được đánh dấu trên toàn phòng. Giá thuê tính theo một lượt trong game.</p>${rows}${returnLine}`);
   hotelPanel.querySelectorAll('[data-rent]').forEach(b=>b.onclick=()=>{
     const v=vehicles.find(x=>x.rentalId===b.dataset.rent);if(!v)return;
-    if(!confirm('Xác nhận thuê '+v.name+' với giá '+fmtVND(v.rentPrice)+'?'))return;
     closePanel();requestRent(v);
   });
   const rb=$('returnRental');if(rb)rb.onclick=()=>{closePanel();returnRentalAtNpc();};
