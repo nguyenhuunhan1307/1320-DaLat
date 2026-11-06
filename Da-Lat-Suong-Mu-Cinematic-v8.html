@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Đà Lạt Sương Mù — Cinematic 3D Edition v11 · Quality + Fixes</title>
+<title>Đà Lạt Sương Mù — Cinematic 3D Edition v12 · Âm Giới 18 Câu Đố</title>
 <meta name="theme-color" content="#18231f">
 <meta name="description" content="Khám phá Đà Lạt 3D thế giới mở với góc nhìn thứ ba, ánh sáng cinematic, sương mù và các địa danh đặc trưng.">
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -187,6 +187,44 @@ body.photo #top,body.photo #mapwrap,body.photo #card,body.photo #hint,body.photo
 #start .sbox h2{margin:8px 0 0}
 #start .sbox .field{margin:12px 0}
 #start .sbox #go{width:100%;margin-top:8px}
+#puz{position:fixed;inset:0;z-index:31;background:radial-gradient(ellipse at center,rgba(60,8,10,.9),rgba(6,2,3,.96));display:flex;align-items:center;justify-content:center;padding:16px;overflow:auto}
+#puz[hidden]{display:none}
+.pz-panel{width:min(560px,100%);max-height:94vh;overflow:auto;padding:20px 22px;background:rgba(22,10,11,.96);border:1px solid rgba(255,150,110,.35);border-radius:16px;box-shadow:0 0 60px rgba(255,70,30,.25);display:flex;flex-direction:column;gap:10px;color:#f4e6dc}
+.pz-panel>*{flex-shrink:0}
+.pz-eyebrow{font-size:12px;letter-spacing:.14em;color:#ff9a78}
+.pz-title{margin:0;font-size:26px;color:#ffe1c4}
+.pz-sub{font-size:13px;color:#e8b890}
+.pz-how{margin:0;font-size:14px;line-height:1.5;color:#e6d6cb}
+.pz-body{display:flex;flex-direction:column;gap:10px;align-items:stretch;min-height:120px}
+.pz-score{font-size:13px;color:#cdb8a8;text-align:center}
+.pz-big{font-size:20px;text-align:center;padding:8px;color:#ffe1c4}
+.pz-q{font-size:17px;line-height:1.45;text-align:center;padding:6px 4px}
+.pz-msg{min-height:22px;text-align:center;font-size:15px}
+.pz-msg.good{color:#7dff9a}.pz-msg.bad{color:#ff8a78}
+.pz-win{text-align:center;font-size:24px;color:#7dff9a;padding:10px}
+.pz-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.pz-foot{display:flex;justify-content:flex-end}
+.pz-btn{border:1px solid rgba(255,170,130,.4);border-radius:10px;padding:10px 14px;background:rgba(255,255,255,.07);color:#f4e6dc;font-size:15px;min-height:44px;touch-action:manipulation}
+.pz-btn:hover{background:rgba(255,140,90,.22)}
+.pz-btn.ghost{background:none;font-size:13px;min-height:36px}
+.pz-btn.big{font-size:20px;padding:12px 28px;font-weight:700;background:rgba(255,120,70,.28)}
+.pz-btn.ok{background:rgba(60,200,110,.4);border-color:#7dff9a}.pz-btn.no{background:rgba(220,60,50,.4);border-color:#ff8a78}
+.pz-opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:480px){.pz-opts{grid-template-columns:1fr}}
+.pz-bar{height:6px;background:rgba(255,255,255,.12);border-radius:4px;overflow:hidden}.pz-bar i{display:block;height:100%;width:100%;background:#ff9a50}
+.pz-in{padding:12px;font-size:17px;border-radius:10px;border:1px solid rgba(255,170,130,.4);background:rgba(0,0,0,.4);color:#fff;text-align:center}
+.pz-cv{width:100%;max-width:340px;align-self:center;border:1px solid rgba(255,170,130,.25);border-radius:10px;background:#141012}
+.pz-grid{display:grid;gap:6px;grid-template-columns:repeat(3,1fr);max-width:340px;width:100%;align-self:center}
+.pz-grid .pz-btn{padding:10px 0;font-size:20px;text-align:center}
+.pz-grid.ttt .pz-btn{height:84px;font-size:36px}
+.pz-grid.simon .pz-btn{height:70px;background:var(--pc);opacity:.45}.pz-grid.simon .pz-btn.lit{opacity:1;box-shadow:0 0 22px var(--pc)}
+.pz-grid .pz-btn.start{outline:2px solid #ffd27a}
+.pz-heaps{display:flex;flex-direction:column;gap:8px;align-items:center}.pz-heap{display:flex;gap:6px;align-items:center}.pz-hl{width:60px;font-size:13px;color:#cdb8a8}
+.pz-btn.pebble{min-height:36px;width:36px;padding:0;border-radius:50%;font-size:20px}
+.pz-list{margin:0;padding:0 0 0 22px;font-size:15px;line-height:1.55;columns:2}
+.pz-ring{position:relative;width:min(340px,100%);height:300px;align-self:center}
+.pz-ring .pz-btn.pit{position:absolute;transform:translate(-50%,-50%);min-height:44px;min-width:56px;padding:4px 6px;font-size:14px}
+.pz-ring .pz-btn.src{border-color:#ffd27a;background:rgba(255,210,100,.2)}
 </style>
 
 </head>
@@ -230,6 +268,7 @@ body.photo #top,body.photo #mapwrap,body.photo #card,body.photo #hint,body.photo
   <div class="grid" id="albumGrid"></div>
 </div></div>
 <div id="hotelUI" hidden role="dialog" aria-modal="true"><div class="panel" id="hotelPanel"></div></div>
+<div id="puz" hidden role="dialog" aria-modal="true" aria-label="Câu đố Âm Giới"><div class="pz-panel" id="puzPanel"></div></div>
 <div id="book" class="glass" hidden role="dialog" aria-modal="true" aria-labelledby="bookTitle">
   <div class="eyebrow" id="bookKind">Khách sạn</div>
   <h2 id="bookTitle">Đặt phòng</h2>
@@ -1885,7 +1924,7 @@ canvas.addEventListener('pointermove',e=>{if(document.pointerLockElement===canva
 const endDrag=e=>{if(dragging&&dragging.id===e.pointerId)dragging=null;};canvas.addEventListener('pointerup',endDrag);canvas.addEventListener('pointercancel',endDrag);
 canvas.addEventListener('wheel',e=>{e.preventDefault();if(!started)return;if(fpv){if(e.deltaY>0)setView(false);return;}if(e.deltaY<0&&cam.dist<=2.55){setView(true);return;}cam.dist=clamp(cam.dist*(1+Math.sign(e.deltaY)*.1),2.5,120);},{passive:false});
 const keys=new Set();
-addEventListener('keydown',e=>{const k0=e.key.toLowerCase();if(!$('album').hidden&&(k0==='escape'||k0==='p')){closeAlbum();return;}if(!$('hotelUI').hidden&&k0==='escape'){closePanel();return;}
+addEventListener('keydown',e=>{const k0=e.key.toLowerCase();if(!$('puz').hidden){if(k0==='escape')pzClose();return;}if(!$('album').hidden&&(k0==='escape'||k0==='p')){closeAlbum();return;}if(!$('hotelUI').hidden&&k0==='escape'){closePanel();return;}
   if(!started||e.target.tagName==='INPUT'||!$('book').hidden||!$('album').hidden||!$('hotelUI').hidden)return;const k=k0;keys.add(k);
   if(k===' '){e.preventDefault();if(fishing){strike();return;}if(!ride&&!MP.passenger)jump();}
   if(k==='c'&&!e.repeat)takePhoto();
@@ -2088,7 +2127,7 @@ SPOTS.unshift({id:'nightmarket',name:'Chợ đêm Đà Lạt',eyebrow:'Dốc ch�
 SPOTS.unshift({id:'tl_hall',name:'Chánh điện',eyebrow:'Thiền viện Trúc Lâm',x:TRUCLAM.x-9,z:TRUCLAM.z,r:5,text:'Bậc đá dẫn lên chánh điện, cửa bàn khoa sơn son, hai tầng mái cong.',actions:[{label:'Vào chánh điện',fn:()=>enterLodge(TRUCLAM_IN)}]},
   {id:'tl_bell',name:'Lầu chuông',eyebrow:'Thiền viện Trúc Lâm',x:TRUCLAM.x+12,z:TRUCLAM.z-15,r:4.5,text:'Đại hồng chung bằng đồng treo giữa lầu, chày gỗ treo ngang.',actions:[{label:'Thỉnh chuông',fn:()=>{bigBell();toast('Boong… tiếng đại hồng chung ngân xa xuống mặt hồ Tuyền Lâm.');}}]},
   {id:'tl_qa',name:'Tượng Quan Âm',eyebrow:'Hồ sen · Thiền viện Trúc Lâm',x:TRUCLAM.x+10,z:TRUCLAM.z+13,r:4,text:'Tượng Quan Âm áo trắng đứng trên tòa sen giữa hồ sen.',actions:[{label:'Chắp tay',fn:()=>{player.armL.rotation.x=player.armR.rotation.x=-1.4;toast('Bạn chắp tay đứng lặng bên hồ sen.');}}]},
-  {id:'nhama',name:'Nhà ma Đà Lạt',eyebrow:'Biệt thự cổ bỏ hoang · hư cấu',x:HAUNT.x,z:HAUNT.z+9,r:5.5,text:'Biệt thự kiểu Pháp bỏ hoang, rêu phủ chân tường, cửa chớp gãy. Đêm đến có ô cửa sáng chập chờn…',actions:[{label:'Vào nhà',fn:()=>enterLodge(NHAMA_IN)},{label:'Xuống 18 tầng địa ngục',alt:true,fn:()=>enterHell()},{label:'Nghe ngóng',alt:true,fn:()=>{spooky();toast('Có tiếng gì đó thì thầm sau cánh cửa…');}}]},
+  {id:'nhama',name:'Nhà ma Đà Lạt',eyebrow:'Biệt thự cổ bỏ hoang · hư cấu',x:HAUNT.x,z:HAUNT.z+9,r:5.5,text:'Biệt thự kiểu Pháp bỏ hoang, rêu phủ chân tường, cửa chớp gãy. Đêm đến có ô cửa sáng chập chờn…',actions:[{label:'Bước vào nhà ma · sang Âm Giới',fn:()=>enterHell()},{label:'Chỉ vào sảnh nhà (thế giới thường)',alt:true,fn:()=>enterLodge(NHAMA_IN)},{label:'Nghe ngóng',alt:true,fn:()=>{spooky();toast('Có tiếng gì đó thì thầm sau cánh cửa…');}}]},
   {id:'hoabinh',name:'Rạp Hòa Bình',eyebrow:'Khu Hòa Bình · chợ đêm',x:-60,z:-262,r:10,text:'Rạp chiếu bóng phong cách cổ điển với sảnh vé, quầy bắp nước, hành lang và phòng chiếu có màn hình lớn. Có thể gắn link video để phát trên màn hình trong rạp và màn hình LED bên ngoài.',actions:[{label:'Vào rạp phim',fn:()=>enterLodge(HOABINH_IN)},{label:'Gắn link lên màn hình',alt:true,fn:()=>openHallScreen()},{label:'Xem giờ',alt:true,fn:()=>toast('Đồng hồ trên tháp chỉ '+new Date().toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'})+'.')}]},
   {id:'caudat',name:'Đồi chè Cầu Đất',eyebrow:'Đài ngắm săn mây trên đỉnh đồi',x:TEA.x,z:TEA.z,r:9,text:'Luống chè chạy vòng theo sườn đồi. Sáng sớm, mây trắng phủ kín thung lũng bên dưới như biển.',actions:[{label:'Săn mây',fn:()=>cloudHunt()},{label:'Ngồi xích đu',alt:true,fn:()=>{sitWorld(TEA.swing.x,TEA.swing.z,0,-.47,-1.2,TEA.swing.y);toast('Ngồi xích đu, chân đung đưa trên biển mây.');}},{label:'Uống trà nóng',alt:true,fn:()=>toast('Ly trà xanh Cầu Đất nóng hổi, chát nhẹ rồi ngọt hậu.')}]},
   {id:'teafactory',name:'Nhà máy chè Cầu Đất',eyebrow:'Nhà máy chè cổ · Cầu Đất',x:1560,z:930,r:24,text:'Tham quan cả khuôn viên và nội thất nhà máy: khu làm héo, máy sao chè, máy sấy, dây chuyền đóng gói, kho nguyên liệu và văn phòng quản lý.',actions:[{label:'Vào tham quan nhà máy',fn:()=>enterLodge(TEA_FACTORY_IN)},{label:'Ngửi hương chè',alt:true,fn:()=>toast('Mùi chè sao khô thơm nồng khắp xưởng.')}]},
@@ -2122,7 +2161,7 @@ function teleport(id){
     falls:[FALLS.x,FALLS.z-30,FALLS.x,FALLS.z+20],bikerent:[-409,-118,-414,-118],carrent:[365.5,212,365.5,180],prenn:[300,800,360,1150],thuyta:[-245,-162,-245,-130],langbiang:[60,-760,-260,-2080],nhama:[HAUNT.x,HAUNT.z+16,HAUNT.x,HAUNT.z],hoabinh:[-68,-262,-50,-262],caudat:[TEA.x,TEA.z+8,TEA.x+200,TEA.z+200],teafactory:[1568,916,1560,930],fish:[FISHPIER.x,FISHPIER.z,FISHPIER.x+FISHPIER.dx*20,FISHPIER.z+FISHPIER.dz*20],fishtl:[FISHTL.x,FISHTL.z,FISHTL.x+FISHTL.dx*20,FISHTL.z+FISHTL.dz*20]}[id];
   if(id.startsWith('lodge:')){const L=LODGES.find(l=>l.id===id.slice(6));T=[L.ex,L.ez,L.x,L.z];}
   if(id==='gh'&&GH.length)T=[GH[0].x+30,GH[0].z+30,GH[0].x,GH[0].z];
-  if(!T)return;if(CABLE.ride)return;if(HELL18.active){HELL18.active=false;hellLight.intensity=0;}if(P.lying)getUp();if(P.seated)standUp();if(ride)exitRide(true);if(fishing)stopFishing();if(indoor)leaveIndoor();P.x=T[0];P.z=T[1];P.y=groundAt(P.x,P.z);P.lastPier=pierAt(P.x,P.z);P.vy=0;cam.yaw=Math.atan2(P.x-T[2],P.z-T[3]);P.face=cam.yaw+Math.PI;
+  if(!T)return;if(CABLE.ride)return;if(HELL18.active){hellRestore();}if(P.lying)getUp();if(P.seated)standUp();if(ride)exitRide(true);if(fishing)stopFishing();if(indoor)leaveIndoor();P.x=T[0];P.z=T[1];P.y=groundAt(P.x,P.z);P.lastPier=pierAt(P.x,P.z);P.vy=0;cam.yaw=Math.atan2(P.x-T[2],P.z-T[3]);P.face=cam.yaw+Math.PI;
   cam.tx=P.x;cam.ty=P.y;cam.tz=P.z;cam.pitch=.3;cam.dist=Math.max(cam.dist,12);updateLOD(P.x,P.z,true);currentSpot=null;currentVeh=null;renderCard(null);
 }
 /* ---------- Nội thất đi bộ được: sảnh, NPC đứng chào, lễ tân, phòng nghỉ, tầng hầm giải trí (mọi khách sạn & homestay) ---------- */
@@ -3268,41 +3307,356 @@ const HELL_LIGHT=i=>i===5?0xff5426:i===6?0x9bdcff:i===17?0xffe8b0:(i===2||i===13
   const portal=new THREE.Mesh(new THREE.CircleGeometry(2.1,32),new THREE.MeshBasicMaterial({color:lc,transparent:true,opacity:.6,side:THREE.DoubleSide}));portal.position.set(0,2.6,-8.78);g.add(portal);
   const arch=new THREE.Mesh(new THREE.TorusGeometry(2.2,.18,8,32),gold);arch.position.set(0,2.6,-8.75);g.add(arch);
   if(i===0||i===9||i===15){box(5,1.2,2,gold,0,.85,-3,g);for(let a=-1;a<=1;a+=2)box(.45,4,.45,stone,a*2.2,2.25,-3,g);}
-  if(i===2||i===12||i===13){const water=new THREE.Mesh(new THREE.PlaneGeometry(12,7),new THREE.MeshStandardMaterial({color:i===2?0x4b1115:0x321014,roughness:.18,metalness:.25}));water.rotation.x=-Math.PI/2;water.position.set(0,.32,-1);g.add(water);}
+  if(i===2||i===12||i===13){const water=new THREE.Mesh(new THREE.PlaneGeometry(12,7),new THREE.MeshStandardMaterial({color:i===2?0x4b1115:0x321014,roughness:.18,metalness:.25}));water.rotation.x=-Math.PI/2;water.position.set(0,.32,-3.2);g.add(water);}
   if(i===3||i===16){for(let k=0;k<3;k++){const xx=-5+k*5;box(3.2,3.2,.35,iron,xx,1.9,-3,g);for(let b=0;b<5;b++)cyl(.045,.045,3.2,6,iron,xx-1.2+b*.6,1.9,-2.7,g);}}
-  if(i===4){for(let k=0;k<7;k++){const xx=-7+k*2.2;const trunk=cyl(.18,.32,5,7,wood,xx,2.7,-2+(k%2)*3,g);trunk.rotation.z=(k%2?-.12:.1);}}
+  if(i===4){for(let k=0;k<7;k++){const xx=-7+k*2.2;const trunk=cyl(.18,.32,5,7,wood,xx,2.7,-5+(k%2)*2,g);trunk.rotation.z=(k%2?-.12:.1);}}
   if(i===5){for(let k=0;k<5;k++){const f=new THREE.Mesh(new THREE.ConeGeometry(.5,1.8,5),ember);f.position.set(-6+k*3,1.1,-4+(k%2)*2);g.add(f);}}
-  if(i===6){for(let k=0;k<8;k++){const ic=new THREE.Mesh(new THREE.ConeGeometry(.45,2.4,5),ice);ic.position.set(-7+(k%4)*4,1.5,-5+Math.floor(k/4)*8);g.add(ic);}}
+  if(i===6){for(let k=0;k<8;k++){const ic=new THREE.Mesh(new THREE.ConeGeometry(.45,2.4,5),ice);ic.position.set(-7+(k%4)*4,1.5,-6+Math.floor(k/4)*3);g.add(ic);}}
   if(i===7){for(let k=0;k<3;k++){const m=new THREE.Mesh(new THREE.BoxGeometry(2.2,3.2,.18),wet);m.position.set(-5+k*5,1.9,-5);g.add(m);}}
   if(i===17){const gate=new THREE.Mesh(new THREE.TorusGeometry(3,.22,10,36),gold);gate.position.set(0,3.2,-4);g.add(gate);}
   for(let k=0;k<8;k++){const b=new THREE.Mesh(new THREE.DodecahedronGeometry(.35+(k%3)*.12,0),k%2?dark:stone);b.position.set(-7+(k*37%14),.48,-7+(k*19%14));b.rotation.set(k*.3,k*.7,k*.2);g.add(b);}
+  const al=new THREE.Group();al.position.set(0,.28,1.8);g.add(al);cyl(.7,.85,.9,12,stone,0,.45,0,al);cyl(.82,.82,.12,12,gold,0,.96,0,al);
+  const orb=new THREE.Mesh(new THREE.OctahedronGeometry(.34,0),new THREE.MeshStandardMaterial({color:lc,emissive:lc,emissiveIntensity:1.8,roughness:.3}));orb.position.y=1.65;al.add(orb);circleCol(x,z+1.8,.95);
   addLabel('TẦNG '+String(i+1).padStart(2,'0')+' · '+HELL_NAMES[i],HELL_DESC[i],x,y+8,z,1.35,700);
-  HELL18.rooms.push({x,z,y,g,index:i});
+  HELL18.rooms.push({x,z,y,g,index:i,portal,arch,orb});
  }
- addLabel('18 TẦNG ĐỊA NGỤC','Nhà ma Đà Lạt · chọn “Xuống 18 tầng địa ngục”',HAUNT.x,groundAt(HAUNT.x,HAUNT.z)+20,HAUNT.z,1.7,1100);
+ addLabel('CỔNG ÂM GIỚI','Nhà ma Đà Lạt · bước vào để sang thế giới khác',HAUNT.x,groundAt(HAUNT.x,HAUNT.z)+20,HAUNT.z,1.7,1100);
 })();
+/* ===== Âm Giới: thế giới khác sau cánh cửa nhà ma · 18 tầng = 18 câu đố trò chơi dân gian ===== */
+const HELL_SAVE_KEY='dalat-amgioi-v1';
+HELL18.cleared=new Array(18).fill(false);HELL18.zone=null;
+try{const s=JSON.parse(localStorage.getItem(HELL_SAVE_KEY)||'null');if(Array.isArray(s)&&s.length===18)HELL18.cleared=s.map(Boolean);}catch(e){}
+function hellSaveProg(){try{localStorage.setItem(HELL_SAVE_KEY,JSON.stringify(HELL18.cleared));}catch(e){}}
+function hellAtmos(){
+ if(!window.__hellOn)return;
+ scene.fog.color.setHex(0x1a0708);scene.fog.near=6;scene.fog.far=64;scene.environment=null;
+ sun.intensity=0;hemi.intensity=.42;hemi.color.setHex(0xff9a78);hemi.groundColor.setHex(0x3a0c10);
+ renderer.toneMappingExposure=1.2;bloom.strength=.8;bloom.threshold=.8;stars.visible=false;moon.visible=false;sky.visible=false;
+ $('clock').textContent='Âm Giới · Tầng '+(HELL18.level+1)+'/18';
+}
+function hellRestoreAtmos(){hemi.color.setHex(0xe8f0ff);hemi.groundColor.setHex(0x4a5a3a);sky.visible=true;applyMode();}
+const hellEmb=(()=>{const n=260,pos=new Float32Array(n*3),sp=new Float32Array(n);
+ for(let i=0;i<n;i++){pos[i*3]=(Math.random()-.5)*17;pos[i*3+1]=Math.random()*6.5;pos[i*3+2]=(Math.random()-.5)*17;sp[i]=.25+Math.random()*.7;}
+ const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(pos,3));
+ const p=new THREE.Points(g,new THREE.PointsMaterial({color:0xff9a50,size:.09,transparent:true,opacity:.85,depthWrite:false,blending:THREE.AdditiveBlending}));
+ p.frustumCulled=false;p.visible=false;scene.add(p);return{p,pos,sp,n,g};})();
+function hellPaint(i){const r=HELL18.rooms[i];if(!r||!r.portal)return;const ok=HELL18.cleared[i];
+ r.portal.material.color.setHex(ok?HELL_LIGHT(i):0x5a1414);r.portal.material.opacity=ok?.8:.22;
+ r.orb.material.emissive.setHex(ok?0x6aff9a:HELL_LIGHT(i));r.orb.material.color.setHex(ok?0x6aff9a:HELL_LIGHT(i));}
+HELL18.rooms.forEach((r,i)=>hellPaint(i));
 function hellNear(x,z,r=5){return Math.hypot(P.x-x,P.z-z)<r;}
-function hellGo(i,msg){HELL18.level=i;const r=HELL18.rooms[i];P.x=r.x;P.z=r.z+4;P.y=groundAt(P.x,P.z);P.vy=0;P.face=Math.PI;cam.yaw=0;cam.tx=P.x;cam.tz=P.z;cam.ty=P.y+1.35;
- hellLight.position.set(r.x,r.y+5.5,r.z);hellLight.color.setHex(HELL_LIGHT(i));hellLight.intensity=2.4;if(msg)toast(msg);flash();}
-function enterHell(){if(HELL18.active)return;if(P.seated)standUp();if(ride)exitRide(true);if(fishing)stopFishing();if(P.lying)getUp();currentSpot=null;renderCard(null);HELL18.active=true;
- hellGo(0,'Tầng 01 · '+HELL_NAMES[0]+'. Đi tới cổng sáng cuối phòng rồi bấm E để xuống sâu hơn; cửa phía sau lưng bấm E để quay lên.');}
-function leaveHell(msg){HELL18.active=false;hellLight.intensity=0;P.x=HAUNT.x;P.z=HAUNT.z+18;P.y=groundAt(P.x,P.z);P.vy=0;currentSpot=null;renderCard(null);updateLOD(P.x,P.z,true);flash();if(msg)toast(msg);}
+function hellGo(i,msg){HELL18.level=i;const r=HELL18.rooms[i];P.x=r.x;P.z=r.z+4.6;P.y=groundAt(P.x,P.z);P.vy=0;P.face=Math.PI;cam.yaw=0;cam.tx=P.x;cam.tz=P.z;cam.ty=P.y+1.35;
+ hellLight.position.set(r.x,r.y+5.5,r.z);hellLight.color.setHex(HELL_LIGHT(i));hellLight.intensity=2.4;
+ hellEmb.p.position.set(r.x,r.y+.3,r.z);hellEmb.p.visible=true;HELL18.zone=null;hellAtmos();if(msg)toast(msg);flash();}
+function enterHell(){if(HELL18.active)return;if(P.seated)standUp();if(ride)exitRide(true);if(fishing)stopFishing();if(P.lying)getUp();currentSpot=null;renderCard(null);
+ HELL18.active=true;window.__hellOn=true;let s=HELL18.cleared.indexOf(false);if(s<0)s=17;
+ hellGo(s,'Cánh cửa nhà ma đóng sầm lại sau lưng… Bạn đã sang Âm Giới. Tầng '+String(s+1).padStart(2,'0')+' · '+HELL_NAMES[s]+': tới quả cầu phát sáng, bấm E để giải đố.');
+ flash();setTimeout(flash,450);try{spooky();}catch(e){}}
+function hellRestore(){pzClose();HELL18.active=false;window.__hellOn=false;hellLight.intensity=0;hellEmb.p.visible=false;hellRestoreAtmos();}
+function leaveHell(msg){hellRestore();P.x=HAUNT.x;P.z=HAUNT.z+18;P.y=groundAt(P.x,P.z);P.vy=0;currentSpot=null;renderCard(null);updateLOD(P.x,P.z,true);flash();if(msg)toast(msg);}
 function hellAction(){
  if(!HELL18.active)return false;
- const cur=HELL18.rooms[HELL18.level];
+ const cur=HELL18.rooms[HELL18.level],L=HELL18.level;
+ if(hellNear(cur.x,cur.z+1.8,3.4)){
+  if(HELL18.cleared[L])toast('Phong ấn tầng này đã mở. Cổng sáng cuối phòng dẫn xuống tầng '+String(Math.min(18,L+2)).padStart(2,'0')+' (bấm E tại cổng).');
+  else pzOpen(L);
+  return true;}
  if(hellNear(cur.x,cur.z-7.6,5.5)){
-  if(HELL18.level<17)hellGo(HELL18.level+1,'Tầng '+String(HELL18.level+2).padStart(2,'0')+' · '+HELL_NAMES[HELL18.level+1]);
-  else leaveHell('Bạn đã đến Điện Luân Hồi, vượt qua 18 tầng và trở về thế gian!');
-  return true;
- }
+  if(!HELL18.cleared[L]){toast('Cổng bị phong ấn! Hãy giải câu đố ở quả cầu phát sáng để mở cổng.');flash();return true;}
+  if(L<17)hellGo(L+1,'Tầng '+String(L+2).padStart(2,'0')+' · '+HELL_NAMES[L+1]);
+  else leaveHell('Bạn đã vượt qua cả 18 câu đố của Âm Giới và trở về thế gian. Ma quỷ cũng phải nể!');
+  return true;}
  if(hellNear(cur.x,cur.z+7.6,5.5)){
-  if(HELL18.level>0)hellGo(HELL18.level-1,'Quay lại tầng '+String(HELL18.level).padStart(2,'0')+' · '+HELL_NAMES[HELL18.level-1]);
-  else leaveHell('Bạn đã rời 18 tầng địa ngục.');
-  return true;
- }
- toast('Cổng sáng cuối phòng dẫn xuống tầng sau · cửa phía sau lưng dẫn lên tầng trước.');
+  if(L>0)hellGo(L-1,'Quay lại tầng '+String(L).padStart(2,'0')+' · '+HELL_NAMES[L-1]);
+  else leaveHell('Bạn đã rời Âm Giới.');
+  return true;}
+ toast('Quả cầu phát sáng = bàn đố · cổng sáng cuối phòng = xuống tầng · cửa sau lưng = quay lên.');
  return true;
 }
+function hellTick(dt){
+ if(!HELL18.active)return;const t=performance.now()/1000,r=HELL18.rooms[HELL18.level];
+ hellLight.intensity=PZ.open?1.6:2.3+Math.sin(t*7)*.15+Math.sin(t*3.1)*.2;
+ if(r.orb){r.orb.rotation.y+=dt*1.2;r.orb.position.y=1.65+Math.sin(t*2)*.12;}
+ const a=hellEmb.pos;for(let i=0;i<hellEmb.n;i++){a[i*3+1]+=hellEmb.sp[i]*dt;a[i*3]+=Math.sin(t+i)*dt*.15;if(a[i*3+1]>6.6)a[i*3+1]=0;}
+ hellEmb.g.attributes.position.needsUpdate=true;
+ let z=null;if(hellNear(r.x,r.z+1.8,3.4))z='altar';else if(hellNear(r.x,r.z-7.6,5.5))z='door';else if(hellNear(r.x,r.z+7.6,5.5))z='back';
+ if(z!==HELL18.zone){HELL18.zone=z;if(!PZ.open){
+  if(z==='altar')toast(HELL18.cleared[HELL18.level]?'Bàn đố đã được giải.':'Bấm E để mở câu đố: '+HELL_GAMES[HELL18.level].name+'.');
+  else if(z==='door')toast(HELL18.cleared[HELL18.level]?'Bấm E để xuống tầng tiếp theo.':'Cổng đang bị phong ấn — giải đố trước.');
+  else if(z==='back')toast('Bấm E để quay lên tầng trước.');}}
+}
+
+/* ---------- Bộ máy câu đố ---------- */
+const PZ={open:false,cleanup:null,lvl:-1,done:false};
+const pzEl=(tag,cls,txt)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e;};
+const pzShuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+const pzPick=(a,n)=>pzShuffle(a).slice(0,n);
+const pzRange=(a,b)=>Array.from({length:b-a+1},(_,i)=>a+i);
+const pzNorm=s=>String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/đ/g,'d').replace(/[^a-z0-9]/g,'');
+function pzCtx(body,say,win){
+ const L=[],T=[],R={id:0,on:true};
+ const c={body,say,win,
+  on(t,ev,fn,o){t.addEventListener(ev,fn,o);L.push([t,ev,fn,o]);},
+  after(fn,ms){const id=setTimeout(fn,ms);T.push(id);return id;},
+  every(fn,ms){const id=setInterval(fn,ms);T.push(id);return id;},
+  anim(fn){let last=performance.now();const step=t=>{if(!R.on)return;const dt=Math.min(.05,(t-last)/1000);last=t;fn(dt,t/1000);R.id=requestAnimationFrame(step);};R.id=requestAnimationFrame(step);},
+  btn(parent,label,fn,cls){const b=pzEl('button','pz-btn'+(cls?' '+cls:''),label);b.type='button';b.onclick=fn;parent.appendChild(b);return b;},
+  key(fn){c.on(window,'keydown',e=>{if(e.key==='Escape')return;if(e.target.tagName==='INPUT')return;fn(e);},true);}
+ };
+ c.cleanup=()=>{R.on=false;cancelAnimationFrame(R.id);L.forEach(([t,ev,fn,o])=>t.removeEventListener(ev,fn,o));T.forEach(id=>{clearTimeout(id);clearInterval(id);});};
+ return c;}
+function pzClose(){if(PZ.cleanup){PZ.cleanup();PZ.cleanup=null;}const p=$('puz');if(p)p.hidden=true;PZ.open=false;keys.clear();}
+function pzOpen(i){
+ pzClose();const G=HELL_GAMES[i];PZ.open=true;PZ.lvl=i;PZ.done=false;keys.clear();
+ const panel=$('puzPanel');panel.textContent='';
+ const stars=1+Math.floor(i/3.7);
+ panel.append(pzEl('div','pz-eyebrow','TẦNG '+String(i+1).padStart(2,'0')+' · '+HELL_NAMES[i]),pzEl('h2','pz-title',G.name),
+  pzEl('div','pz-sub','Độ khó '+'★'.repeat(stars)+'☆'.repeat(5-stars)+' · câu đố '+(i+1)+'/18'),pzEl('p','pz-how',G.how));
+ const body=pzEl('div','pz-body'),msg=pzEl('div','pz-msg');panel.append(body,msg);
+ const foot=pzEl('div','pz-foot'),close=pzEl('button','pz-btn ghost','Đóng (Esc)');close.type='button';close.onclick=pzClose;foot.appendChild(close);panel.appendChild(foot);
+ const say=(t,cls)=>{msg.textContent=t||'';msg.className='pz-msg'+(cls?' '+cls:'');};
+ const win=()=>{if(PZ.done)return;PZ.done=true;if(PZ.cleanup){PZ.cleanup();}PZ.cleanup=null;body.textContent='';
+  HELL18.cleared[i]=true;hellSaveProg();hellPaint(i);flash();
+  const all=HELL18.cleared.every(Boolean);
+  say('');body.append(pzEl('div','pz-win','✔ Phong ấn đã mở!'),pzEl('p','pz-how',i<17?'Đang tự động xuống tầng '+String(i+2).padStart(2,'0')+' · '+HELL_NAMES[i+1]+'…':(all?'Bạn đã giải đủ 18 câu đố! Đang đưa bạn về thế gian…':'Đang đưa bạn về thế gian…')));
+  let went=false;const go=()=>{if(went)return;went=true;if(!HELL18.active||PZ.lvl!==i)return;pzClose();
+   if(i<17)hellGo(i+1,'Tầng '+String(i+2).padStart(2,'0')+' · '+HELL_NAMES[i+1]+' — tới quả cầu phát sáng, bấm E để giải đố.');
+   else leaveHell('Bạn đã vượt qua cả 18 câu đố của Âm Giới và trở về thế gian. Ma quỷ cũng phải nể!');};
+  const b=pzEl('button','pz-btn','Đi tiếp ngay');b.type='button';b.onclick=go;body.appendChild(b);b.focus();setTimeout(go,2000);
+  toast('Giải xong câu đố tầng '+String(i+1).padStart(2,'0')+' · '+HELL18.cleared.filter(Boolean).length+'/18');};
+ const c=pzCtx(body,say,win);PZ.cleanup=c.cleanup;
+ $('puz').hidden=false;document.activeElement&&document.activeElement.blur&&document.activeElement.blur();
+ G.start(c);
+}
+/* --- ngân hàng câu hỏi --- */
+const PZ_RID=[
+ {q:'Cái gì càng lau càng ướt?',o:['Cái khăn','Cái bàn','Cái gương','Cái ly']},
+ {q:'Cái gì có cổ mà không có đầu?',o:['Cái áo','Con gà','Cái bàn','Cái đèn']},
+ {q:'“Thân em vừa trắng lại vừa tròn, bảy nổi ba chìm với nước non” nói về món gì?',o:['Bánh trôi nước','Bánh chưng','Bánh tét','Bánh dày']},
+ {q:'Trong “Rồng rắn lên mây”, rồng rắn đi hỏi xin thuốc ở ai?',o:['Thầy thuốc','Ông địa','Bà đỡ','Ông trạng']},
+ {q:'Trong trò Ô ăn quan, quân nhỏ (sỏi, hạt) thường gọi là gì?',o:['Dân','Tốt','Binh','Sĩ']},
+ {q:'Linh vật nào KHÔNG có trong bầu cua tôm cá?',o:['Ngựa','Gà','Nai','Cua']},
+ {q:'“Chi chi chành chành, cái đanh thổi lửa…” thuộc thể loại nào?',o:['Đồng dao','Quan họ','Hát xoan','Chèo']},
+ {q:'Dịp nào trẻ em Việt Nam rước đèn ông sao, phá cỗ?',o:['Tết Trung thu','Tết Nguyên đán','Tết Đoan ngọ','Lễ Vu lan']},
+ {q:'Trong oẳn tù tì, “Bao” thắng món nào?',o:['Bao thắng Búa','Bao thắng Kéo','Búa thắng Bao','Kéo thắng Búa']}];
+const PZ_FIN=PZ_RID.concat([
+ {q:'Bầu cua tôm cá có tất cả bao nhiêu linh vật?',o:['6','5','8','4']},
+ {q:'Món đồ chơi nặn bằng bột nhiều màu hình con vật, bán dịp Trung thu, gọi là gì?',o:['Tò he','Bánh phồng','Kẹo kéo','Mứt tết']},
+ {q:'Trò chơi nào cần hai đội cầm hai đầu sợi dây thừng?',o:['Kéo co','Nhảy sạp','Ném còn','Thả diều']},
+ {q:'Trong trò đập niêu, người chơi bị bịt mắt dùng gì để đập vỡ niêu?',o:['Cây gậy','Quả bóng','Cái vồ sắt','Viên bi']},
+ {q:'Trò búng viên bi tròn nhỏ cho trúng bi đối phương gọi là gì?',o:['Đánh bi (bắn bi)','Nhảy dây','Đá cầu','Kéo co']}]);
+const PZ_IDM=[
+ {q:'Có công mài sắt, có ngày nên ___',a:['kim']},{q:'Một cây làm chẳng nên non, ba cây chụm lại nên hòn núi ___',a:['cao']},
+ {q:'Ăn quả nhớ kẻ trồng ___',a:['cây']},{q:'Uống nước nhớ ___',a:['nguồn']},{q:'Lá lành đùm lá ___',a:['rách']},
+ {q:'Gần mực thì đen, gần đèn thì ___',a:['rạng']},{q:'Đi một ngày đàng, học một sàng ___',a:['khôn']},
+ {q:'Nước chảy đá ___',a:['mòn']},{q:'Chị ngã em ___',a:['nâng']},{q:'Bầu ơi thương lấy bí cùng, tuy rằng khác giống nhưng chung một ___',a:['giàn']}];
+const PZ_CD=[
+ {q:'Công cha như núi Thái Sơn, nghĩa mẹ như nước trong ___ chảy ra',a:['nguồn']},
+ {q:'Một lòng thờ mẹ kính cha, cho tròn chữ ___, mới là đạo con',a:['hiếu']},
+ {q:'Bầu ơi thương lấy bí cùng, tuy rằng khác ___ nhưng chung một giàn',a:['giống']},
+ {q:'Thân em như tấm lụa đào, phất phơ giữa chợ biết vào tay ___',a:['ai']},
+ {q:'Ai ơi giữ chí cho bền, dù ai xoay hướng đổi ___ mặc ai',a:['nền']},
+ {q:'Dù ai nói ngả nói nghiêng, lòng ta vẫn vững như kiềng ba ___',a:['chân']},
+ {q:'Anh em như thể tay chân, rách lành đùm bọc dở hay ___',a:['đỡ đần']}];
+const PZ_PROB=[
+ {q:'Lắc 1 xúc xắc bầu cua (Bầu, Cua, Tôm, Cá, Gà, Nai). Xác suất ra “Cua” là?',o:['1/6','1/3','1/2','1/12']},
+ {q:'Lắc 2 xúc xắc. Xác suất cả hai cùng ra “Tôm” là?',o:['1/36','1/12','1/6','1/18']},
+ {q:'Lắc 2 xúc xắc. Xác suất có ÍT NHẤT một con “Bầu” là?',o:['11/36','1/3','10/36','1/6']},
+ {q:'Lắc 3 xúc xắc. Xác suất KHÔNG ra “Nai” lần nào là?',o:['125/216','1/2','5/6','25/36']},
+ {q:'Lắc 3 xúc xắc. Xác suất cả ba mặt đều khác nhau là?',o:['5/9','1/2','2/3','1/3']},
+ {q:'Lắc 3 xúc xắc. Xác suất cả ba mặt giống nhau là?',o:['1/36','1/216','1/6','1/18']}];
+const pzQs=(bank,n)=>()=>pzPick(bank,n).map(b=>({q:b.q,o:b.o,a:0}));
+/* --- trắc nghiệm dùng chung --- */
+function pzMcq(c,gen,o={}){
+ const B=c.body;let qs,i,wrong,tleft,lock;
+ const info=pzEl('div','pz-score'),bar=pzEl('div','pz-bar'),fill=pzEl('i');bar.appendChild(fill);
+ const q=pzEl('div','pz-q'),opts=pzEl('div','pz-opts');B.append(info);if(o.time)B.append(bar);B.append(q,opts);
+ const next=()=>{c.say('');i++;if(i>=qs.length)c.win();else show();};
+ function reset(){qs=gen();i=0;wrong=0;show();}
+ function lose(m){lock=true;c.say(m+' Ma đổi bộ câu mới…','bad');c.after(()=>{c.say('');reset();},1700);}
+ function show(){lock=false;tleft=o.time||0;const Q=qs[i];
+  info.textContent='Câu '+(i+1)+'/'+qs.length+(o.allow?' · được sai tối đa '+o.allow+' (đã sai '+wrong+')':' · phải đúng hết');
+  q.textContent=Q.q;opts.textContent='';
+  pzShuffle(Q.o.map((t,k)=>({t,ok:k===Q.a}))).forEach(op=>{const b=c.btn(opts,op.t,()=>{if(lock)return;lock=true;b.classList.add(op.ok?'ok':'no');
+   if(op.ok){c.say('Đúng!','good');c.after(next,650);}
+   else{wrong++;if(wrong>(o.allow||0))lose('Sai rồi! Đáp án: '+Q.o[Q.a]+'.');else{c.say('Sai! Đáp án: '+Q.o[Q.a],'bad');c.after(next,1200);}}});});}
+ if(o.time)c.anim(dt=>{if(lock)return;tleft-=dt;fill.style.width=Math.max(0,tleft/o.time*100)+'%';
+  if(tleft<=0){lock=true;wrong++;if(wrong>(o.allow||0))lose('Hết giờ!');else{c.say('Hết giờ!','bad');c.after(next,900);}}});
+ reset();}
+/* --- điền chữ --- */
+function pzTyped(c,bank,n,allow){
+ const B=c.body;let qs,i,wrong;const info=pzEl('div','pz-score'),q=pzEl('div','pz-q'),inp=pzEl('input','pz-in'),row=pzEl('div','pz-row');
+ inp.type='text';inp.autocomplete='off';inp.placeholder='Điền từ còn thiếu…';B.append(info,q,inp,row);
+ function show(){info.textContent='Câu '+(i+1)+'/'+qs.length+' · còn được sai '+(allow-wrong)+' lần';q.textContent=qs[i].q;inp.value='';inp.focus();}
+ function reset(){qs=pzPick(bank,n);i=0;wrong=0;show();}
+ function submit(){const a=pzNorm(inp.value);if(!a)return;
+  if(qs[i].a.some(x=>pzNorm(x)===a)){c.say('Đúng!','good');i++;if(i>=qs.length)return c.win();c.after(()=>{c.say('');show();},600);}
+  else{wrong++;if(wrong>allow){c.say('Sai quá nhiều lần, ma đổi câu mới…','bad');c.after(()=>{c.say('');reset();},1400);}
+   else{c.say('Chưa đúng. Gợi ý: từ cần điền bắt đầu bằng chữ “'+qs[i].a[0][0].toUpperCase()+'”.','bad');info.textContent='Câu '+(i+1)+'/'+qs.length+' · còn được sai '+(allow-wrong)+' lần';}}}
+ c.btn(row,'Trả lời',submit);c.on(inp,'keydown',e=>{if(e.key==='Enter')submit();});reset();}
+/* --- canh nhịp: dây quay (nhảy dây) / thanh chạy (ném còn) --- */
+function pzTiming(c,o){
+ const B=c.body,cv=pzEl('canvas','pz-cv');cv.width=320;cv.height=o.circle?210:110;const g=cv.getContext('2d');
+ const sc=pzEl('div','pz-score'),row=pzEl('div','pz-row');B.append(sc,cv,row);
+ let hits=0,sp=o.speed,half=o.half,ph=0,zc=Math.random()*.6+.2,inZ=false,jumped=false,flashT=0,flashC='#fff';
+ const TAU=Math.PI*2,wrap=a=>{a%=TAU;if(a>Math.PI)a-=TAU;if(a<-Math.PI)a+=TAU;return a;};
+ const jump=()=>{
+  if(o.circle){const d=Math.abs(wrap(ph-Math.PI/2));if(d<half&&!jumped){jumped=true;ok();}else if(!jumped){bad('Vướng dây! Chuỗi nhảy về 0.',true);}}
+  else{const p=ph<=1?ph:2-ph;if(Math.abs(p-zc)<half)ok();else bad('Trượt! Mất 1 lần trúng.',false);}};
+ function ok(){hits++;sp+=o.dsp;if(!o.circle){half=Math.max(o.minHalf,half-o.dhalf);zc=Math.random()*(1-2*half)+half;}flashT=.25;flashC='#7dff9a';c.say('Trúng!','good');if(hits>=o.need)c.win();}
+ function bad(m,reset){hits=reset?0:Math.max(0,hits-1);flashT=.25;flashC='#ff6a5a';c.say(m,'bad');}
+ c.btn(row,o.label,jump,'big');c.key(e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();if(!e.repeat)jump();}});
+ c.anim(dt=>{
+  ph+=dt*sp*(o.circle?1:.5);if(!o.circle&&ph>2)ph-=2;if(o.circle&&ph>TAU)ph-=TAU;
+  sc.textContent=o.title+': '+hits+'/'+o.need+' · bấm Space hoặc nút';
+  g.clearRect(0,0,320,cv.height);g.fillStyle='#141012';g.fillRect(0,0,320,cv.height);
+  if(flashT>0){flashT-=dt;g.fillStyle=flashC;g.globalAlpha=Math.max(0,flashT*1.4);g.fillRect(0,0,320,cv.height);g.globalAlpha=1;}
+  if(o.circle){
+   const cx=160,cy=95,rx=125,ry=70;g.lineWidth=5;g.strokeStyle='#4a3a2a';g.beginPath();g.ellipse(cx,cy,rx,ry,0,0,TAU);g.stroke();
+   g.strokeStyle='#4be07a';g.lineWidth=9;g.beginPath();g.ellipse(cx,cy,rx,ry,0,Math.PI/2-half,Math.PI/2+half);g.stroke();
+   g.font='28px serif';g.textAlign='center';g.fillText('🧍',cx,cy+36);
+   const px=cx+rx*Math.cos(ph),py=cy+ry*Math.sin(ph);g.strokeStyle='#d9a066';g.lineWidth=3;g.beginPath();g.moveTo(cx-rx,cy);g.quadraticCurveTo(px,py*1.0+(py-cy)*.6,cx+rx,cy);g.stroke();
+   g.fillStyle='#ffd27a';g.beginPath();g.arc(px,py,8,0,TAU);g.fill();
+   const nowIn=Math.abs(wrap(ph-Math.PI/2))<half;if(nowIn&&!inZ)jumped=false;if(!nowIn&&inZ&&!jumped)bad('Vướng dây! Chuỗi nhảy về 0.',true);inZ=nowIn;
+  }else{
+   g.fillStyle='#2a2222';g.fillRect(20,45,280,22);g.fillStyle='#4be07a';g.fillRect(20+(zc-half)*280,45,half*560,22);
+   const p=ph<=1?ph:2-ph;g.fillStyle='#ffd27a';g.fillRect(20+p*280-3,36,6,40);g.font='20px serif';g.textAlign='center';g.fillText('⭕',160,24);
+  }});
+}
+/* --- 18 trò --- */
+const HELL_GAMES=[
+ {name:'Oẳn tù tì',how:'Thắng ma 2 ván (hòa thì chơi lại). Búa thắng Kéo, Kéo thắng Bao, Bao thắng Búa.',start(c){
+  const B=c.body,H=['✊ Búa','✋ Bao','✌️ Kéo'];let w=0;const res=pzEl('div','pz-big','Chọn nào!'),row=pzEl('div','pz-row'),sc=pzEl('div','pz-score','Thắng: 0 / 2');B.append(res,row,sc);
+  H.forEach((h,i)=>c.btn(row,h,()=>{const m=Math.floor(Math.random()*3),r=(i-m+3)%3;
+   res.textContent='Bạn '+h+'  ·  Ma '+H[m]+(r===0?'  → Hòa':r===1?'  → Bạn thắng!':'  → Ma thắng');if(r===1){w++;sc.textContent='Thắng: '+w+' / 2';if(w>=2)c.after(c.win,500);}}));}},
+ {name:'Đố vui dân gian',how:'Trả lời đúng 3 câu đố (được sai tối đa 1 câu).',start(c){pzMcq(c,pzQs(PZ_RID,3),{allow:1});}},
+ {name:'Nhảy dây',how:'Dây quay tròn. Bấm nhảy đúng lúc chấm vàng đi qua vùng xanh ở đáy. Nhảy trúng 5 lần liên tiếp.',start(c){
+  pzTiming(c,{circle:true,need:5,half:.5,speed:3.2,dsp:.3,label:'NHẢY!',title:'Nhảy liên tiếp'});}},
+ {name:'Lô tô',how:'Ma hô số, bạn bấm đúng số đó trên tờ vé trước khi ma hô số kế. Đánh dấu đủ 5 số. Bỏ lỡ hoặc bấm sai là phải làm lại.',start(c){
+  const B=c.body;let ticket,marked,cur,iv;const grid=pzEl('div','pz-grid g3'),call=pzEl('div','pz-big'),sc=pzEl('div','pz-score');B.append(call,grid,sc);
+  function upd(){sc.textContent='Đã đánh dấu '+marked.size+'/5 số';}
+  function newT(){ticket=pzPick(pzRange(1,90),9).sort((a,b)=>a-b);marked=new Set();cur=null;grid.textContent='';
+   ticket.forEach(n=>{const b=c.btn(grid,String(n),()=>click(n,b));});upd();callNext();iv=c.every(callNext,1750);}
+  function fail(m){clearInterval(iv);c.say(m+' Làm lại tờ vé mới…','bad');c.after(()=>{c.say('');newT();},1500);}
+  function callNext(){if(cur!=null&&ticket.includes(cur)&&!marked.has(cur)){fail('Bạn bỏ lỡ số '+cur+'!');return;}
+   const rem=ticket.filter(n=>!marked.has(n));
+   cur=(Math.random()<.62&&rem.length)?rem[Math.floor(Math.random()*rem.length)]:pzPick(pzRange(1,90).filter(n=>!ticket.includes(n)),1)[0];call.textContent='Ma hô: '+cur+'!';}
+  function click(n,b){if(n!==cur||marked.has(n)){fail('Sai số rồi!');return;}marked.add(n);b.classList.add('ok');upd();if(marked.size>=5){clearInterval(iv);c.win();}}
+  newT();}},
+ {name:'Ném còn',how:'Còn bay qua lại. Bấm ném khi vạch vàng nằm trong vùng xanh. Trúng 4 lần; vùng xanh sẽ nhỏ dần.',start(c){
+  pzTiming(c,{circle:false,need:4,half:.14,minHalf:.04,dhalf:.025,speed:1.2,dsp:.2,label:'NÉM CÒN!',title:'Lần trúng'});}},
+ {name:'Bịt mắt bắt dê',how:'Ghi nhớ vị trí những chú dê, ô sẽ tối đi, rồi bấm lại đúng các ô đó. 3 vòng, lưới càng lúc càng lớn.',start(c){
+  const R=[[3,2,2000],[4,3,2300],[5,4,2800]];let r=0,ready=false,goats,found;const info=pzEl('div','pz-score'),grid=pzEl('div','pz-grid');c.body.append(info,grid);
+  function round(){const[n,k,ms]=R[r];goats=new Set(pzPick(pzRange(0,n*n-1),k));found=new Set();ready=false;grid.textContent='';grid.style.gridTemplateColumns='repeat(' + n + ',1fr)';
+   info.textContent='Vòng '+(r+1)+'/3 · nhớ '+k+' chú dê…';const cells=[];
+   for(let i=0;i<n*n;i++){const b=c.btn(grid,goats.has(i)?'🐐':'',()=>click(i,b,cells));cells.push(b);}
+   c.after(()=>{cells.forEach((b,i)=>{b.textContent='';});ready=true;info.textContent='Vòng '+(r+1)+'/3 · bấm vào '+k+' ô có dê';},ms);}
+  function click(i,b,cells){if(!ready||found.has(i))return;
+   if(!goats.has(i)){ready=false;goats.forEach(g=>{cells[g].textContent='🐐';});b.classList.add('no');c.say('Hụt rồi! Bắt đầu lại từ vòng 1…','bad');r=0;c.after(()=>{c.say('');round();},1700);return;}
+   found.add(i);b.textContent='🐐';b.classList.add('ok');if(found.size>=goats.size){ready=false;r++;if(r>=R.length)c.after(c.win,500);else c.after(round,800);}}
+  round();}},
+ {name:'Cờ ca rô mini',how:'Bạn đi X trước trên bàn 3×3, ma đi O rất giỏi. Chỉ cần không để ma xếp đủ 3 ô thẳng hàng — hòa hoặc thắng đều qua.',start(c){
+  const LN=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+  const win3=b=>{for(const[p,q,r]of LN)if(b[p]&&b[p]===b[q]&&b[p]===b[r])return b[p];return b.every(Boolean)?'D':null;};
+  function best(b,pl){const w=win3(b);if(w)return{s:w==='O'?1:w==='X'?-1:0};let bs=null;
+   for(let i=0;i<9;i++)if(!b[i]){b[i]=pl;const r=best(b,pl==='O'?'X':'O');b[i]=null;if(!bs||(pl==='O'?r.s>bs.s:r.s<bs.s))bs={s:r.s,m:i};}return bs;}
+  let bd=Array(9).fill(null),lock=false;const grid=pzEl('div','pz-grid g3 ttt');c.body.append(grid);const cells=[];
+  const draw=()=>cells.forEach((b,i)=>{b.textContent=bd[i]||'';});
+  for(let i=0;i<9;i++)cells.push(c.btn(grid,'',()=>{if(lock||bd[i])return;bd[i]='X';draw();let w=win3(bd);if(w)return end(w);
+   lock=true;c.after(()=>{const m=best(bd.slice(),'O').m;bd[m]='O';draw();w=win3(bd);if(w)return end(w);lock=false;},450);}));
+  function end(w){lock=true;if(w==='O'){c.say('Ma thắng! Chơi lại ván mới…','bad');c.after(()=>{c.say('');bd=Array(9).fill(null);draw();lock=false;},1500);}
+   else{c.say(w==='X'?'Bạn thắng ma!':'Hòa — đủ để qua!','good');c.after(c.win,800);}}}},
+ {name:'Điền thành ngữ, tục ngữ',how:'Điền từ còn thiếu của 4 câu thành ngữ – tục ngữ. Được sai tối đa 3 lần (gõ không dấu cũng được).',start(c){pzTyped(c,PZ_IDM,4,3);}},
+ {name:'Rồng rắn lên mây',how:'Rồng rắn nối đuôi nhau sáng lên theo thứ tự. Nhìn kỹ rồi bấm lại đúng thứ tự. Phải nhớ đủ 7 khúc, càng lúc càng dài.',start(c){
+  const COL=['#d0453b','#e8a93a','#4aa86a','#3b8fd0','#9a5cc8','#d86aa5'];const info=pzEl('div','pz-score'),grid=pzEl('div','pz-grid g3 simon');c.body.append(info,grid);
+  const pads=COL.map((col,k)=>{const b=c.btn(grid,'🐉',()=>press(k));b.style.setProperty('--pc',col);return b;});
+  let seq,len,pos,busy=true;
+  const lit=(k,ms)=>{pads[k].classList.add('lit');c.after(()=>pads[k].classList.remove('lit'),ms);};
+  function play(){busy=true;pos=0;info.textContent='Nhìn kỹ… ('+len+'/7 khúc)';seq.slice(0,len).forEach((k,j)=>c.after(()=>lit(k,420),600+j*650));c.after(()=>{busy=false;info.textContent='Đến lượt bạn: bấm lại theo đúng thứ tự';},600+len*650);}
+  function start(){seq=Array.from({length:7},()=>Math.floor(Math.random()*6));len=3;play();}
+  function press(k){if(busy)return;lit(k,200);if(k!==seq[pos]){busy=true;c.say('Sai thứ tự! Rồng rắn tản ra rồi…','bad');c.after(()=>{c.say('');start();},1300);return;}
+   pos++;if(pos>=len){busy=true;if(len>=7){c.after(c.win,500);return;}len++;c.after(play,800);}}
+  start();}},
+ {name:'Kéo co',how:'Bấm Space (hoặc nút KÉO) thật nhanh! Ma kéo ngược lại mỗi lúc một mạnh. Kéo vạch vàng sang hết bên phải để thắng, để về hết bên trái là thua.',start(c){
+  const cv=pzEl('canvas','pz-cv');cv.width=320;cv.height=90;const g=cv.getContext('2d'),row=pzEl('div','pz-row');c.body.append(cv,row);
+  let v=50,tm=0,dead=false;const pull=()=>{if(dead)return;v+=4;};
+  c.btn(row,'KÉO!',pull,'big');c.key(e=>{if(e.key===' '){e.preventDefault();if(!e.repeat)pull();}});
+  c.anim((dt)=>{if(dead)return;tm+=dt;v-=(14+Math.sin(tm*1.7)*6+Math.min(8,tm*.5))*dt;v=Math.max(0,Math.min(100,v));
+   g.clearRect(0,0,320,90);g.fillStyle='#141012';g.fillRect(0,0,320,90);g.fillStyle='#3a1a1a';g.fillRect(10,40,150,16);g.fillStyle='#1a3a24';g.fillRect(160,40,150,16);
+   g.font='24px serif';g.textAlign='center';g.fillText('👻',24,30);g.fillText('🧑',296,30);g.fillStyle='#ffd27a';g.fillRect(10+v*3-4,32,8,32);
+   if(v>=100){dead=true;c.say('Bạn kéo thắng ma!','good');c.after(c.win,600);}
+   else if(v<=0){dead=true;c.say('Ma kéo thắng! Thử lại…','bad');c.after(()=>{c.say('');v=50;tm=0;dead=false;},1300);}});}},
+ {name:'Bốc sỏi',how:'Mỗi lượt bốc từ 1 hạt trở lên từ MỘT hàng (bấm vào hạt, lấy hạt đó và các hạt phía sau). Ai bốc hạt cuối cùng là thắng. Bạn đi trước, hãy tìm nước đi chắc thắng.',start(c){
+  const SETS=[[3,4,5],[1,3,6],[2,4,7],[3,5,7],[1,2,4]];let heaps,lock;const area=pzEl('div','pz-heaps');c.body.append(area);
+  function init(){heaps=SETS[Math.floor(Math.random()*SETS.length)].slice();lock=false;draw();}
+  function draw(){area.textContent='';heaps.forEach((n,h)=>{const row=pzEl('div','pz-heap');row.append(pzEl('span','pz-hl','Hàng '+(h+1)));for(let k=0;k<n;k++)c.btn(row,'●',()=>take(h,k),'pebble');area.appendChild(row);});}
+  function take(h,k){if(lock)return;heaps[h]=k;draw();if(heaps.every(x=>x===0)){c.say('Bạn bốc hạt cuối cùng — thắng!','good');lock=true;c.after(c.win,700);return;}
+   lock=true;c.after(()=>{const x=heaps.reduce((a,b)=>a^b,0);let mh=-1,nv=0;
+    if(x){for(let i=0;i<heaps.length;i++)if((heaps[i]^x)<heaps[i]){mh=i;nv=heaps[i]^x;break;}}
+    else{let m=0;heaps.forEach((n,i)=>{if(n>heaps[m])m=i;});mh=m;nv=heaps[m]-1;}
+    heaps[mh]=nv;draw();
+    if(heaps.every(v=>v===0)){c.say('Ma bốc hạt cuối — ma thắng! Ván mới…','bad');c.after(()=>{c.say('');init();},1500);}else lock=false;},650);}
+  init();}},
+ {name:'Bầu cua — xác suất',how:'Ma xóc xúc xắc bầu cua (6 mặt: Bầu, Cua, Tôm, Cá, Gà, Nai) và hỏi xác suất. Phải đúng cả 3 câu.',start(c){pzMcq(c,pzQs(PZ_PROB,3),{allow:0});}},
+ {name:'Đập niêu — dò đường',how:'Bạn bị bịt mắt, đứng ở ô ▲ giữa sân, quay mặt lên trên. Làm theo đúng các lệnh rồi bấm vào ô bạn đang đứng (chỗ treo niêu).',start(c){
+  const N=7,D=[[0,-1],[1,0],[0,1],[-1,0]],AR=['▲','▶','▼','◀'];const list=pzEl('ol','pz-list'),grid=pzEl('div','pz-grid');grid.style.gridTemplateColumns='repeat('+N+',1fr)';c.body.append(list,grid);let fin,locked;
+  function gen(){for(;;){let x=3,y=3,f=0;const cm=[];for(let s=0;s<7;s++){
+    if(s%2===0){const ks=pzShuffle([1,2,3]);let ok=false;for(const k of ks){const nx=x+D[f][0]*k,ny=y+D[f][1]*k;if(nx>=0&&nx<N&&ny>=0&&ny<N){x=nx;y=ny;cm.push('Tiến '+k+' bước');ok=true;break;}}if(!ok)f=(f+1)%4,cm.push('Quay phải');}
+    else{if(Math.random()<.5){f=(f+3)%4;cm.push('Quay trái');}else{f=(f+1)%4;cm.push('Quay phải');}}}
+   if(!(x===3&&y===3))return{cm,x,y};}}
+  function round(){const g=gen();fin=g;locked=false;list.textContent='';g.cm.forEach(s=>list.appendChild(pzEl('li','',s)));grid.textContent='';
+   for(let y=0;y<N;y++)for(let x=0;x<N;x++){const b=c.btn(grid,x===3&&y===3?AR[0]:'',()=>pick(x,y,b));if(x===3&&y===3)b.classList.add('start');}}
+  function pick(x,y,b){if(locked)return;locked=true;if(x===fin.x&&y===fin.y){b.classList.add('ok');b.textContent='🏺';c.say('Choang! Niêu vỡ!','good');c.after(c.win,700);}
+   else{b.classList.add('no');c.say('Đập hụt rồi! Niêu ở ô khác. Thử đường mới…','bad');c.after(()=>{c.say('');round();},1500);}}
+  round();}},
+ {name:'Ô ăn quan — rải sỏi',how:'Mười ô xếp vòng, đánh số 1–10 theo chiều kim đồng hồ từ ô trên cùng. Bốc hết sỏi ở ô được chỉ định, rải mỗi ô một hạt, bắt đầu từ ô kế tiếp (rải vòng quanh nếu nhiều hạt). Bấm vào ô nhận hạt cuối cùng. 3 vòng, số hạt tăng dần.',start(c){
+  const R=[[3,9],[10,14],[15,23]];let r=0,ans,lock;const q=pzEl('div','pz-q'),ring=pzEl('div','pz-ring');c.body.append(q,ring);
+  function round(){lock=false;const[a,b]=R[r],p=Math.floor(Math.random()*10),d=Math.random()<.5?1:-1,n=a+Math.floor(Math.random()*(b-a+1));
+   ans=(((p+d*n)%10)+10)%10;q.textContent='Vòng '+(r+1)+'/3 · Bốc ô số '+(p+1)+' ('+n+' hạt), rải theo chiều '+(d>0?'kim đồng hồ':'NGƯỢC kim đồng hồ')+'. Hạt cuối rơi vào ô số mấy?';
+   ring.textContent='';for(let k=0;k<10;k++){const ang=-Math.PI/2+k*Math.PI/5,bt=c.btn(ring,String(k+1),()=>pick(k,bt),'pit'+(k===p?' src':''));
+    bt.style.left=(50+40*Math.cos(ang))+'%';bt.style.top=(50+40*Math.sin(ang))+'%';bt.textContent=(k+1)+(k===p?' ('+n+')':'');}}
+  function pick(k,b){if(lock)return;lock=true;if(k===ans){b.classList.add('ok');c.say('Đúng!','good');r++;c.after(()=>{c.say('');if(r>=R.length)c.win();else round();},700);}
+   else{b.classList.add('no');c.say('Sai rồi! Đáp án là ô số '+(ans+1)+'. Làm lại từ vòng 1…','bad');r=0;c.after(()=>{c.say('');round();},1900);}}
+  round();}},
+ {name:'Thả diều',how:'Gió thổi con diều lên xuống. Di chuyển chuột lên/xuống trong khung (hoặc phím ↑ ↓) để kéo dây bù lại, giữ diều trong dải vàng. Đủ 10 giây tích lũy (ra khỏi dải thì tụt dần).',start(c){
+  const cv=pzEl('canvas','pz-cv');cv.width=320;cv.height=240;const g=cv.getContext('2d'),sc=pzEl('div','pz-score');c.body.append(sc,cv);
+  let ctl=.5,prog=0,tm=0;const held=new Set();
+  c.on(cv,'pointermove',e=>{const r=cv.getBoundingClientRect();ctl=Math.max(0,Math.min(1,(e.clientY-r.top)/r.height));});
+  c.on(window,'keydown',e=>{if(e.target.tagName==='INPUT')return;if(e.key==='ArrowUp'||e.key==='ArrowDown'){e.preventDefault();held.add(e.key);}},true);
+  c.on(window,'keyup',e=>held.delete(e.key),true);
+  c.anim(dt=>{tm+=dt;if(held.has('ArrowUp'))ctl=Math.max(0,ctl-1.1*dt);if(held.has('ArrowDown'))ctl=Math.min(1,ctl+1.1*dt);
+   const A=55+Math.min(35,tm*2),wind=.6*Math.sin(.9*tm)+.4*Math.sin(2.1*tm+1.3),ky=Math.max(14,Math.min(226,120+A*wind+(ctl-.5)*170));
+   const inb=ky>95&&ky<145;prog=Math.max(0,prog+(inb?dt:-dt*1.2));
+   g.fillStyle='#10161c';g.fillRect(0,0,320,240);g.fillStyle='rgba(255,210,100,.2)';g.fillRect(0,95,320,50);g.strokeStyle='#ffd27a';g.strokeRect(0,95,320,50);
+   g.strokeStyle='#cfcfcf';g.lineWidth=1.5;g.beginPath();g.moveTo(40,236);g.quadraticCurveTo(120,236,210,ky);g.stroke();g.font='34px serif';g.textAlign='center';g.fillText('🪁',210,ky+10);
+   g.fillStyle='#8fd0ff';g.font='12px sans-serif';g.fillText('gió '+(wind>0?'⬇':'⬆'),290,20);
+   sc.textContent='Giữ diều trong dải vàng: '+prog.toFixed(1)+'/10 giây';if(prog>=10){c.say('Diều bay thật cao!','good');c.win();}});}},
+ {name:'Điền ca dao',how:'Điền từ còn thiếu trong 4 câu ca dao. Chỉ được sai tối đa 2 lần (gõ không dấu cũng được).',start(c){pzTyped(c,PZ_CD,4,2);}},
+ {name:'Mê cung bịt mắt',how:'Mê cung hiện ra 8 giây rồi tối đi. Dùng phím mũi tên hoặc WASD (hoặc nút) đưa người từ góc trái-trên tới cờ ở góc phải-dưới. Mỗi lần đâm vào tường sẽ lộ bức tường đó; đâm quá 8 lần là thua.',start(c){
+  const N=6,S=48,cv=pzEl('canvas','pz-cv');cv.width=N*S+8;cv.height=N*S+8;const g=cv.getContext('2d'),info=pzEl('div','pz-score'),row=pzEl('div','pz-row');c.body.append(info,cv,row);
+  let E,Sw,px,py,bumps,show,rev,tleft;
+  function gen(){E=Array.from({length:N},()=>Array(N).fill(false));Sw=Array.from({length:N},()=>Array(N).fill(false));const vis=Array.from({length:N},()=>Array(N).fill(false));const st=[[0,0]];vis[0][0]=true;
+   while(st.length){const[x,y]=st[st.length-1],nb=[];if(x<N-1&&!vis[y][x+1])nb.push([x+1,y,'E']);if(x>0&&!vis[y][x-1])nb.push([x-1,y,'W']);if(y<N-1&&!vis[y+1][x])nb.push([x,y+1,'S']);if(y>0&&!vis[y-1][x])nb.push([x,y-1,'N']);
+    if(!nb.length){st.pop();continue;}const[nx,ny,d]=nb[Math.floor(Math.random()*nb.length)];if(d==='E')E[y][x]=true;if(d==='W')E[y][x-1]=true;if(d==='S')Sw[y][x]=true;if(d==='N')Sw[y-1][x]=true;vis[ny][nx]=true;st.push([nx,ny]);}}
+  function reset(){gen();px=0;py=0;bumps=0;show=true;rev=new Set();tleft=8;draw();}
+  function wall(k,x1,y1,x2,y2,all){if(all||rev.has(k)){g.beginPath();g.moveTo(4+x1*S,4+y1*S);g.lineTo(4+x2*S,4+y2*S);g.stroke();}}
+  function draw(){g.clearRect(0,0,cv.width,cv.height);g.fillStyle='#14100f';g.fillRect(0,0,cv.width,cv.height);g.lineWidth=3;g.lineCap='round';g.strokeStyle='#8a7a66';
+   g.strokeRect(4,4,N*S,N*S);g.strokeStyle=show?'#d9c7a8':'#ff7a6a';
+   for(let y=0;y<N;y++)for(let x=0;x<N;x++){if(x<N-1&&!E[y][x])wall('E'+x+','+y,x+1,y,x+1,y+1,show);if(y<N-1&&!Sw[y][x])wall('S'+x+','+y,x,y+1,x+1,y+1,show);}
+   g.font='26px serif';g.textAlign='center';g.textBaseline='middle';g.fillText('🚩',4+(N-1)*S+S/2,4+(N-1)*S+S/2);g.fillText('🧑',4+px*S+S/2,4+py*S+S/2);
+   info.textContent=show?'Ghi nhớ đường đi… còn '+Math.ceil(tleft)+' giây':'Đâm tường: '+bumps+'/8';}
+  function move(d){if(show)return;let nx=px,ny=py,k=null,ok=false;
+   if(d==='E'){ok=px<N-1&&E[py][px];k='E'+px+','+py;nx++;}if(d==='W'){ok=px>0&&E[py][px-1];k='E'+(px-1)+','+py;nx--;}
+   if(d==='S'){ok=py<N-1&&Sw[py][px];k='S'+px+','+py;ny++;}if(d==='N'){ok=py>0&&Sw[py-1][px];k='S'+px+','+(py-1);ny--;}
+   if(ok){px=nx;py=ny;if(px===N-1&&py===N-1){draw();c.say('Tới đích!','good');c.after(c.win,500);return;}}
+   else{const border=(d==='E'&&px===N-1)||(d==='W'&&px===0)||(d==='S'&&py===N-1)||(d==='N'&&py===0);if(!border){rev.add(k);bumps++;if(bumps>8){c.say('Đâm tường quá nhiều! Mê cung mới…','bad');show=true;tleft=0;c.after(()=>{c.say('');reset();},1300);}}}draw();}
+  [['◀','W'],['▲','N'],['▼','S'],['▶','E']].forEach(([l,d])=>c.btn(row,l,()=>move(d)));
+  c.key(e=>{const m={arrowleft:'W',a:'W',arrowright:'E',d:'E',arrowup:'N',w:'N',arrowdown:'S',s:'S'}[e.key.toLowerCase()];if(m){e.preventDefault();move(m);}});
+  c.anim(dt=>{if(show){tleft-=dt;if(tleft<=0&&!c.__lock){show=false;}draw();}});
+  reset();}},
+ {name:'Phán xét cuối cùng',how:'Diêm Vương hỏi 5 câu về trò chơi dân gian và câu đố, mỗi câu 12 giây. Được sai tối đa 1 câu.',start(c){pzMcq(c,pzQs(PZ_FIN,5),{allow:1,time:12});}}
+];
+
 
 function doAction(){if(hellAction())return;if(MP.passenger){mpLeaveRemoteRide();return;}if(mpNearestDriver()){mpJoinRemoteRide();return;}if(P.lying){sleepNow();return;}if(ride||CABLE.ride)return;if(indoor){if(currentHotelSpot&&currentHotelSpot.actions?.[0])currentHotelSpot.actions[0].fn();return;}if(currentVeh){enterRide(currentVeh);return;}if(currentSpot&&currentSpot.actions[0])currentSpot.actions[0].fn();}
 
@@ -3410,6 +3764,7 @@ function applyMode(){
   if(indoor){scene.fog.near=150;scene.fog.far=1200;hemi.intensity=indoor.I.dark?.1:Math.max(m.hemi,.6);sun.intensity=m.sun*(indoor.I.dark?.04:.3);}
   $('btnTime').textContent=m.label;$('clock').textContent='~1.500 m · '+m.clock+(indoor?' · trong nhà':'');
   if(indoor)refreshViews();
+  if(window.__hellOn)hellAtmos();
 }
 $('btnTime').onclick=()=>{modeIdx=(modeIdx+1)%MODES.length;applyMode();};
 $('btnFog').onclick=()=>{thickFog=!thickFog;$('btnFog').setAttribute('aria-pressed',String(thickFog));applyMode();};
@@ -3539,7 +3894,7 @@ function frame(){
   stepFishing(dt);
   for(const c of player.body.children)c.visible=!fpv||c===eyeAnchor||c===heldFish||(c===player.armR&&(!!fishing||!!heldFish))||(c===player.armL&&!!heldFish&&heldFish.userData.two);
   mpSendState(dt);
-  grade.uniforms.uTime.value=time%10;composer.render();updateHallScreenOverlay();if(photoPending)finishPhoto();
+  grade.uniforms.uTime.value=time%10;hellTick(dt);composer.render();updateHallScreenOverlay();if(photoPending)finishPhoto();
   requestAnimationFrame(frame);
 }
 drawMap();requestAnimationFrame(frame);
