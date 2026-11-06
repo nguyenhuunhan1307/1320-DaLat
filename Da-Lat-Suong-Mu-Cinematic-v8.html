@@ -1128,13 +1128,13 @@ const GH=[];
 (function teaHill(){
   say('Đang trồng đồi chè Cầu Đất…');
   const c=TEA,top=H(c.x,c.z);let base=1e9;for(let a=0;a<6.28;a+=.15)base=Math.min(base,H(c.x+Math.cos(a)*c.r,c.z+Math.sin(a)*c.r));TEA.top=top;TEA.base=base;
-  const pos=[],col=[],idx=[],cc=new THREE.Color(),step=HQ?1.6:2.4,hw=.62,hh=.82,NP=5,paths=[.4,2.0,3.6,5.2];
+  const pos=[],col=[],idx=[],cc=new THREE.Color(),step=HQ?3.2:4.2,hw=.62,hh=.82,NP=5,paths=[.4,2.0,3.6,5.2];
   const addRow=pts=>{if(pts.length<3)return;const b0=pos.length/3,hue=.25+Math.random()*.05,lt=.22+Math.random()*.06;
     for(let i=0;i<pts.length;i++){const p=pts[i],a=pts[Math.max(0,i-1)],b=pts[Math.min(pts.length-1,i+1)];let tx=b.x-a.x,tz=b.z-a.z;const l=Math.hypot(tx,tz)||1;tx/=l;tz/=l;const nx=-tz,nz=tx,bump=.88+.12*Math.sin(i*1.7);
       cc.setHSL(hue,.55,lt+Math.random()*.05);for(let k=0;k<NP;k++){const th=k/(NP-1)*Math.PI;pos.push(p.x+nx*Math.cos(th)*hw,p.y+Math.sin(th)*hh*bump,p.z+nz*Math.cos(th)*hw);col.push(cc.r,cc.g,cc.b);}}
     for(let i=0;i<pts.length-1;i++)for(let k=0;k<NP-1;k++){const a=b0+i*NP+k,b=a+NP;idx.push(a,b,a+1,a+1,b,b+1);}};
-  const radAt=(a,L)=>{const dx=Math.cos(a),dz=Math.sin(a);if(H(c.x+dx*c.r,c.z+dz*c.r)>L)return -1;let lo=0,hi=c.r;for(let it=0;it<16;it++){const m=(lo+hi)/2;if(H(c.x+dx*m,c.z+dz*m)>L)lo=m;else hi=m;}return (lo+hi)/2;};
-  for(let L=top-5;L>base+3;L-=step){let rs=0,rn=0;for(let k=0;k<24;k++){const r=radAt(k/24*Math.PI*2,L);if(r>0){rs+=r;rn++;}}if(!rn)continue;const N=Math.max(40,Math.round(2*Math.PI*(rs/rn)/1.7));let run=[];
+  const radAt=(a,L)=>{const dx=Math.cos(a),dz=Math.sin(a);if(H(c.x+dx*c.r,c.z+dz*c.r)>L)return -1;let lo=0,hi=c.r;for(let it=0;it<10;it++){const m=(lo+hi)/2;if(H(c.x+dx*m,c.z+dz*m)>L)lo=m;else hi=m;}return (lo+hi)/2;};
+  for(let L=top-5;L>base+3;L-=step){let rs=0,rn=0;for(let k=0;k<12;k++){const r=radAt(k/12*Math.PI*2,L);if(r>0){rs+=r;rn++;}}if(!rn)continue;const N=Math.max(36,Math.round(2*Math.PI*(rs/rn)/2.8));let run=[];
     for(let j=0;j<=N;j++){const a=j/N*Math.PI*2,r=radAt(a,L);if(r<0){addRow(run);run=[];continue;}
       const x=c.x+Math.cos(a)*r,z=c.z+Math.sin(a)*r,q=roadNear(x,z),onPath=paths.some(pa=>Math.cos(a-pa)>0&&Math.abs(Math.sin(a-pa))*r<1.3);
       if(r<20||(q&&q.d<q.w/2+2.5)||nearPad(x,z,1.5)||onPath){addRow(run);run=[];continue;}
@@ -3519,7 +3519,12 @@ function frame(){
 }
 drawMap();requestAnimationFrame(frame);
 addEventListener('beforeunload',mpDisconnect);
-})();
+})().catch(err=>{
+  console.error('Game initialization failed:',err);
+  const go=document.getElementById('go'),msg=document.getElementById('loadmsg');
+  if(go){go.disabled=true;go.textContent='Chưa tải xong — thử tải lại';}
+  if(msg)msg.textContent='Game gặp lỗi khi dựng thế giới. Hãy tải lại trang (Ctrl/Cmd + Shift + R). Nếu vẫn lỗi, gửi ảnh Console để kiểm tra. Chi tiết: '+(err&&err.message?err.message:'Lỗi không xác định');
+});
 </script>
 
 </body>
